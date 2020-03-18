@@ -1,0 +1,34 @@
+{
+  "name": "ripplewallet",
+  "version": "1.0.0",
+  "description": "RippleFox Desktop Client",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "build --tasks win-x86,win-x64,mac-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
+    "start": "run --x64 --mirror https://npm.taobao.org/mirrors/nwjs/ ."
+  },
+  "author": "ripplefox",
+  "license": "ISC",
+  "devDependencies": {
+    "nwjs-builder-phoenix": "^1.15.0"
+  },
+  "dependencies": {
+    "qrcode-generator": "^1.4.4"
+  },
+  "build": {
+    "nwVersion": "0.44.4",
+    "win": {
+      "productName": "RippleFox Wallet",
+      "companyName": "RippleFox",
+      "icon": "./assets/ripplefox.ico"
+    },
+    "mac": {
+      "displayName": "RippleFox Wallet",
+      "icon": "./assets/ripplefox.icns"
+    }
+  },
+  "window": {
+    "icon": "./assets/ripplefox.png"
+  }
+}
