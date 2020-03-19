@@ -14,7 +14,15 @@
     "nwjs-builder-phoenix": "^1.15.0"
   },
   "dependencies": {
-    "qrcode-generator": "^1.4.4"
+    "angular": "^1.7.9",
+    "angular-qrcode": "^7.2.0",
+    "angular-route": "^1.7.9",
+    "angular-translate": "^2.18.2",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.3.1",
+    "sjcl": "^1.0.8",
+    "underscore": "^1.9.2"
   },
   "build": {
     "nwVersion": "0.44.4",

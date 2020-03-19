@@ -3,9 +3,32 @@
   <title>RippleFox Desktop Client</title>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/auth.css">
   
-  <script src="./node_modules/qrcode-generator/qrcode.js"></script>
-  <script src="./node_modules/qrcode-generator/qrcode_UTF8.js"></script>
+  <script src="./node_modules/jquery/dist/jquery.js"></script>
+  <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="./node_modules/angular/angular.js"></script>
+  <script src="./node_modules/angular-route/angular-route.js"></script>
+  <script src="./node_modules/angular-translate/dist/angular-translate.js"></script>
+  <script src="./node_modules/angular-qrcode/angular-qrcode.js"></script>
+  <script src="./node_modules/underscore/underscore-min.js"></script>
+  
+  <script src="js/lang/translate_cn.js"></script>
+  <script src="js/lang/translate_en.js"></script>
+  
+  <script src="js/app.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/factory.js"></script>
+  <script src="js/directives.js"></script>
+  <script src="js/controllers.js"></script>
+  
+  <script src="js/auth/auth.factory.js"></script>
+  <script src="js/auth/authdata.factory.js"></script>
+  <script src="js/auth/authdata.filesystem.factory.js"></script>
+  <script src="js/auth/authdata.inmemory.factory.js"></script>
   
   <script>
       /* global chrome */
@@ -16,89 +39,13 @@
         });
       });
       chrome.privacy.services.passwordSavingEnabled.set({ value: false });
-      
-      
-      var body_loadHander = function() {
-
-        var crtOpt = function(value, label) {
-          var opt = document.createElement('option');
-          opt.appendChild(document.createTextNode(label) );
-          opt.value = value;
-          return opt;
-        };
-
-        var t = document.forms['qrForm'].elements['t'];
-        t.appendChild(crtOpt('' + 0, 'Auto Detect') );
-        for (var i = 1; i <= 40; i += 1) {
-          t.appendChild(crtOpt('' + i, '' + i) );
-        }
-        t.value = '0';
-
-        update_qrcode();
-      };
-
-      var draw_qrcode = function(text, typeNumber, errorCorrectionLevel) {
-        document.write(create_qrcode(text, typeNumber, errorCorrectionLevel) );
-      };
-
-      var create_qrcode = function(text, typeNumber,
-          errorCorrectionLevel, mode, mb) {
-
-        qrcode.stringToBytes = qrcode.stringToBytesFuncs[mb];
-
-        var qr = qrcode(typeNumber || 4, errorCorrectionLevel || 'M');
-        qr.addData(text, mode);
-        qr.make();
-
-        return qr.createSvgTag({ alt: '</svg>puke'});
-      };
-
-      var update_qrcode = function() {
-        var form = document.forms['qrForm'];
-        var text = form.elements['msg'].value.
-          replace(/^[\s\u3000]+|[\s\u3000]+$/g, '');
-        var t = form.elements['t'].value;
-        var e = form.elements['e'].value;
-        var m = form.elements['m'].value;
-        var mb = form.elements['mb'].value;
-        document.getElementById('qr').innerHTML =
-          create_qrcode(text, t, e, m, mb);
-      };
-      
   </script>
 </head>
 
 <body>
-	<p>hello world</p>
-	    <form name="qrForm">
-      <span>TypeNumber:</span>
-      <select name="t"></select>
-      <span>ErrorCorrectionLevel:</span>
-      <select name="e">
-        <option value="L">L(7%)</option>
-        <option value="M" selected="selected">M(15%)</option>
-        <option value="Q">Q(25%)</option>
-        <option value="H">H(30%)</option>
-      </select>
-      <span>Mode:</span>
-      <select name="m">
-        <option value="Numeric">Numeric</option>
-        <option value="Alphanumeric">Alphanumeric</option>
-        <option value="Byte" selected>Byte</option>
-        <option value="Kanji">Kanji</option>
-      </select>
-      <span>Multibyte:</span>
-      <select name="mb">
-        <option value="default">None</option>
-        <option value="SJIS">SJIS</option>
-        <option value="UTF-8" selected>UTF-8</option>
-      </select>
-      <br/>
-      <textarea name="msg" rows="10" cols="40">here comes qr!</textarea>
-      <br/>
-      <input type="button" value="update" onclick="update_qrcode()"/>
-      <div id="qr"></div>
-    </form>
+	<div ng-include="'pages/header.html'"></div>
+  <div class="container" ng-view></div>
+  <div ng-include="'pages/footer.html'"></div>
 </body>
 
 </html>

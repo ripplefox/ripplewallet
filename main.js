@@ -18,3 +18,5 @@ nw.Window.open('app.html', {position: 'center', width: 1024, height: 800, min_wi
     win.maximize();
   }
 });
+
+nw.Window.get().showDevTools();
