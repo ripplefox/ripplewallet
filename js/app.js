@@ -11,8 +11,7 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(local|http|https|app|tel|ftp|file|blob|content|ms-appx|x-wmapp0|cdvfile|chrome-extension):|data:image\//);
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
 
-  /*
-  $httpProvider.interceptors.push('TokenInterceptor');
+  //$httpProvider.interceptors.push('TokenInterceptor');
 
   $routeProvider.when('/login', {
     templateUrl : 'pages/login.html',
@@ -119,11 +118,13 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
   }).otherwise({
     redirectTo : '/login'
   });
-  */
 });
-/*
-myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'StellarApi', 'SettingFactory', 'RemoteFactory', 'AnchorFactory',
-  function($rootScope, $window, $location, $translate, AuthenticationFactory, StellarApi, SettingFactory, RemoteFactory, AnchorFactory) {
+
+//myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'StellarApi', 'SettingFactory', 'RemoteFactory', 'AnchorFactory',
+//  function($rootScope, $window, $location, $translate, AuthenticationFactory, StellarApi, SettingFactory, RemoteFactory, AnchorFactory) {
+
+myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory',
+  function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory) {
 
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
       if ((nextRoute.access && nextRoute.access.requiredLogin) && !AuthenticationFactory.isInSession) {
@@ -157,8 +158,8 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
         $rootScope.address = AuthenticationFactory.address;
         $rootScope.contacts = AuthenticationFactory.contacts;
         $rootScope.resolveFed();
-        StellarApi.listenStream();
-        StellarApi.queryAccount();
+        //StellarApi.listenStream();
+        //StellarApi.queryAccount();
       } else {
         delete $rootScope.address;
         delete $rootScope.contacts;
@@ -190,33 +191,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
         }
       });
     };
-
-    //the default gateway list
-    $rootScope.gateways = gateways;
-    RemoteFactory.getIcoAnchors(function(err, data){
-      if (err) {
-        console.error(err);
-      } else {
-        gateways.addAnchors(data);
-      }
-    });
-
-    $rootScope.ico_data;
-    RemoteFactory.getIcoItems(function(err, data){
-      if (err) {
-        console.error(err);
-      } else {
-        $rootScope.ico_data = data;
-      }
-    });
-    for (var domain in gateways.data) {
-      AnchorFactory.addAnchor(domain);
-    }
-
-    $rootScope.stellar_ticker;
-    RemoteFactory.getStellarTicker(function(err, ticker){
-      if (ticker) { $rootScope.stellar_ticker = ticker; }
-    });
 
     reset();
     function reset() {
@@ -259,13 +233,13 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
 
     $translate.use(SettingFactory.getLang());
     try {
-      StellarApi.setServer(SettingFactory.getStellarUrl(), SettingFactory.getNetPassphrase(), SettingFactory.getAllowHttp());
-      StellarApi.setTimeout(SettingFactory.getTimeout());
+      //StellarApi.setServer(SettingFactory.getStellarUrl(), SettingFactory.getNetPassphrase(), SettingFactory.getAllowHttp());
+      //StellarApi.setTimeout(SettingFactory.getTimeout());
     } catch(e) {
       console.error("Cannot set server", SettingFactory.getStellarUrl(), SettingFactory.getNetworkType(), e);
       console.warn("Change network back to xlm.");
-      SettingFactory.setNetworkType('xlm');
-      StellarApi.setServer(null);
+      //SettingFactory.setNetworkType('xlm');
+      //StellarApi.setServer(null);
     }
 
     if (SettingFactory.getProxy()) {
@@ -276,7 +250,8 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       }
     }
   }]);
-*/
+
+
 /* exported round */
 var round = function(dight, howMany) {
   if(howMany) {
