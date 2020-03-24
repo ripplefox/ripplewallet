@@ -29,7 +29,7 @@ var translate_cn = {
   security_notice : '下方的秘钥让你可以在丢失密码的小概率事件中拿回你的钱。任何拥有该秘钥的人都可以取出你的钱。所以务必将它保管在安全的地方。',
   show_password : '显示',
   hide_password : '隐藏',
-  ripple_address : '瑞波地址',
+  public_address : '公开地址',
   secret_key : '秘钥和二维码:',
   show_secret: '显示秘钥',
   hide_secret: '隐藏秘钥',

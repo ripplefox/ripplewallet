@@ -1,4 +1,6 @@
 /* globals angular, gateways, nw, translate_cn, translate_en, translate_fr, translate_br */
+window.RippleAPI = require('ripple-lib').RippleAPI;
+
 /* exported myApp */
 var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'monospaced.qrcode']);
 
@@ -157,7 +159,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       if (AuthenticationFactory.isInMemory) {
         $rootScope.address = AuthenticationFactory.address;
         $rootScope.contacts = AuthenticationFactory.contacts;
-        $rootScope.resolveFed();
         //StellarApi.listenStream();
         //StellarApi.queryAccount();
       } else {
@@ -181,16 +182,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
         return $rootScope.lines[code] && $rootScope.lines[code][issuer] ? $rootScope.lines[code][issuer].balance : 0;
       }
     }
-    $rootScope.resolveFed = function() {
-      StellarApi.getFedName(SettingFactory.getFedNetwork(), $rootScope.address, function(err, name){
-        if (err) {
-          console.error(err);
-        } else {
-          $rootScope.fed_name = name;
-          $rootScope.$apply();
-        }
-      });
-    };
 
     reset();
     function reset() {

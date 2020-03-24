@@ -1,4 +1,4 @@
-/* global angular, myApp, StellarSdk */
+/* global angular, myApp, StellarSdk,  RippleAPI*/
 
 // Auth - singleton that manages account.
 myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'AuthDataFilesystem', 'AuthDataInmemory',
@@ -51,7 +51,7 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
 
       AuthData.load(opts)
         .then((authdata) => {
-          if (authdata.address.substring(0, 1) == "r") throw new Error(`Login failed: Wallet file is a Ripple file.`);
+          if (authdata.address.substring(0, 1) == "G") throw new Error(`Wallet file is a Stellar file.`);
 
           _type = type;
           _data = authdata;

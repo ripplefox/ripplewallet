@@ -1,7 +1,7 @@
-/* global myApp */
+/* global myApp, ripple */
 
-myApp.controller('LoginCtrl', ['$scope', '$rootScope', '$window', '$location', 'FileDialog', 'AuthenticationFactory',
-  function($scope, $rootScope, $window, $location, FileDialog, AuthenticationFactory) {
+myApp.controller('LoginCtrl', ['$scope', '$rootScope', '$window', '$location', 'FileDialog', 'AuthenticationFactory', 'Id', 
+  function($scope, $rootScope, $window, $location, FileDialog, AuthenticationFactory, id) {
     $scope.address="";
     $scope.showTemp = false;
     $scope.toggleTemp = function() {
@@ -27,8 +27,8 @@ myApp.controller('LoginCtrl', ['$scope', '$rootScope', '$window', '$location', '
       AuthenticationFactory.load(type, {path: $scope.walletfile, password: $scope.password}, (err) => {
         $scope.$apply(() => {
           if (err) {
-            console.error(err)
-            $scope.error = 'Login failed: Wallet file or password is wrong.';
+            console.error(err);
+            $scope.error = 'Login failed: ' + err.message;
             return;
           }
 
@@ -38,7 +38,7 @@ myApp.controller('LoginCtrl', ['$scope', '$rootScope', '$window', '$location', '
     }
 
     $scope.submitAddress = function(){
-      $scope.invalidAddress = !StellarApi.isValidAddress($scope.address);
+      $scope.invalidAddress = !Id.isValidAddress($scope.address);
       if ($scope.invalidAddress) {
         return;
       }

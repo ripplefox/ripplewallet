@@ -1,4 +1,4 @@
-/* global myApp, nw, Ripple */
+/* global myApp, nw, RippleAPI */
 
 myApp.factory('SettingFactory', function($window) {
   return {
@@ -177,6 +177,26 @@ myApp.factory('SettingFactory', function($window) {
     },
     setBridgeService : function(anchor_name) {
       $window.localStorage['bridge_service'] = anchor_name;
+    }
+  };
+});
+
+myApp.factory('Id', function($window) {
+  return {
+    isValidAddress : function(address) {
+      return RippleAPI.isValidClassicAddress(address);
+    },
+    isValidSecret : function(secret) {
+      return new RippleAPI().isValidSecret(secret);
+    },
+    generateAccount : function() {
+      var keypair = new RippleAPI().generateAddress();
+      return {address: keypair.address, secret: keypair.secret};
+    },
+    generateFilename : function() {
+      var dt = new Date();
+      var datestr = (''+dt.getFullYear()+(dt.getMonth()+1)+dt.getDate()+'_'+dt.getHours()+dt.getMinutes()+dt.getSeconds()).replace(/([-: ])(\d{1})(?!\d)/g,'$10$2');
+      return "ripple" + datestr + ".txt";
     }
   };
 });

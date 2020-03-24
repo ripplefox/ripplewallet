@@ -112,7 +112,6 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
           } catch(e) {
             reject(e);
           }
-
         });
 
       })
@@ -153,7 +152,7 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
       if(!rawData) throw new Error('No rawData.')
 
       const decrypted = AuthDataFilesystem._decrypt(password, rawData);
-      if (!decrypted) throw new Error("Error while decrypting blob");
+      if (!decrypted) throw new Error("Wallet file or password is wrong.");
 
       const authDataFileSystem = new AuthDataFilesystem({
         address: decrypted.account_id,
@@ -187,13 +186,18 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
     }
 
     static _decrypt(password, blob) {
-      const plaintext_v1 = sjcl.decrypt(`${password.length}|${password}`, atob(blob));
-      const object = JSON.parse(plaintext_v1);
-      return {
-        account_id: object.account_id,
-        contacts: object.contacts,
-        created: object.created,
-        masterkey: [object.masterkey],
+      try {
+        const plaintext_v1 = sjcl.decrypt(`${password.length}|${password}`, atob(blob));
+        const object = JSON.parse(plaintext_v1);
+        return {
+          account_id: object.account_id,
+          contacts: object.contacts,
+          created: object.created,
+          masterkey: [object.masterkey],
+        }
+      } catch(e) {
+        console.error('_decrypt', e);
+        return null;
       }
     }
 

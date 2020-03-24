@@ -1,7 +1,7 @@
-/* global myApp, nw, StellarSdk */
+/* global myApp, nw */
 
-myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location', 'FileDialog', 'AuthenticationFactory',
-  function($scope, $rootScope, $window, $location, FileDialog, AuthenticationFactory) {
+myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location', 'FileDialog', 'AuthenticationFactory', 'Id',
+  function($scope, $rootScope, $window, $location, FileDialog, AuthenticationFactory, Id) {
     $scope.password = '';
     $scope.passwordSet = {};
     $scope.password1 = '';
@@ -35,23 +35,23 @@ myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location'
     };
 
     $scope.fileInputClick = function() {
-      var dt = new Date();
-      var datestr = (''+dt.getFullYear()+(dt.getMonth()+1)+dt.getDate()+'_'+dt.getHours()+dt.getMinutes()+dt.getSeconds()).replace(/([-: ])(\d{1})(?!\d)/g,'$10$2');
+      const txtfilename = Id.generateFilename();
       FileDialog.saveAs(function(filename) {
         $scope.$apply(function() {
           $scope.walletfile = filename;
           $scope.mode = 'register_empty_wallet';
           $scope.save_error = '';
         });
-      }, 'wallet' + datestr + '.txt');
+      }, txtfilename);
     };
 
     $scope.submitForm = function() {
-      if(!$scope.masterkey) $scope.masterkey = StellarSdk.Keypair.random().secret();
+      const keypair = Id.generateAccount();
+      if(!$scope.masterkey) $scope.masterkey = keypair.secret;
 
       const options = {
-        address: StellarSdk.Keypair.fromSecret($scope.masterkey).publicKey(),  // ignored until blob format v2.
-        secrets: [$scope.masterkey],  // TODO: blob format v2 to handle multiple secrets (and other things in upcoming commits).
+        address: keypair.address,  
+        secrets: [$scope.masterkey],
         password: $scope.password1,
         path: $scope.walletfile
       };
@@ -64,7 +64,7 @@ myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location'
         }
 
         $scope.password = new Array($scope.password1.length+1).join("*");
-        $scope.key = `S${new Array(56).join("*")}`;
+        $scope.key = `${new Array(56).join("*")}`;
         $scope.mode = 'welcome';
         $scope.$apply();
       });

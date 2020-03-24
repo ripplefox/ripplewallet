@@ -99,7 +99,7 @@ myApp.directive('ngReallyClick', [function() {
   }
 }]);
 
-myApp.directive('masterKey', function() {
+myApp.directive('masterKey', ['Id', function(Id) {
   return {
     restrict : 'A',
     require : '?ngModel',
@@ -107,13 +107,7 @@ myApp.directive('masterKey', function() {
       if (!ctrl) return;
 
       var validator = function(value) {
-        try{
-          StellarSdk.Keypair.fromSecret(value);
-        } catch(e) {
-          ctrl.$setValidity('masterKey', false);
-          return value;
-        }
-        ctrl.$setValidity('masterKey', true);
+        ctrl.$setValidity('masterKey', Id.isValidSecret(value));
         return value;
       };
 
@@ -125,7 +119,7 @@ myApp.directive('masterKey', function() {
       });
     }
   };
-});
+}]);
 
 /**
  * <input type="password" name="password1" ng-model="password1" > <input

@@ -29,7 +29,7 @@ var translate_en = {
   security_notice : 'The secret key below gives access to your money in the unlikely case that you lose your password. With this secret key alone anyone can retrieve your money. So please store it somewhere PRIVATE AND SAFE.',
   show_password : 'Show password',
   hide_password : 'Hide password',
-  ripple_address : 'Ripple address',
+  public_address : 'Public address',
   secret_key : 'Secret key and QRCode:',
   show_secret: 'Show secret key',
   hide_secret: 'Hide secret key',
