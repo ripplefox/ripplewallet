@@ -5,54 +5,50 @@ myApp.factory('SettingFactory', function($window) {
     // To add new preset network, add new entry here and in `translationKey` to all translations.
     // P.S. Undefined entries will be asked for in user interface.
     NETWORKS: {
-      xlm: {
-        name: "Stellar Public Network",
+      xrp: {
+        name: "Ripple Public Network",
         translationKey: 'public_url',
-        networkType: 'xlm',
-        knownHorizons: [
-          'https://horizon.stellar.org',  // First one is default.
-          'https://stellar-api.wancloud.io',
-          'https://api.chinastellar.com',
+        networkType: 'xrp',
+        servers: [
+          {server: 's1.ripple.com', port: 443},
+          {server: 's-east.ripple.com', port: 443},
+          {server: 's-west.ripple.com', port: 443}
         ],
         coin: {
-          name: "lumen",
-          atom: "stroop",
-          code: "XLM",
-          logo: "img/xlm.png"
+          name: "ripple",
+          atom: "drop",
+          code: "XRP",
+          logo: "img/xrp.png"
         },
-        allowHTTP: false,
-        tabs: ["history", "trade", "balance", "send", "trust", "service", "ico"]
+        tabs: ["history", "trade", "balance", "send", "trust", "service", "dapp"]
       },
-      xlmTest: {
-        name: "Stellar Test Network",
+      xrpTest: {
+        name: "Ripple Test Network",
         translationKey: 'test_url',
-        networkType: 'xlmTest',
-        knownHorizons: [
-          'https://horizon-testnet.stellar.org',
+        networkType: 'xrpTest',
+        servers: [
+          {server: 's.altnet.rippletest.net', port: 443}
         ],
         coin: {
-          name: "lumen",
-          atom: "stroop",
-          code: "XLM",
-          logo: "img/rocket.png"
+          name: "ripple",
+          atom: "drop",
+          code: "XRP",
+          logo: "img/xrp.png"
         },
-        allowHTTP: true,
         tabs: ["history", "trade", "balance", "send", "trust"]
       },
       other: {
         name: "User defined",
         translationKey: 'other_url',
         networkType: 'other',
-        networkPassphrase: undefined,
-        knownHorizons: [
+        servers: [
         ],
         coin: {
-          name: "lumen",  // TODO: ask in settings
-          atom: "stroop",  // TODO: ask in settings
+          name: "ripple",  // TODO: ask in settings
+          atom: "drop",    // TODO: ask in settings
           code: undefined,
           logo: "img/rocket.png",  // TODO: ask in settings
         },
-        allowHTTP: true,
         tabs: ["history", "trade", "balance", "send", "trust"]
       }
     },
@@ -60,15 +56,15 @@ myApp.factory('SettingFactory', function($window) {
     setTimeout : function(timeout) {
       return $window.localStorage['timeout'] = timeout;
     },
-    getTimeout : function(timeout) {
-      return $window.localStorage['timeout'] || '45';
+    getTimeout : function() {
+      return $window.localStorage['timeout'] || '30';
     },
 
-    setBasefee : function(basefee) {
-      return $window.localStorage['basefee'] = basefee;
+    setMaxfee : function(maxfee) {
+      return $window.localStorage['maxfee'] = maxfee;
     },
-    getBasefee : function(timeout) {
-      return $window.localStorage['basefee'] || '100';
+    getMaxfee : function() {
+      return $window.localStorage['maxfee'] || '0.2';
     },
 
     setLang : function(lang) {
@@ -80,8 +76,8 @@ myApp.factory('SettingFactory', function($window) {
       } else {
         if (nw.global.navigator.language.indexOf('zh') >= 0) {
           return 'cn';
-        } else if (nw.global.navigator.language.indexOf('fr') >= 0) {
-          return 'fr';
+        } else if (nw.global.navigator.language.indexOf('jp') >= 0) {
+          return 'jp';
         } else {
           return 'en';
         }
@@ -96,11 +92,12 @@ myApp.factory('SettingFactory', function($window) {
     },
 
     setNetworkType : function(network) {
-      return $window.localStorage[`network_type`] = network in this.NETWORKS ? network : 'xlm';
+      return $window.localStorage[`network_type`] = network in this.NETWORKS ? network : 'xrp';
     },
     getNetworkType : function() {
       return $window.localStorage[`network_type`] || this.setNetworkType();
     },
+    
     getCurrentNetwork : function() {
       var network = this.NETWORKS[this.getNetworkType()];
       if (this.getNetworkType() === 'other') {

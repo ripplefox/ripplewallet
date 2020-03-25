@@ -215,7 +215,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
     }
     $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
     $rootScope.isPublicNetwork = function() {
-      return this.currentNetwork.name == "Stellar Public Network";
+      return this.currentNetwork.name == "Ripple Public Network";
     }
 
     $rootScope.isLangCN = function() {
