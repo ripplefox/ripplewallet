@@ -30,15 +30,14 @@
 					<label translate="selected_net">Selected Stellar Network</label>
 					<ul>
 						<!-- <li><strong>Type: </strong><tt>{{active_network | translate}}</tt></li> -->
-						<li><strong>Passphrase: </strong><tt>{{active_passphrase}}</tt></li>
+						<li><strong>Network: </strong><tt>{{all_networks[active_network].name}}</tt></li>
 						<li><strong>Coin: </strong><tt>{{active_coin}}</tt></li>
-						<li><strong>Horizon: </strong><tt>{{active_horizon}}</tt></li>
 					</ul>
 				</div>
 			</div>
 			<div class="row" style="margin-bottom: 20px;">
 				<div class="col-xs-12 col-md-10">
-					<label translate="switch_net">Switch Stellar Network</label>
+					<label translate="switch_net">Switch Ripple Network</label>
 					<p translate="switch_net_desc">The testnet is for, well, testing. It’s occasionally reset, so don’t get attached to any balances or accounts that you have on it.</p>
 					<div class="btn-group">
 						<span ng-repeat="n in all_networks">
@@ -48,38 +47,53 @@
 				</div>
 			</div>
 			<div class="row" style="margin-bottom: 20px;" ng-init="network = currentNetwork">
-				<div class="col-xs-12 col-md-10">
-					<label translate="other_url">Network URL</label>
-					<input class="form-control" type="text" ng-model="network_horizon" placeholder="{{all_networks[network_type].knownHorizons[0]}}" list="horizons"/>
-					<datalist id="horizons">
-						<option ng-repeat="horizon in network.knownHorizons" value="{{horizon}}">
-					</datalist>
-				</div>
-				<div class="col-xs-12 col-md-10" ng-show="network_type == 'other'">
-					<label translate="passphrase">Passphrase or id</label>
-					<input class="form-control" type="text" ng-model="network_passphrase" placeholder="My Integration Network ; mycrypto"/>
-				</div>
-				<div class="col-xs-12 col-md-10" ng-show="network_type == 'other'">
-					<label translate="coin_ticket">coin ticket</label>
-					<input class="form-control" type="text" ng-model="network_coin" placeholder="XLM"/>
-				</div>
+				
+					<div class="col-xs-6 col-md-5" style="margin-bottom: 10px;">
+						<label translate="server">Server</label>
+						<input class="form-control" type="text" ng-model="server_url" placeholder="s1.ripple.com"/>
+					</div>
+					<div class="col-xs-6 col-md-5" style="margin-bottom: 10px;">
+						<label translate="port">Port</label>
+						<input class="form-control" type="number" ng-model="server_port" placeholder="443"/>
+					</div>
+					
+					<div class="col-xs-12 col-md-5" style="margin-bottom: 10px;">
+						<a class="btn btn-info btn-block btn-big" ng-disabled="!server_url || !server_port" ng-click="addServer()" translate="add">Add</a>
+					</div>
+				
+					<div class="col-xs-12 col-md-10">
+						<table class="table table-hover" style="border: 1px solid #dedfe0;">
+							<tr ng-repeat="remote in network_servers">
+								<td>{{remote.server}}</td>
+								<td>{{remote.port}}</td>
+								<td class="ManageOffers__table__row__item">
+									<a href="javascript:" ng-click="removeServer($index)" translate="remove">Remove</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+			
+			  	<div class="col-xs-12 col-md-10" ng-show="network_type == 'other'">
+					  <label translate="coin_ticket">coin ticket</label>
+					  <input class="form-control" type="text" ng-model="network_coin" placeholder="XLM"/>
+				  </div>
 			</div>
 			<div class="row" style="margin-bottom: 20px;">
                 <div class="col-xs-12 col-md-10">
-                    <label translate="base_fee">Base Fee</label>
+                    <label translate="max_fee">Max Fee</label>
                     <p>{{ 'base_fee_desc' | translate }} {{network_coin}}</p>
-                    <input class="form-control" type="number" ng-model="network_basefee" placeholder="100" />
+                    <input class="form-control" type="number" ng-model="network_maxfee" placeholder="0.2" />
                 </div>
             </div>
 			<div class="row" style="margin-bottom: 20px;">
                 <div class="col-xs-12 col-md-10">
-                    <label translate="timeout">Transaction Timeout</label>
+                    <label translate="timeout">Connection Timeout</label>
                     <p translate="timeout_desc">It is possible that the status of your transaction will be determined after a long time if the network is highly congested. The timeout number can not be negative. If the value is 0, the transaction is good indefinitely.</p>
-                    <input class="form-control" type="number" ng-model="network_timeout" placeholder="45" list="timeoutlist"/>
+                    <input class="form-control" type="number" ng-model="network_timeout" placeholder="30" list="timeoutlist"/>
                     <datalist id="timeoutlist">
                         <option value="0">
+                        <option value="10">
                         <option value="30">
-                        <option value="45">
                         <option value="60">
                     </datalist>
                 </div>
