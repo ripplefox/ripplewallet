@@ -125,8 +125,8 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
 //myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'StellarApi', 'SettingFactory', 'RemoteFactory', 'AnchorFactory',
 //  function($rootScope, $window, $location, $translate, AuthenticationFactory, StellarApi, SettingFactory, RemoteFactory, AnchorFactory) {
 
-myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory',
-  function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory) {
+myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory', 'Id',
+  function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory, Id) {
 
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
       if ((nextRoute.access && nextRoute.access.requiredLogin) && !AuthenticationFactory.isInSession) {
@@ -211,7 +211,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       return Object.keys(obj).length;
     }
     $rootScope.isValidAddress = function(address) {
-      return StellarApi.isValidAddress(address);
+      return Id.isValidAddress(address);
     }
     $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
     $rootScope.isPublicNetwork = function() {

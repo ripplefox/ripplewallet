@@ -1,7 +1,7 @@
 /* global myApp */
 
-myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'SettingFactory', 'XrpApi',
-  function($scope, $rootScope, $location, SettingFactory, XrpApi) {
+myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'SettingFactory', 'XrpApi', 'ServerManager', 
+  function($scope, $rootScope, $location, SettingFactory, XrpApi, SM) {
     $scope.mode = 'network';
     $scope.isMode = function(mode) {
       return $scope.mode === mode;
@@ -22,6 +22,12 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
     $scope.network_timeout = parseFloat(SettingFactory.getTimeout());
     $scope.network_maxfee = parseFloat(SettingFactory.getMaxfee());
 
+    if ($scope.network_servers.length ==0) {
+      $scope.server_url = $scope.all_networks[$scope.network_type].servers[0].server;
+      $scope.server_port = $scope.all_networks[$scope.network_type].servers[0].port;;
+    }
+    
+    
     $scope.fed_network = SettingFactory.getFedNetwork();
     $scope.fed_ripple  = SettingFactory.getFedRipple();
     $scope.fed_bitcoin = SettingFactory.getFedBitcoin();
@@ -29,9 +35,7 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
     $scope.set = function(type) {
       $scope.network_type = type;
       $scope.network_servers = SettingFactory.getServers(type);
-      if(type === 'other') {
-        $scope.network_coin = SettingFactory.getCoin(type);
-      }
+      $scope.network_coin = SettingFactory.getCoin(type);
     }
     $scope.addServer = function() {
       $scope.network_servers.push({"server": $scope.server_url, "port": $scope.server_port});
@@ -55,14 +59,17 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
           $scope.active_servers = SettingFactory.getServers();
           $scope.active_coin = SettingFactory.getCoin();
 
-          //StellarApi.setTimeout($scope.network_timeout);
-          //StellarApi.setBasefee($scope.network_basefee);
-          //StellarApi.setServer($scope.active_horizon, $scope.active_passphrase, SettingFactory.getAllowHttp());
+          SM.setMaxfee(SettingFactory.getMaxfee());
+          SM.setTimeout(SettingFactory.getTimeout());
+          SM.setServers(SettingFactory.getServers());
+          SM.connect().then((name)=>{
+            console.log(`Servermanager reconnect to ${name}`);
+          });
           //StellarApi.logout();
           $rootScope.reset();
+          $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
           $rootScope.$broadcast('$authUpdate');  // workaround to refresh and get changes into effect.
-          location.reload();
-
+          //location.reload();
         } catch (e) {
           console.error(e);
           $scope.network_error = e.message;

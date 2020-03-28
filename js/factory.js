@@ -27,7 +27,7 @@ myApp.factory('SettingFactory', function($window) {
         translationKey: 'test_url',
         networkType: 'xrpTest',
         servers: [
-          {server: 's.altnet.rippletest.net', port: 443}
+          {server: 's.altnet.rippletest.net', port: 51233}
         ],
         coin: {
           name: "ripple",
@@ -105,27 +105,24 @@ myApp.factory('SettingFactory', function($window) {
       }
       return network;
     },
-    setStellarUrl : function(url) {
-      return $window.localStorage[`network_horizon/${this.getNetworkType()}`] = url;
-    },
-    getStellarUrl : function(type) {
+    setServers : function(serverArr, type) {
       type = type || this.getNetworkType();
-      return $window.localStorage[`network_horizon/${type}`] || this.NETWORKS[type].knownHorizons[0];
+      return $window.localStorage[`network_servers/${type}`] = JSON.stringify(serverArr);
     },
-    setNetPassphrase : function(val) {
-      return this.getNetworkType() === 'other' ? $window.localStorage[`network_passphrase/${this.getNetworkType()}`] = val : this.NETWORKS[this.getNetworkType()].networkPassphrase;
-    },
-    getNetPassphrase : function(type) {
-      return this.getNetworkType() === 'other' ? $window.localStorage[`network_passphrase/${type || this.getNetworkType()}`] : this.NETWORKS[this.getNetworkType()].networkPassphrase;
+    getServers : function(type) {
+      type = type || this.getNetworkType();
+      if ($window.localStorage[`network_servers/${type}`]) {
+        return JSON.parse($window.localStorage[`network_servers/${type}`]);
+      } else {
+        return this.NETWORKS[type].servers;
+      }
     },
     setCoin : function(val) {
       return this.getNetworkType() === 'other' ? $window.localStorage[`network_coin/${this.getNetworkType()}`] = val : this.NETWORKS[this.getNetworkType()].coin.code;
     },
     getCoin : function(type) {
-      return this.getNetworkType() === 'other' ? $window.localStorage[`network_coin/${type || this.getNetworkType()}`] : this.NETWORKS[this.getNetworkType()].coin.code;
-    },
-    getAllowHttp : function() {
-      return this.NETWORKS[this.getNetworkType()].allowHTTP;
+      type = type || this.getNetworkType();
+      return type === 'other' ? $window.localStorage[`network_coin/${type}`] : this.NETWORKS[this.getNetworkType()].coin.code;
     },
 
     setFedNetwork : function(domain) {
@@ -155,7 +152,7 @@ myApp.factory('SettingFactory', function($window) {
           base_code   : this.getCurrentNetwork().coin.code,
           base_issuer : '',
           counter_code   : 'CNY',
-          counter_issuer : 'GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX'
+          counter_issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'
         }
       }
     },
@@ -172,8 +169,8 @@ myApp.factory('SettingFactory', function($window) {
     getBridgeService : function() {
       return $window.localStorage['bridge_service'] || 'ripplefox.com';
     },
-    setBridgeService : function(anchor_name) {
-      $window.localStorage['bridge_service'] = anchor_name;
+    setBridgeService : function(gateway_name) {
+      $window.localStorage['bridge_service'] = gateway_name;
     }
   };
 });
