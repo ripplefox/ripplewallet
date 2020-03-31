@@ -69,7 +69,7 @@ myApp.factory('ServerManager', ['$rootScope',
                 });
                 _active.server.getServerInfo().then(info=>{
                   _reserveBaseXRP = parseFloat(info.validatedLedger.reserveBaseXRP);
-                  _reserveIncrementXRP = parseFloat(info.validatedLedger.validatedLedger);
+                  _reserveIncrementXRP = parseFloat(info.validatedLedger.reserveIncrementXRP);
                 });
                 resolve(result.name);
               } else {

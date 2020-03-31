@@ -173,7 +173,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
 
 
     $rootScope.balance = 0; //native asset;
-    $rootScope.reserve = 0;
+    $rootScope.reserve = 10;
     $rootScope.lines = {}; // lines.CNY.xxx = {code: 'CNY', issuer: 'xxx', balance: 200, limit: 1000}
     $rootScope.getBalance = function(code, issuer) {
       if (code == $rootScope.currentNetwork.coin.code) {
