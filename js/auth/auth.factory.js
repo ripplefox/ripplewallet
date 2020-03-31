@@ -1,8 +1,8 @@
-/* global angular, myApp, StellarSdk,  RippleAPI*/
+/* global angular, myApp */
 
 // Auth - singleton that manages account.
-myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'AuthDataFilesystem', 'AuthDataInmemory',
-                                function($rootScope ,  $window ,  AuthData ,  AuthDataFilesystem ,  AuthDataInmemory) {
+myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'AuthDataFilesystem', 'AuthDataInmemory', 'Id',
+                                function($rootScope ,  $window ,  AuthData ,  AuthDataFilesystem ,  AuthDataInmemory, Id) {
   let _type;
   let _data;  // `_dta.secrets` is the only place where secret is held. See also method `sign(te, callback)`.
 
@@ -77,6 +77,7 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
         _type = type;
         _data = authdata;
         console.warn(`Restored "${type}" authdata from session.`)
+        console.log(_data);
       } catch(e) {
         _type    = undefined;
         _data    = undefined;
@@ -156,8 +157,8 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
 
     get availablePKs() {
       return _data.secrets.reduce((map, secret)=>{
-          const kp = StellarSdk.Keypair.fromSecret(secret);
-          map[kp.publicKey()] = kp;
+          const keypair = Id.fromSecret(secret);
+          map[keypair.address] = keypair;
           return map;
         },
         Object.create(null));

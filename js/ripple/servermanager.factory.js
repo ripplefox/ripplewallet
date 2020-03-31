@@ -8,6 +8,9 @@ myApp.factory('ServerManager', ['$rootScope',
     let _timeout = 100000;
     let _active = undefined;
     
+    let _reserveBaseXRP = 0;
+    let _reserveIncrementXRP = 0;
+    
     return {
       setMaxfee(maxfee) {
         _maxfee = parseFloat(maxfee);
@@ -17,9 +20,11 @@ myApp.factory('ServerManager', ['$rootScope',
         _timeout = parseFloat(seconds) * 1000;
       },
       
-      getRemote() {
+      get remote() {
         return _active ? _active.server : null;
       },
+      get reserveBaseXRP() {return _reserveBaseXRP; },
+      get reserveIncrementXRP() { return _reserveIncrementXRP; },
       
       disconnect() {
         for (var name in _servers) {
@@ -54,8 +59,18 @@ myApp.factory('ServerManager', ['$rootScope',
           for (var name in _servers) {
             this._connect(_servers[name], name).then((result) => {
               if(!_active) {
-                console.log(`${result.server.connection._url} is the fatest`);
+                //console.log(`${result.server.connection._url} is the fatest`);
                 _active = result;
+                _active.server.on('connected', () => {
+                  console.warn(_active.name, 'connected');
+                });
+                _active.server.on('disconnected', (code) => {
+                  console.warn(_active.name, 'disconnected, code:', code);
+                });
+                _active.server.getServerInfo().then(info=>{
+                  _reserveBaseXRP = parseFloat(info.validatedLedger.reserveBaseXRP);
+                  _reserveIncrementXRP = parseFloat(info.validatedLedger.validatedLedger);
+                });
                 resolve(result.name);
               } else {
                 result.server.disconnect();

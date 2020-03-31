@@ -176,16 +176,22 @@ myApp.factory('SettingFactory', function($window) {
 });
 
 myApp.factory('Id', function($window) {
+  let _ripple = new RippleAPI();
+  
   return {
     isValidAddress : function(address) {
       return RippleAPI.isValidClassicAddress(address);
     },
     isValidSecret : function(secret) {
-      return new RippleAPI().isValidSecret(secret);
+      return _ripple.isValidSecret(secret);
     },
     generateAccount : function() {
-      var keypair = new RippleAPI().generateAddress();
+      var keypair = _ripple.generateAddress();
       return {address: keypair.address, secret: keypair.secret};
+    },
+    fromSecret : function(secret) {
+      var keypair = _ripple.deriveKeypair(secret);
+      return {address:  RippleAPI.deriveClassicAddress(keypair.publicKey), secret: secret};
     },
     generateFilename : function() {
       var dt = new Date();

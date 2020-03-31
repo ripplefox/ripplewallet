@@ -188,7 +188,7 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
     static _decrypt(password, blob) {
       try {
         const plaintext_v1 = sjcl.decrypt(`${password.length}|${password}`, atob(blob));
-        const object = JSON.parse(plaintext_v1);
+        const object = JSON.parse(plaintext_v1); // {"account_id":"address","contacts":[],"masterkey":"secret"}
         return {
           account_id: object.account_id,
           contacts: object.contacts,

@@ -50,7 +50,7 @@ myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location'
       if(!$scope.masterkey) $scope.masterkey = keypair.secret;
 
       const options = {
-        address: keypair.address,  
+        address: Id.fromSecret($scope.masterkey).address,  
         secrets: [$scope.masterkey],
         password: $scope.password1,
         path: $scope.walletfile

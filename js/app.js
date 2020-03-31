@@ -125,8 +125,8 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
 //myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'StellarApi', 'SettingFactory', 'RemoteFactory', 'AnchorFactory',
 //  function($rootScope, $window, $location, $translate, AuthenticationFactory, StellarApi, SettingFactory, RemoteFactory, AnchorFactory) {
 
-myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory', 'Id',
-  function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory, Id) {
+myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory', 'Id', 'ServerManager', 'XrpApi', 
+  function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory, Id, SM, XrpApi) {
 
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
       if ((nextRoute.access && nextRoute.access.requiredLogin) && !AuthenticationFactory.isInSession) {
@@ -160,7 +160,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
         $rootScope.address = AuthenticationFactory.address;
         $rootScope.contacts = AuthenticationFactory.contacts;
         //StellarApi.listenStream();
-        //StellarApi.queryAccount();
+        //XrpApi.queryAccount();
       } else {
         delete $rootScope.address;
         delete $rootScope.contacts;
@@ -224,13 +224,18 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
 
     $translate.use(SettingFactory.getLang());
     try {
-      //StellarApi.setServer(SettingFactory.getStellarUrl(), SettingFactory.getNetPassphrase(), SettingFactory.getAllowHttp());
-      //StellarApi.setTimeout(SettingFactory.getTimeout());
+      SM.setMaxfee(SettingFactory.getMaxfee());
+      SM.setTimeout(SettingFactory.getTimeout());
+      SM.setServers(SettingFactory.getServers());
+      SM.connect().then((name)=>{
+        console.log(`ServerManager connect to ${name}`);
+        XrpApi.remote = SM.remote;
+      });
     } catch(e) {
-      console.error("Cannot set server", SettingFactory.getStellarUrl(), SettingFactory.getNetworkType(), e);
-      console.warn("Change network back to xlm.");
-      //SettingFactory.setNetworkType('xlm');
-      //StellarApi.setServer(null);
+      console.error("Cannot set server", SettingFactory.getNetworkType(), e);
+      console.warn("Change network back to xrp.");
+      SettingFactory.setNetworkType('xrp');
+      SM.setServers(SettingFactory.getServers());
     }
 
     if (SettingFactory.getProxy()) {
