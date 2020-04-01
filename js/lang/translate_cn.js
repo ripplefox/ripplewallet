@@ -39,8 +39,7 @@ var translate_cn = {
   ledger_wallet: 'Ledger钱包',
   ledger_wallet_connect: '请连接Ledger.',
   /** Balance & Trust **/
-  balance : '余额',
-  estimated : '资产折合：',
+  balance : '资产',
   reserve   : '冻结：',
   total : '总量',
   trust : '授信',
@@ -50,7 +49,7 @@ var translate_cn = {
   trust_src : '授信后才能充值或接收他人的转账。',
   trust_note: '警告: 列表来源于瑞波社区，我们不对任何锚点进行背书。请为自己的授信行为负责。',
   trust_remove : '删除授信',
-  trust_remove_desc : '当余额为零时可以删除授信',
+  trust_noremove_desc : '无需删除授信',
   trust_removeing : '正在删除……',
   trust_add : '授信',
   fed_add : '通过联邦协议授信',

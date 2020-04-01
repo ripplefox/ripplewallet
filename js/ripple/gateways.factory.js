@@ -11,10 +11,10 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
             {type: 'stellar',  name: 'stellar'},
           ],
           assets : [
-            {code : 'CNY', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true},
-            {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, logo: "img/coin/usdt.svg"},
-            {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, logo: "img/coin/xlm.png"},
-            {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, logo: "img/coin/ult.png"}
+            {code : 'CNY', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "CNYT"},
+            {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "USDT", logo: "img/coin/usdt.svg"},
+            {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Stellar Lumens", logo: "img/coin/xlm.png"},
+            {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Ultiledger", logo: "img/coin/ult.png"}
           ],
           logo : "img/gateway/ripplefox.png"
         },
@@ -36,7 +36,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
             {code : 'USD', issuer : 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq', list: true},
             {code : 'BTC', issuer : 'rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL', list: true},
           ],
-          logo : "img/gateway/bitstamp.png"
+          logo : "img/gateway/gatehub.png"
         },
         "unkown" : {
           name : '',
@@ -72,6 +72,10 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
     return {
       getGateway(code, issuer) {
         return  _asset2gateway[key(code, issuer)] || _asset2gateway[issuer] ||_gateways["unkown"];
+      },
+      
+      get gateways() {
+        return _gateways;
       }
     };
   } ]);

@@ -47,7 +47,7 @@ myApp.factory('SettingFactory', function($window) {
           name: "ripple",  // TODO: ask in settings
           atom: "drop",    // TODO: ask in settings
           code: undefined,
-          logo: "img/ripple.png",  // TODO: ask in settings
+          logo: "img/waterdrop.jpg",  // TODO: ask in settings
         },
         tabs: ["history", "trade", "balance", "send", "trust"]
       }

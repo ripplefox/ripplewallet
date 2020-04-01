@@ -40,7 +40,6 @@ var translate_en = {
   ledger_wallet_connect: 'Please connect Ledger.',
   /** Balance & Trust **/
   balance : 'Balance',
-  estimated : 'Estimated value of holdings:',
   reserve   : 'Reserve:',
   total : 'Total',
   trust : 'Trust',
@@ -50,7 +49,7 @@ var translate_en = {
   trust_src : 'This is a list of anchors from the Ripple community.',
   trust_note: 'Note: We do NOT endorse any of these anchors.',
   trust_remove : 'Remove trust line',
-  trust_remove_desc : 'Trust is removable when balance is 0',
+  trust_noremove_desc : 'No need to remove the trust',
   trust_removeing : 'Removing...',
   trust_add : 'Create trust line for',
   fed_add : 'Add trust via federation',

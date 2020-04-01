@@ -37,7 +37,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
       
       checkFunded(address) {
-        return new Promise(async (resolve)=>{
+        return new Promise(async (resolve, reject)=>{
           if (!_remote.isConnected()) {
             await _remote.connect();
           }
@@ -73,7 +73,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
       
       checkBalances(address) {
-        return new Promise(async (resolve)=>{
+        return new Promise(async (resolve, reject)=>{
           if (!_remote.isConnected()) {
             await _remote.connect();
           }
@@ -93,7 +93,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
       
       checkTrustlines(address) {
-        return new Promise(async (resolve)=>{
+        return new Promise(async (resolve, reject)=>{
           if (!_remote.isConnected()) {
             await _remote.connect();
           }
@@ -146,7 +146,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
               code : asset.currency,
               issuer : asset.counterparty,
               balance : asset.value,
-              limit: trust.specification.limit
+              limit: trust.specification.limit,
+              ripplingDisabled: trust.specification.ripplingDisabled
             };
             lines[asset.currency][asset.counterparty] = item;
           }
