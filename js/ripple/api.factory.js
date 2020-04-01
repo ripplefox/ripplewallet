@@ -8,6 +8,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     let _sequence = 0;
     
     let _balances = {}; // all balances include xrp
+    let _trustlines = {}; // no xrp line
     let _unsubscribeAccount;
     let _unsubscribeTx;
     let _remote;
@@ -71,7 +72,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      checkBalance(address) {
+      checkBalances(address) {
         return new Promise(async (resolve)=>{
           if (!_remote.isConnected()) {
             await _remote.connect();
@@ -82,6 +83,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
               balances[key(item.currency, item.counterparty)] = item;
             });
             _balances = balances;
+            console.log(ret);
             resolve(balances);
           }).catch(e => {
             console.error('getBalance', e);
@@ -90,10 +92,33 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
+      checkTrustlines(address) {
+        return new Promise(async (resolve)=>{
+          if (!_remote.isConnected()) {
+            await _remote.connect();
+          }
+          _remote.getTrustlines(address || this.address).then((ret) => {
+            let lines = {};
+            ret.forEach((item)=>{
+              var keystr = key(item.specification.currency, item.specification.counterparty);
+              lines[keystr] = item;
+            });
+            _trustlines = lines;
+            console.log(ret);
+            resolve(lines);
+          }).catch(e => {
+            console.error('getTrustlines', e);
+            reject(e);
+          });
+        });
+      },
+      
       queryAccount(callback) {
         this.checkInfo().then(info => {
-          return this.checkBalance();
+          return this.checkBalances();
         }).then(bal => {
+          return this.checkTrustlines();
+        }).then(lines => {
           this._updateRootInfo();
           if (callback) { callback(); }
         }).catch(e => {
@@ -110,13 +135,18 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         for (var keystr in _balances) {
           if (keystr !== 'XRP') {
             var asset = _balances[keystr];
+            var trust = _trustlines[keystr];
+            if (asset.value == "0" && trust.specification.limit == "0") {
+              continue; // do not show line others trusted
+            }
             if (!lines[asset.currency]) {
               lines[asset.currency] = {};
             }
             const item = {
               code : asset.currency,
               issuer : asset.counterparty,
-              balance : asset.value
+              balance : asset.value,
+              limit: trust.specification.limit
             };
             lines[asset.currency][asset.counterparty] = item;
           }
@@ -126,27 +156,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         $rootScope.$apply();
       },
       
-      async queryBalances(address) {
-        address = address || this.address;
-        if (_remote.isConnected()) {
-          await _remote.connect();
-        }
-        try {
-          let ret = await _remote.getBalances(address);
-          let balances = {};
-          ret.forEach((item)=>{
-            balances[key(item.currency, item.counterparty)] = item;
-          });
-          
-          return ret;
-        } catch (e) {
-          console.error('getBalance', e);
-          return [{
-              value: '0',
-              currency: 'XRP'
-          }];
-        }
-      },
 
       _sendToken(target, currency, issuer, amount, memo_type, memo_value, callback) {
         amount = round(amount, 7);
@@ -294,16 +303,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           });
       },
 
-      getInfo(address, callback) {
-        _server.accounts().accountId(address||this.address).call().then((data) => {
-          callback(null, data);
-        }).catch((err) => {
-          if (!(err instanceof StellarSdk.NotFoundError)) {
-            console.error(address, err);
-          }
-          callback(err, null);
-        });
-      },
 
       changeTrust(code, issuer, limit, callback) {
         const asset = new StellarSdk.Asset(code, issuer);
@@ -340,16 +339,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       queryPaymentsNext(addressOrPage, callback) {
         console.debug('loop payments', this.address);
         StellarHistory.payments(addressOrPage, callback);
-      },
-
-      queryEffects(callback) {
-        console.debug('effects', this.address);
-        StellarHistory.effects(this.address, callback);
-      },
-
-      queryEffectsNext(addressOrPage, callback) {
-        console.debug('loop effects', this.address);
-        StellarHistory.effects(addressOrPage, callback);
       },
 
       queryTransactions(callback) {
