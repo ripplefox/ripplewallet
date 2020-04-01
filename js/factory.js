@@ -18,7 +18,7 @@ myApp.factory('SettingFactory', function($window) {
           name: "ripple",
           atom: "drop",
           code: "XRP",
-          logo: "img/xrp.png"
+          logo: "img/coin/xrp.png"
         },
         tabs: ["history", "trade", "balance", "send", "trust", "service", "dapp"]
       },
@@ -33,7 +33,7 @@ myApp.factory('SettingFactory', function($window) {
           name: "ripple",
           atom: "drop",
           code: "XRP",
-          logo: "img/xrp.png"
+          logo: "img/coin/xrp.png"
         },
         tabs: ["history", "trade", "balance", "send", "trust"]
       },
@@ -47,7 +47,7 @@ myApp.factory('SettingFactory', function($window) {
           name: "ripple",  // TODO: ask in settings
           atom: "drop",    // TODO: ask in settings
           code: undefined,
-          logo: "img/rocket.png",  // TODO: ask in settings
+          logo: "img/ripple.png",  // TODO: ask in settings
         },
         tabs: ["history", "trade", "balance", "send", "trust"]
       }
