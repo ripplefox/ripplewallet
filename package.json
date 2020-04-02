@@ -23,6 +23,7 @@
     "jquery": "^3.3.1",
     "qrcode-generator": "^1.4.4",
     "ripple-lib": "^1.6.4",
+    "ripplelib": "^1.2.5",
     "sjcl": "^1.0.8",
     "underscore": "^1.9.2"
   },
