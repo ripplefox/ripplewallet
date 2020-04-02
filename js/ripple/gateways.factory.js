@@ -24,7 +24,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           service : [],
           assets : [
             {code : 'USD', issuer : 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', list: true},
-            {code : 'BTC', issuer : 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B', list: true},
+            {code : 'BTC', issuer : 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B'}
           ],
           logo : "img/gateway/bitstamp.png"
         },
@@ -33,8 +33,9 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           website : 'https://www.gatehub.net/',
           service : [],
           assets : [
-            {code : 'USD', issuer : 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq', list: true},
-            {code : 'BTC', issuer : 'rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL', list: true},
+            {code : 'USD', issuer : 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq'},
+            {code : 'EUR', issuer : 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq'},
+            {code : 'BTC', issuer : 'rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL', list: true}
           ],
           logo : "img/gateway/gatehub.png"
         },

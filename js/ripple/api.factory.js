@@ -113,6 +113,29 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
+      changeTrust(code, issuer, limit, ripplingDisabled = true) {
+        const trustline = {
+          currency: code,
+          counterparty: issuer,
+          limit: limit,
+          ripplingDisabled: ripplingDisabled
+        };
+
+        return new Promise((resolve, reject)=> {
+          _remote.prepareTrustline(this.address, trustline).then(prepared => {
+            console.log(prepared);
+            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            _remote.submit(signedTransaction).then(result => {
+                console.info(result);
+                resolve(result);
+              }).catch (err => {
+              console.info(err);
+              reject(err);
+            });
+          });
+        });
+      },
+      
       queryAccount(callback) {
         this.checkInfo().then(info => {
           return this.checkBalances();
@@ -303,34 +326,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             }
           });
       },
-
-
-      changeTrust(code, issuer, limit, callback) {
-        const asset = new StellarSdk.Asset(code, issuer);
-        console.debug('Turst asset', asset, limit);
-        _server.loadAccount(this.address).then((account) => {
-          this._updateSeq(account);
-          const op = StellarSdk.Operation.changeTrust({
-            asset: asset,
-            limit: limit.toString()
-          });
-          const te = new StellarSdk.TransactionBuilder(account, {fee: _basefee}).addOperation(op).setTimeout(_timeout).build();
-          return AuthenticationFactory.sign(te);
-        }).then((te) => {
-          return _server.submitTransaction(te);
-        }).then((txResult) => {
-          console.log(txResult);
-          console.log('Trust updated.', txResult.hash);
-          callback(null, txResult.hash);
-        }).catch((err) => {
-          console.error('Trust Fail !', err);
-          callback(err, null);
-        });
-      },
-
-
-
-      
 
       queryPayments(callback) {
         console.debug('payments', this.address);

@@ -1,7 +1,7 @@
 /* global myApp, StellarSdk */
 
-myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
-  function($scope, $rootScope, XrpApi, Gateways) {
+myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'Federation',
+  function($scope, $rootScope, XrpApi, Gateways, Federation) {
   
     $scope.gatewaylist = Gateways.gateways;
     console.log($scope.gatewaylist);
@@ -24,25 +24,25 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
       var snapshot = $scope.fed_url;
       $scope.fed_error = false;
       $scope.fed_loading = true;
-      StellarApi.federation($scope.fed_url).then(function(res){
+      Federation.get($scope.fed_url).then(txt => {
+        console.log('resolve', txt);
         $scope.fed_error = false;
         $scope.fed_loading = false;
-        $scope.fed_currencies = res.CURRENCIES;
-        $scope.$apply();
-        console.debug(res);
-      }).catch(function(err){
+        $scope.fed_currencies = (txt.currencies || []).map(code => {
+          return {code: code, issuer: txt.accounts[0]};
+        });
+      }).catch(err => {
         if (snapshot !== $scope.fed_url) {
           return;
         }
         $scope.fed_currencies = [];
         $scope.fed_error = true;
         $scope.fed_loading = false;
-        $scope.$apply();
-        console.error(snapshot, err);
+        console.log(snapshot, err);
       });
     }
     $scope.issuerChange = function() {
-      var gateway = $rootScope.gateways.getSourceById($scope.manual_issuer);
+      var gateway = Gateways.getGateway('', $scope.manual_issuer);
       $scope.manual_logo = gateway.logo;
       $scope.manual_name = gateway.name;
     }
@@ -51,12 +51,6 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
         return false;
       }
       return $rootScope.lines[code][issuer].limit > 0;
-    };
-    $scope.hasBalance = function(code, issuer) {
-      if (!$rootScope.lines[code] || !$rootScope.lines[code][issuer]) {
-        return false;
-      }
-      return $rootScope.lines[code][issuer].balance > 0;
     };
     $scope.changeState = {};
     $scope.setChanging = function(code, issuer, state) {
@@ -77,38 +71,32 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
       $scope.trust_error = "";
       $scope.trust_done = false;
 
-      try{
-        new StellarSdk.Asset(code, issuer);
-      } catch(e) {
-        $scope.trust_error = e.message;
-        return;
-      }
-
       $scope.setChanging(code, issuer, true);
-      StellarApi.changeTrust(code, issuer, amount, function(err, data){
+      XrpApi.changeTrust(code, issuer, amount).then(result => {
         $scope.setChanging(code, issuer, false);
-        if (err) {
-          $scope.trust_error = StellarApi.getErrMsg(err);
-        } else {
-          $scope.trust_done = true;
-        }
+        $scope.trust_done = true;
+        $rootScope.$apply();
+      }).catch(err => {
+        $scope.trust_error = err.message;
         $rootScope.$apply();
       });
     };
+    
     $scope.delTrust = function(code, issuer) {
       code = code || $scope.manual_code;
       issuer = issuer || $scope.manual_issuer;
       $scope.setChanging(code, issuer, true);
       $scope.trust_error = "";
       $scope.trust_done = false;
-      StellarApi.changeTrust(code, issuer, "0", function(err, data){
+      XrpApi.changeTrust(code, issuer, "0").then(result => {
         $scope.setChanging(code, issuer, false);
-        if (err) {
-          $scope.trust_error = StellarApi.getErrMsg(err);
-        } else {
-          $scope.trust_done = true;
-        }
-        $rootScope.$apply();
+        $scope.trust_done = true;
+      }).catch(err=>{
+        $scope.trust_error = err;
       });
     };
+    
+    $scope.getGateway = function(code, issuer) {
+      return Gateways.getGateway(code, issuer);
+    }
   } ]);

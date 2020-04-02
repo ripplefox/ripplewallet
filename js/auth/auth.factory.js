@@ -125,36 +125,6 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
       return _data ? _data.secrets : undefined;
     }
 
-    teThresholds(te) {
-      // TODO #1: parse "te" to get list of source accounts.
-      // TODO #2: fetch horizon to lookup actual signers for them.
-
-      // For now assume that account has default signers.
-      return Promise.resolve({
-        [this.address]: {  // Account.
-          requiredThreshold: 1,
-          attainedThreshold: te.signatures.length,  // Assumes no multisignatures. TODO: upgrade.
-          availableSigners: {
-            [this.address]: 1,  // Public Key.
-          }
-        },
-      });
-    }
-
-    requiredSigners(thresholds) {
-      const allUsefulSignersAndWeights = Object.entries(thresholds)
-        .filter(([account, thresholds]) => thresholds.attainedThreshold < thresholds.requiredThreshold)
-        .reduce((all, [account, signers])=> {
-            Object.entries(signers.availableSigners).forEach(([signer, weight])=>all[signer] = Math.max(weight, all[signer] || 0));
-            return all;
-          },
-          Object.create(null))
-
-      return Object.entries(allUsefulSignersAndWeights)
-        .sort((a, b) => a[1] > b[1])  // Biggest weight first.
-        .map((signerAndWeight) => signerAndWeight[0])
-    }
-
     get availablePKs() {
       return _data.secrets.reduce((map, secret)=>{
           const keypair = Id.fromSecret(secret);
@@ -165,23 +135,11 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
     }
 
     // Sign with all available and useful secrets we can automatically.
-    sign(te) {
-      return Promise.resolve()
-        .then(()=>{
-          return this.teThresholds(te);
-        })
-        .then((thresholds)=>{
-          const usefulSignature = this.requiredSigners(thresholds).filter((pk) => pk in this.availablePKs).pop();
-
-          if(usefulSignature) {
-            const kp = this.availablePKs[usefulSignature];
-            te.sign(kp);
-            console.info(`Automatically signed Tx ${te.hash} with Keypair ${kp.publicKey()}`);
-            return this.sign(te);
-          } else {
-            return te;
-          }
-        })
+    sign(address, txtJson) {
+      const kp = this.availablePKs[address];
+      if (!kp) throw new Error(`No keypair found for ${address}`);
+      var signedTransaction = Id.sign(txtJson, kp.secret);
+      return signedTransaction;
     }
 
     //

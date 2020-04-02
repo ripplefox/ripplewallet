@@ -193,6 +193,9 @@ myApp.factory('Id', function($window) {
       var keypair = _ripple.deriveKeypair(secret);
       return {address:  RippleAPI.deriveClassicAddress(keypair.publicKey), secret: secret};
     },
+    sign : function(txtJson, secret) {
+      return _ripple.sign(txtJson, secret);
+    },
     generateFilename : function() {
       var dt = new Date();
       var datestr = (''+dt.getFullYear()+(dt.getMonth()+1)+dt.getDate()+'_'+dt.getHours()+dt.getMinutes()+dt.getSeconds()).replace(/([-: ])(\d{1})(?!\d)/g,'$10$2');

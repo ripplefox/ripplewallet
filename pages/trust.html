@@ -61,13 +61,12 @@
 			</div>
 
 			<div class="row" ng-repeat="asset in fed_currencies">
-				<div class="row__fixedAsset" ng-init="gateway=gateways.getSourceById(asset.issuer, asset.code)">
+				<div class="row__fixedAsset" ng-init="gateway=getGateway(asset.code, asset.issuer)">
 					<gateway name="{{gateway.name}}" logo="{{gateway.logo}}" website="{{gateway.website}}"
 								code="{{asset.code}}" address="{{asset.issuer}}"></gateway>
 				</div>
 				<div class="row__shareOption">
-					<button class="s-button btn btn-danger" ng-show="hasLine(asset.code, asset.issuer) && !hasBalance(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
-					<button class="s-button btn btn-warning" ng-show="hasLine(asset.code, asset.issuer) && hasBalance(asset.code, asset.issuer)" ng-disabled="true">{{'trust_remove_desc' | translate}}</button>
+					<button class="s-button btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
 					<button class="s-button btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
 				</div>
 			</div>
@@ -88,7 +87,7 @@
 				<label class="s-inputGroup AddTrust__inputGroup">
 					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="issuer_id">Issuer Account ID</span>
 					<input type="text" class="s-inputGroup__item S-flexItem-share" ng-model="manual_issuer" ng-change="issuerChange()"
-					placeholder="{{'example' | translate}}: GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX">
+					placeholder="{{'example' | translate}}: rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y">
 				</label>
 				<label class="s-inputGroup AddTrust__inputGroup">
 					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="amount">Amount</span>

@@ -15,10 +15,11 @@ myApp.controller("BalanceCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
     };
     $scope.delTrust = function(code, issuer) {
       $scope.setRemoving(code, issuer, true);
-      StellarApi.changeTrust(code, issuer, "0", function(err, data){
-        if (err) {
-          console.error(StellarApi.getErrMsg(err));
-        }
+      XrpApi.changeTrust(code, issuer, "0").then(result => {
+        $scope.setRemoving(code, issuer, false);
+        $scope.$apply();
+      }).catch(err => {
+        console.error(err);
         $scope.setRemoving(code, issuer, false);
         $scope.$apply();
       });
