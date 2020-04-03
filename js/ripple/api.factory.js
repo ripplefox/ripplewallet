@@ -98,7 +98,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let lines = {};
             ret.forEach((item)=>{
               var keystr = key(item.specification.currency, item.specification.counterparty);
-              lines[keystr] = item;
+              lines[keystr] = item.specification; //{limit: "100000000", currency: "USD", counterparty: "rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y", ripplingDisabled: true}
+              lines[keystr].balance = item.state.balance;
             });
             _trustlines = lines;
             console.log(ret);
@@ -134,8 +135,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       queryAccount(callback) {
         this.checkInfo().then(info => {
-          return this.checkBalances();
-        }).then(bal => {
           return this.checkTrustlines();
         }).then(lines => {
           this._updateRootInfo();
@@ -151,6 +150,23 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         $rootScope.reserve = SM.reserveBaseXRP + SM.reserveIncrementXRP * _ownerCount;
         
         var lines = {};
+        for(var keystr in _trustlines) {
+          var line = _trustlines[keystr];
+          if (line.balance == "0" && line.limit == "0") {
+            continue;
+          }
+          if (!lines[line.currency]) {
+            lines[line.currency] = {};
+          }
+          lines[line.currency][line.counterparty] = {
+              code    : line.currency,
+              issuer  : line.counterparty,
+              balance : line.balance,
+              limit   : line.limit,
+              ripplingDisabled: line.ripplingDisabled
+          };
+        }
+        /*
         _balances.forEach((asset)=>{
           var keystr = key(asset.currency, asset.counterparty);
           if (keystr !== 'XRP') {
@@ -171,6 +187,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             lines[asset.currency][asset.counterparty] = item;
           }
         });
+        */
         $rootScope.lines = lines;
         $rootScope.$broadcast("balanceChange");
         $rootScope.$apply();
@@ -222,15 +239,59 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         this._updateRootInfo();
       },
       
-      _updateLines() {
-        
+      _updateLines(effects) {
+        if (!Array.isArray(effects)) return;
+
+        effects.forEach(effect => {
+          if (['trust_create_local',
+               'trust_create_remote',
+               'trust_change_local',
+               'trust_change_remote',
+               'trust_change_balance',
+               'trust_change_no_ripple'].indexOf(effect.type) >= 0) {
+            var line = {};
+            var index = key(effect.currency, effect.counterparty);
+
+            line.currency = effect.currency;
+            line.counterparty = effect.counterparty;
+            line.flags = effect.flags;
+            line.no_ripple = !!effect.noRipple; // Force Boolean
+
+            if (effect.balance) {
+              line.balance = effect.balance.to_number().toString();
+            }
+
+            if (effect.deleted) {
+              delete _trustlines[index];
+              return;
+            }
+
+            if (effect.limit) {
+              line.limit = effect.limit.to_number().toString();
+            }
+
+            if (effect.limit_peer) {
+              line.limit_peer = effect.limit_peer;
+            }
+            //console.log('_lines need update', line);
+            _trustlines[index] = {
+                limit: line.limit,
+                currency: line.currency,
+                counterparty: line.counterparty,
+                ripplingDisabled: line.no_ripple,
+                balance: line.balance
+            }
+          }
+        });
+        this._updateRootInfo();
       },
       
-      _updateOffer() {
-        
+      _updateOffer(offer) {
+        console.log('_updateOffer', offer);
       },
       
       _processTx(tx, meta, is_historic) {
+        var self = this;
         var processedTxn = rewriter.processTxn(tx, meta, this.address);
         if (processedTxn && processedTxn.error) {
           console.error('Error processing transaction ', processedTxn.error);
@@ -245,19 +306,13 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           }
 
           // Show status notification
-          if (processedTxn.tx_result === "tesSUCCESS" &&
-              transaction &&
-              !is_historic) {
-
-//            $scope.$broadcast('$appTxNotification', {
-//              hash:tx.hash,
-//              tx: transaction
-//            });
+          if (processedTxn.tx_result === "tesSUCCESS" && transaction && !is_historic) {
+            console.log('tx success', tx);
+            //$scope.$broadcast('$appTxNotification', { hash:tx.hash, tx: transaction });
           }
 
           // Add to recent notifications
-          if (processedTxn.tx_result === "tesSUCCESS" &&
-              transaction) {
+          if (processedTxn.tx_result === "tesSUCCESS" && transaction) {
 
             var effects = [];
             // Only show specific transactions
@@ -266,7 +321,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
               case 'exchange':
                 var funded = false;
                 processedTxn.effects.some(function(effect) {
-                  if (_.contains(['offer_bought','offer_funded','offer_partially_funded'], effect.type)) {
+                  if (['offer_bought','offer_funded','offer_partially_funded'].indexOf(effect.type)>=0) {
                     funded = true;
                     effects.push(effect);
                     return true;
@@ -279,12 +334,11 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
                 }
                 /* falls through */
               case 'received':
-
                 // Is it unseen?
-                if (processedTxn.date > ($scope.userBlob.data.lastSeenTxDate || 0)) {
-                  processedTxn.unseen = true;
+                //if (processedTxn.date > ($scope.userBlob.data.lastSeenTxDate || 0)) {
+                  //processedTxn.unseen = true;
                   //$scope.unseenNotifications.count++;
-                }
+                //}
 
                 processedTxn.showEffects = effects;
                 //$scope.events.unshift(processedTxn);
@@ -304,12 +358,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             // Iterate on each effect to find offers
             processedTxn.effects.forEach(function (effect) {
               // Only these types are offers
-              if (_.contains([
-                'offer_created',
-                'offer_funded',
-                'offer_partially_funded',
-                'offer_cancelled'], effect.type))
-              {
+              if (['offer_created', 'offer_funded', 'offer_partially_funded', 'offer_cancelled'].indexOf(effect.type) >= 0) {
                 var offer = {
                   seq: +effect.seq,
                   gets: effect.gets,
@@ -318,7 +367,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
                   flags: effect.flags
                 };
 
-                this._updateOffer(offer);
+                self._updateOffer(offer);
               }
             });
 
