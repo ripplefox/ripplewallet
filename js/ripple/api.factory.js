@@ -10,8 +10,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     
     let _balances = {}; // all balances include xrp
     let _trustlines = {}; // no xrp line
-    let _unsubscribeAccount;
-    let _unsubscribeTx;
+    let _history = [];
+    let _myHandleAccountEvent = undefined;
     let _remote;
     
     function key(code, issuer) {
@@ -180,9 +180,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         this._closeStream();
         console.log('subscribe', this.address);
         var self = this;
-        _remote.connection.on('transaction', function(e){
-          self._handleAccountEvent(e);
-        });
+        _myHandleAccountEvent = function(e) {
+          self._handleAccountEvent(e)
+        }
+        _remote.connection.on('transaction', _myHandleAccountEvent);
         _remote.request('subscribe', {
           accounts: [ this.address ]
         }).then(response => {
@@ -193,6 +194,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
 
       _closeStream() {
+        if(_myHandleAccountEvent) {
+          _remote.connection.removeListener('transaction', _myHandleAccountEvent);
+        }
         console.log('unsubscribe', this.address);
         _remote.request('unsubscribe', {
           accounts: [ this.address ]
@@ -206,14 +210,122 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       _handleAccountEvent(event) {
         console.log('event', event);
         try {
-          this._processTx(event.transaction, event.meta, this.address);
+          this._processTx(event.transaction, event.meta);
         } catch(err) {
           console.error(err);
         };
       },
       
-      _processTx(tx, meta, account) {
-        var processedTxn = rewriter.processTxn(tx, meta, account);
+      _handleAccountEntry(data) {
+        _xrpBalance = round(data.Balance / 1000000, 6).toString();
+        _ownerCount = data.OwnerCount || 0;
+        this._updateRootInfo();
+      },
+      
+      _updateLines() {
+        
+      },
+      
+      _updateOffer() {
+        
+      },
+      
+      _processTx(tx, meta, is_historic) {
+        var processedTxn = rewriter.processTxn(tx, meta, this.address);
+        if (processedTxn && processedTxn.error) {
+          console.error('Error processing transaction ', processedTxn.error);
+          // Add to history only
+          _history.unshift(processedTxn);
+        } else if (processedTxn) {
+          var transaction = processedTxn.transaction;
+
+          // Update account
+          if (processedTxn.accountRoot) {
+            this._handleAccountEntry(processedTxn.accountRoot);
+          }
+
+          // Show status notification
+          if (processedTxn.tx_result === "tesSUCCESS" &&
+              transaction &&
+              !is_historic) {
+
+//            $scope.$broadcast('$appTxNotification', {
+//              hash:tx.hash,
+//              tx: transaction
+//            });
+          }
+
+          // Add to recent notifications
+          if (processedTxn.tx_result === "tesSUCCESS" &&
+              transaction) {
+
+            var effects = [];
+            // Only show specific transactions
+            switch (transaction.type) {
+              case 'offernew':
+              case 'exchange':
+                var funded = false;
+                processedTxn.effects.some(function(effect) {
+                  if (_.contains(['offer_bought','offer_funded','offer_partially_funded'], effect.type)) {
+                    funded = true;
+                    effects.push(effect);
+                    return true;
+                  }
+                });
+
+                // Only show trades/exchanges which are at least partially funded
+                if (!funded) {
+                  break;
+                }
+                /* falls through */
+              case 'received':
+
+                // Is it unseen?
+                if (processedTxn.date > ($scope.userBlob.data.lastSeenTxDate || 0)) {
+                  processedTxn.unseen = true;
+                  //$scope.unseenNotifications.count++;
+                }
+
+                processedTxn.showEffects = effects;
+                //$scope.events.unshift(processedTxn);
+            }
+          }
+
+          // Add to history
+          _history.unshift(processedTxn);
+
+          // Update Ripple lines
+          if (processedTxn.effects && !is_historic) {
+            this._updateLines(processedTxn.effects);
+          }
+
+          // Update my offers
+          if (processedTxn.effects && !is_historic) {
+            // Iterate on each effect to find offers
+            processedTxn.effects.forEach(function (effect) {
+              // Only these types are offers
+              if (_.contains([
+                'offer_created',
+                'offer_funded',
+                'offer_partially_funded',
+                'offer_cancelled'], effect.type))
+              {
+                var offer = {
+                  seq: +effect.seq,
+                  gets: effect.gets,
+                  pays: effect.pays,
+                  deleted: effect.deleted,
+                  flags: effect.flags
+                };
+
+                this._updateOffer(offer);
+              }
+            });
+
+            //$scope.$broadcast('$offersUpdate');
+          }
+        }
+        
         console.log(processedTxn);
       },
 
