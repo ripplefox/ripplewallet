@@ -28,10 +28,21 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
+      init() {
+        if (this.address && _remote) {
+          this.queryAccount();
+          this.listenStream();
+        }
+      },
+      
       logout() {
-        this.address = undefined;
-        _balances = {};
-        //this._closeStream();
+        _ownerCount = 0;
+        _xrpBalance = "";
+        _sequence = 0;
+        _balances = {}; // all balances include xrp
+        _trustlines = {}; // no xrp line
+        _history = [];
+        this._closeStream();
       },
       
       get address() {
@@ -212,16 +223,17 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
 
       _closeStream() {
         if(_myHandleAccountEvent) {
+          console.log('unsubscribe', this.address);
           _remote.connection.removeListener('transaction', _myHandleAccountEvent);
+          _myHandleAccountEvent = undefined;
+          _remote.request('unsubscribe', {
+            accounts: [ this.address ]
+          }).then(response => {
+            console.log('unsubscribe done', response);
+          }).catch(function(error) {
+            console.log('unsubscribe', error);
+          });
         }
-        console.log('unsubscribe', this.address);
-        _remote.request('unsubscribe', {
-          accounts: [ this.address ]
-        }).then(response => {
-          console.log('unsubscribe done', response);
-        }).catch(function(error) {
-          console.log('unsubscribe', error);
-        });
       },
       
       _handleAccountEvent(event) {
@@ -273,13 +285,19 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             if (effect.limit_peer) {
               line.limit_peer = effect.limit_peer;
             }
-            //console.log('_lines need update', line);
-            _trustlines[index] = {
-                limit: line.limit,
-                currency: line.currency,
-                counterparty: line.counterparty,
-                ripplingDisabled: line.no_ripple,
-                balance: line.balance
+            console.log('_lines need update', line);
+            if (_trustlines[index]) {
+              _trustlines[index].limit = line.limit || _trustlines[index].limit;
+              _trustlines[index].balance = line.balance || _trustlines[index].balance;
+              _trustlines[index].ripplingDisabled = line.no_ripple;
+            } else {
+              _trustlines[index] = {
+                  limit: line.limit,
+                  currency: line.currency,
+                  counterparty: line.counterparty,
+                  ripplingDisabled: line.no_ripple,
+                  balance: line.balance
+              }
             }
           }
         });

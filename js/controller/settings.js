@@ -62,14 +62,14 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
           SM.setMaxfee(SettingFactory.getMaxfee());
           SM.setTimeout(SettingFactory.getTimeout());
           SM.setServers(SettingFactory.getServers());
+          XrpApi.logout();
           SM.connect().then((name)=>{
-            console.log(`Servermanager reconnect to ${name}`);
+            console.log(`ServerManager connect to ${name}`);
+            XrpApi.remote = SM.remote;
           });
-          //StellarApi.logout();
           $rootScope.reset();
           $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
-          $rootScope.$broadcast('$authUpdate');  // workaround to refresh and get changes into effect.
-          //location.reload();
+          location.reload();
         } catch (e) {
           console.error(e);
           $scope.network_error = e.message;

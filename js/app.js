@@ -159,8 +159,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       if (AuthenticationFactory.isInMemory) {
         $rootScope.address = AuthenticationFactory.address;
         $rootScope.contacts = AuthenticationFactory.contacts;
-        //StellarApi.listenStream();
-        //XrpApi.queryAccount();
+        XrpApi.init();
       } else {
         delete $rootScope.address;
         delete $rootScope.contacts;
