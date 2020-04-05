@@ -44,6 +44,7 @@ var translate_en = {
   total : 'Total',
   trust : 'Trust',
   asset : 'Asset',
+  no_balance  : 'Account not found. (Unfunded or network error)',
   trust_limit : 'Trust Limit',
   add_trust : 'Add trust from known anchors',
   trust_src : 'This is a list of anchors from the Ripple community.',
@@ -75,7 +76,7 @@ var translate_en = {
   select_asset : 'Please select an asset to send.',
   sending_to   : 'Sending to',
   send_done    : 'Asset successfully sent.',
-  not_funded   : 'Not funded. To create this account, send it at least 1 {{name}}s ({{code}}).',
+  not_funded   : 'Not funded. To create this account, send it at least 20 {{name}}s ({{code}}).',
   can_accept   : 'The account can accept',
 
   contacts : 'Contacts',

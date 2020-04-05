@@ -150,8 +150,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }).then(lines => {
           this._updateRootInfo();
           if (callback) { callback(); }
-        }).catch(e => {
-          console.error(e);
+        }).catch(err => {
+          console.error(err);
           if (callback) { callback(err); }
         });
       },

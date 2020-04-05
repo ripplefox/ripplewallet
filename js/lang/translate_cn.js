@@ -44,6 +44,7 @@ var translate_cn = {
   total : '总量',
   trust : '授信',
   asset : '资产',
+  no_balance  : '账户不存在（未激活或网络错误）',
   trust_limit : '授信额度',
   add_trust : '对社区锚点进行授信',
   trust_src : '授信后才能充值或接收他人的转账。',
@@ -75,7 +76,7 @@ var translate_cn = {
   select_asset : '请先选择要发送的资产。',
   sending_to   : '正在发送到',
   send_done    : '发送成功',
-  not_funded   : '未激活。请发送至少1个{{code}}创建该账号。最好发3个。',
+  not_funded   : '未激活。请发送至少20个{{code}}创建该账号。最好发3个。',
   can_accept   : '账号可接收',
 
   contacts : '联系人',

@@ -171,8 +171,8 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
     };
 
 
-    $rootScope.balance = 0; //native asset;
-    $rootScope.reserve = 10;
+    $rootScope.balance = "0"; //native asset;
+    $rootScope.reserve = 0;
     $rootScope.lines = {}; // lines.CNY.xxx = {code: 'CNY', issuer: 'xxx', balance: 200, limit: 1000}
     $rootScope.getBalance = function(code, issuer) {
       if (code == $rootScope.currentNetwork.coin.code) {
@@ -180,6 +180,10 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       } else {
         return $rootScope.lines[code] && $rootScope.lines[code][issuer] ? $rootScope.lines[code][issuer].balance : 0;
       }
+    }
+    $rootScope.funded = function() {
+      console.log($rootScope.balance, $rootScope.balance !== "0")
+      return $rootScope.balance !== "0";
     }
 
     reset();
@@ -189,7 +193,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       $rootScope.address  = 'undefined';
       $rootScope.contacts = [];
       $rootScope.lines = {};
-      $rootScope.balance = 0;
+      $rootScope.balance = "0";
       $rootScope.reserve = 0;
 
       $rootScope.offers = {};
