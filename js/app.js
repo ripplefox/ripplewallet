@@ -1,4 +1,4 @@
-/* globals angular, gateways, nw, translate_cn, translate_en, translate_fr, translate_br */
+/* globals angular, nw, translate_cn, translate_en, translate_jp */
 window.RippleAPI = require('ripple-lib').RippleAPI;
 
 /* exported myApp */
@@ -125,8 +125,8 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
 //myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'StellarApi', 'SettingFactory', 'RemoteFactory', 'AnchorFactory',
 //  function($rootScope, $window, $location, $translate, AuthenticationFactory, StellarApi, SettingFactory, RemoteFactory, AnchorFactory) {
 
-myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory', 'Id', 'ServerManager', 'XrpApi', 
-  function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory, Id, SM, XrpApi) {
+myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory', 'Id', 'ServerManager', 'XrpApi', 'Gateways',
+  function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory, Id, SM, XrpApi, Gateways) {
 
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
       if ((nextRoute.access && nextRoute.access.requiredLogin) && !AuthenticationFactory.isInSession) {
@@ -216,6 +216,10 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
     $rootScope.isValidAddress = function(address) {
       return Id.isValidAddress(address);
     }
+    $rootScope.getGateway = function(code, issuer) {
+      return Gateways.getGateway(code, issuer);
+    }
+    
     $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
     $rootScope.isPublicNetwork = function() {
       return this.currentNetwork.name == "Ripple Public Network";

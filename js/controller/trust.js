@@ -96,7 +96,4 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
       });
     };
     
-    $scope.getGateway = function(code, issuer) {
-      return Gateways.getGateway(code, issuer);
-    }
   } ]);

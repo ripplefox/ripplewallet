@@ -7,8 +7,8 @@
 				<a class="btn btn-success btn-sm" ng-click="refresh()" ng-disabled="working">
 					<span class="glyphicon glyphicon-refresh"></span> {{'refresh' | translate}}</a>
 			</div>
-			<div class="form-group service_alert">
-				<span ng-hide="funded()" translate="no_balance">Account not found. (Unfunded or Network error)</span>
+			<div class="form-group service_alert" ng-hide="funded()">
+				<span translate="no_balance">Account not found. (Unfunded or Network error)</span>
 			</div>
 			<table class="BalancesTable">
 				<thead>

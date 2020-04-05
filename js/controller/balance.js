@@ -40,10 +40,6 @@ myApp.controller("BalanceCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
       }
     }
     
-    $scope.getGateway = function(code, issuer) {
-      return Gateways.getGateway(code, issuer);
-    }
-
     $scope.$on("balanceChange", function() {
       console.debug('balanceChange event got');
     });
