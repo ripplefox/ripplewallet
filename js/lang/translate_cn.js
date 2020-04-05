@@ -70,6 +70,7 @@ var translate_cn = {
   send_desc : '目前我们只支持资产间的直接发送。',
   send_note : '注意：接受者必须也授信过同样的资产。',
   recipient : '接受者',
+  dest_tag  : '标签',
   memo: '备注',
   invalid_domain : '域名无响应',
   account_loading: '正在解析账号',
@@ -92,6 +93,7 @@ var translate_cn = {
   error_same_contact : '该联系人已存在',
   error_need_address : '请输入一个账号地址',
   error_invalid_address : '不是有效的账号地址',
+  error_invalid_tag     : '标签号应该是正整数',
   error_already_name    : '已有同名联系人',
 
   /** Convert **/

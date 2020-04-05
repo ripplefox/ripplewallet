@@ -70,6 +70,7 @@ var translate_en = {
   send_desc : 'Currently we only support sending assets directly.',
   send_note : 'Note: The target address must also trust the asset you are sending.',
   recipient : 'Recipient',
+  dest_tag  : 'Destination tag',
   memo: 'Memo',
   invalid_domain : 'is unavailable',
   account_loading: 'Loading account for',
@@ -92,6 +93,7 @@ var translate_en = {
   error_same_contact : 'This contact already exists.',
   error_need_address : 'Please enter an address.',
   error_invalid_address : 'Not a valid address.',
+  error_invalid_tag     : 'Invalid destination tag',
   error_already_name    : 'You already have a contact with the same name.',
 
   /** Convert **/
