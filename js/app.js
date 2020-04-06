@@ -134,7 +134,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       } else {
         if (currentRoute && currentRoute.originalPath == '/trade') {
           console.log('Leave trade page');
-          StellarApi.closeOrderbook();
         }
         if (currentRoute && currentRoute.originalPath == '/send') {
           console.log('Leave send page');

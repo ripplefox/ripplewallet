@@ -1,8 +1,8 @@
 /* global _, myApp, round, RippleAPI */
 const rewriter = require('./js/ripple/jsonrewriter.js');
 
-myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
-  function($rootScope, AuthenticationFactory, SM) {
+myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager', 'XrpPath',
+  function($rootScope, AuthenticationFactory, SM, XrpPath) {
 
     let _ownerCount = 0;
     let _xrpBalance = "";
@@ -21,6 +21,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     return {
       set remote(remote) {
         _remote = remote;
+        XrpPath.remote = remote;
         
         if (this.address) {
           this.queryAccount();
