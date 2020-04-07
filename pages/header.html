@@ -12,7 +12,7 @@
 	        <span class="icon-bar"></span>
 	      </button>
 	      <a class="navbar-brand" style="padding-top: 5px;" href="#">
-	      	<img style="width: 40px; height: 40px; border: 2px solid #AAA; border-radius: 50%; background: white;" data-ng-src="img/waterdrop.jpg">
+	      	<img ng-class="{online: online, offline: !online}" data-ng-src="img/waterdrop.jpg">
 	      </a>
 	    </div>
 	    <div class="collapse navbar-collapse" id="myNavbar">

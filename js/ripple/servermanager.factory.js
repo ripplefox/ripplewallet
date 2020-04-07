@@ -23,6 +23,11 @@ myApp.factory('ServerManager', ['$rootScope',
       get remote() {
         return _active ? _active.server : null;
       },
+      
+      get online() {
+        return _active ? _active.server.isConnected() : false;
+      },
+      
       get reserveBaseXRP() {return _reserveBaseXRP; },
       get reserveIncrementXRP() { return _reserveIncrementXRP; },
       
@@ -62,15 +67,18 @@ myApp.factory('ServerManager', ['$rootScope',
                 //console.log(`${result.server.connection._url} is the fatest`);
                 _active = result;
                 _active.server.on('connected', () => {
+                  $rootScope.$broadcast("networkChange");
                   console.warn(_active.name, 'connected');
                 });
                 _active.server.on('disconnected', (code) => {
+                  $rootScope.$broadcast("networkChange");
                   console.warn(_active.name, 'disconnected, code:', code);
                 });
                 _active.server.getServerInfo().then(info=>{
                   _reserveBaseXRP = parseFloat(info.validatedLedger.reserveBaseXRP);
                   _reserveIncrementXRP = parseFloat(info.validatedLedger.reserveIncrementXRP);
                 });
+                $rootScope.$broadcast("networkChange");
                 resolve(result.name);
               } else {
                 result.server.disconnect();

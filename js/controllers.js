@@ -1,8 +1,13 @@
 /* global myApp, round */
 
-myApp.controller("HeaderCtrl", ['$scope', '$rootScope', '$location', 'AuthenticationFactory', 'SettingFactory', 'XrpApi',
-  function($scope, $rootScope, $location, AuthenticationFactory, SettingFactory, XrpApi) {
+myApp.controller("HeaderCtrl", ['$scope', '$rootScope', '$location', 'AuthenticationFactory', 'SettingFactory', 'XrpApi', 'ServerManager', 
+  function($scope, $rootScope, $location, AuthenticationFactory, SettingFactory, XrpApi, SM) {
 
+    $rootScope.online = SM.online;
+    $scope.$on("networkChange", function() {
+      $rootScope.online = SM.online;
+    });
+  
     $scope.isActive = function(route) {
       return route === $location.path();
     }
