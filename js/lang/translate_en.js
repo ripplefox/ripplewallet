@@ -20,7 +20,6 @@ var translate_en = {
   password_confirm : 'Confirm password',
   pwd_not_match : 'Passwords do not match',
   encrypt_account : 'Encrypt account',
-  cancel : 'Cancel',
   create_secret : 'Create account with secret key',
   enter_secret : 'Enter your secret key',
   invalid_account: 'Account is invalid',
@@ -36,8 +35,10 @@ var translate_en = {
   are_you_sure_secret: 'Are you in a safe place where no person or camera can see your screen?',
   save_safe: 'Have you saved your secret key somewhere safe?',
   yes_save: 'Yes, I saved my secret key',
-  ledger_wallet: 'Ledger Wallet',
-  ledger_wallet_connect: 'Please connect Ledger.',
+  cancel : 'Cancel',
+  back   : 'Back',
+  confirm: 'Confirm',
+  
   /** Balance & Trust **/
   balance : 'Balance',
   reserve   : 'Reserve:',
@@ -100,11 +101,16 @@ var translate_en = {
   convert       : 'Convert',
   convert_title : 'Convert one currency into another',
   convert_input : 'Please enter the conversion details.',
-  convert_nopath: 'No acceptable path. Please make sure your account has enough funds.',
+  convert_nopath: 'No acceptable path. Please make sure your account has enough funds / trustline limit.',
   receive       : 'Receive',
   calculating   : 'Calculating',
   path          : 'Path:',
-
+  path_updated  : 'Paths last updated',
+  seconds_ago   : 'second(s) ago',
+  converting    : 'You are converting',
+  converting_to : 'to',
+  pay_most      : 'You will pay at most',
+  
   /** History **/
   history: 'History',
   payments: 'Payments',

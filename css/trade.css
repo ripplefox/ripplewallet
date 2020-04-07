@@ -278,3 +278,87 @@ a.AssetPairRow:hover .AssetPair__separator {
 .lightenZeros__unemph {
 	opacity: 0.4;
 }
+
+.alternatives {
+	display: block !important;
+}
+
+.alternatives .message {
+	padding-left: 15px;
+	text-align: left;
+	font-size: 21px;
+	color: #3a3f43;
+}
+
+.alternatives > div {
+  padding-top: 10px;
+  text-align: center;
+}
+
+.alternatives > div .am {
+  padding: 10px 0;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 5px;
+  background-clip: padding-box;
+}
+
+.alternatives > div .am .amnt {
+  padding: 0 8px 0 0;
+  font-size: 30px;
+}
+
+.alternatives > div .am .currency {
+  font-size: 20px;
+  color: #bbb;
+}
+
+.alternatives > div .am .ex {
+  color: #ccc;
+}
+
+.alternatives > div .am .ex .pair {
+  margin-left: 5px;
+  font-size: 12px;
+}
+
+.alternatives > div .btn {
+  margin: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 0;
+  background-clip: padding-box;
+}
+
+.pathupdate {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #B1B1B1;
+  border-top : none !important;
+}
+
+
+.mode-confirm {
+    font-size: 16px;
+    display: block !important;
+}
+
+.mode-confirm .value {
+  padding: 0 8px 0 0;
+  font-size: 36px;
+}
+
+.mode-confirm .currency {
+  font-size: 20px;
+}
+
+.mode-confirm .amount_feedback {
+    padding: 20px;
+    margin: 0 0 10px 0;
+    font: 34px 'OpenSansLight';
+    background: #f3f3f3;
+}

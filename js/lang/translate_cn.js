@@ -20,7 +20,6 @@ var translate_cn = {
   password_confirm : '确认密码',
   pwd_not_match : '密码不一致',
   encrypt_account : '加密账户',
-  cancel : '取消',
   create_secret : '用秘钥创建帐户',
   enter_secret : '请输入秘钥',
   invalid_account: '账号是无效的',
@@ -36,8 +35,10 @@ var translate_cn = {
   are_you_sure_secret: '你在一个安全的地方？没有人或摄相头在看你吧？',
   save_safe: '你把密钥保存在安全的地方了吗？',
   yes_save: '是，我已经保存好了！',
-  ledger_wallet: 'Ledger钱包',
-  ledger_wallet_connect: '请连接Ledger.',
+  cancel : '取消',
+  back   : '返回',
+  confirm: '确定',
+  
   /** Balance & Trust **/
   balance : '资产',
   reserve   : '冻结：',
@@ -100,10 +101,15 @@ var translate_cn = {
   convert       : '兑换',
   convert_title : '把一种货币转换成另一种',
   convert_input : '请输入兑换的具体信息。',
-  convert_nopath: '没有合适的兑换路径。可能是账号的资金不足。',
+  convert_nopath: '没有合适的兑换路径。可能是账号的资金或授信不足。',
   receive       : '接收',
   calculating   : '计算中',
   path          : '路径：',
+  path_updated  : '路径上次更新在',
+  seconds_ago   : '秒以前',
+  converting    : '你正在兑换',
+  converting_to : '到',
+  pay_most      : '你将最多花费',
 
   /** History **/
   history: '历史',
