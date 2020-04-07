@@ -283,11 +283,22 @@ a.AssetPairRow:hover .AssetPair__separator {
 	display: block !important;
 }
 
-.alternatives .message {
-	padding-left: 15px;
+.message {
+	padding: 15px 0;
 	text-align: left;
 	font-size: 21px;
 	color: #3a3f43;
+}
+
+.message .result-success {
+	padding: 15px;
+	color: #000;
+  background-color: #8DC86A;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  background-clip: padding-box;
 }
 
 .alternatives > div {

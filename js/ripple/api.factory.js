@@ -138,7 +138,45 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
                 console.info(result);
                 resolve(result);
               }).catch (err => {
-              console.info(err);
+              console.info('changeTrust', err);
+              reject(err);
+            });
+          });
+        });
+      },
+      
+      convert(srcAmount, destAmount, paths) {
+        //remove the type, type_hex to pass checkTxSerialization in sign function
+        paths.forEach(path => {
+          path.forEach(asset => {
+            if (asset.type) {
+              delete asset.type;
+            }
+            if (asset.type_hex) {
+              delete asset.type_hex;
+            }
+          });
+        });
+        const payment = {
+            "source": {
+              "address": this.address,
+              "maxAmount": srcAmount
+            },
+            "destination": {
+              "address": this.address,
+              "amount": destAmount
+            },
+            "paths" : JSON.stringify(paths),
+            "allowPartialPayment": true
+        }
+        return new Promise((resolve, reject)=>{
+          _remote.preparePayment(this.address, payment).then(prepared => {
+            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            _remote.submit(signedTransaction).then(result => {
+              console.info(result);
+              resolve(result);
+            }).catch (err => {
+              console.info('convert', err);
               reject(err);
             });
           });

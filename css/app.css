@@ -130,54 +130,6 @@ code {
 	white-space:nowrap;
 }
 
-/*--------------------------------------------------
-.currency-summary {
-  font-size: 18px;
+.block {
+	display: block !important;
 }
-.currency-summary .balance {
-    text-align: right;
-}
-.currency-summary .component {
-    font-family: OpenSansLight;
-    font-size: 16px;
-    line-height: 35px;
-    color: #888888;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-top: 1px solid #ccccca;
-}
-.currency-summary .balancebox {
-  border: 1px solid #ccccca;
-  background-color: #f3f3f3;
-  padding: 0 20px;
-  margin-bottom: 10px;
-}
-.currency-summary .total .lbl {
-  color: #676027;
-  font-family: OpenSansBold;
-}
-.currency-summary .total .lbl i {
-  color: #888888;
-  display: inline-block;
-  text-align: center;
-  width: 2em;
-  padding-right: 0.8em;
-}
-.currency-summary .total .lbl,
-.currency-summary .total .balance {
-  color: #1f1f1e;
-  line-height: 60px;
-}
-.currency-summary .total .lbl a,
-.currency-summary .total .balance a {
-  display: block;
-  color: #1f1f1e;
-  text-decoration: none;
-}
-.currency-summary .currency-non-native .total {
-  cursor: pointer;
-}
-.currency-native {
-  color: #346aa9;
-}
- */

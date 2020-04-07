@@ -1,4 +1,4 @@
-<section class="col-xs-12 col-md-10 content">
+<section class="col-xs-12 content">
 	<div class="so-back islandBack islandBack--t">
 		<div class="island">
 			<div class="island__header" translate="convert_title">Convert one currency into another</div>
@@ -52,7 +52,7 @@
 				</div>
 			</group>
 			<group ng-show="mode == 'confirm'">
-			  <div class="mode-confirm row" ng-show="!finding && objKeyLength(paths) || true">
+			  <div class="mode-confirm row">
 					<p translate="converting">You are converting</p>
 					<p class="amount_feedback"><span class="value">{{asset.value}} </span><span class="currency">{{asset.code}}</span></p>
 					<p translate="converting_to">to</p>
@@ -70,34 +70,28 @@
 						<button ng-click="convert_confirmed()" class="btn btn-block btn-success submit">{{'confirm' | translate}}</button>
 					</div>
 				</div>
-				
-				<div class="row">
-				  <button class="s-button btn btn-success" 
-					ng-click="send_asset()" 
-					ng-disabled="!asset.src_code || sending">
-						{{'send' | translate}} {{asset.src_code}} <span ng-show="asset.src_code">({{asset.price | number : asset.precise}} {{asset.dst_code}}/{{asset.src_code}})</span>
-				  </button>
+			</group>
+			
+			<group ng-show="mode == 'submit'">
+				<div class="row form-group" ng-show="sending">
+						<div class="message">
+							<i class="fa fa-spinner fa-pulse"></i> {{ 'submitting' | translate}}
+					  </div>
+			  </div>
+			  <div class="row form-group block" ng-show="send_done">
+						<div class="message">
+							<h2 class="result-success" translate="submitted">Your transaction has been submitted.</h2>
+					  	<p translate="act_will_upd">Your account will update once the transaction has cleared.</p>
+					  </div>
+					<hr>
+			  	<div class="actionLink"><a href="" ng-click="init()" translate="back_convert">Do another conversion</a></div>
+			  	<div class="actionLink"><a href="" ng-click="goTo('balance')" translate="go_balance">Back to balance</a></div>
 			  </div>
 			</group>
 			
 			<div class="island__paddedContent">
-				<div class="service_info" ng-show="asset.origin && asset.origin.path.length">
-					<label translate="path">Path:</label>
-					<ul>
-						<li ng-repeat="asset in asset.origin.path"
-							ng-switch="asset.asset_type">
-							<span ng-switch-when="native">{{currentNetwork.coin.code}}</span>
-							<span ng-switch-default>{{asset.asset_code}}.{{asset.asset_issuer}}</span>
-						</li>
-					</ul>
-				</div>
-				
 				<div class="service_alert" ng-show="send_error">
 					<div>{{send_error}}</div>
-				</div>
-				
-				<div class="service_success" ng-show="send_done">
-					<div translate="send_done">Asset successfully sent.</div>
 				</div>
 			</div>
 		</div>
