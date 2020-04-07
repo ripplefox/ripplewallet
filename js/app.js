@@ -181,7 +181,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       }
     }
     $rootScope.funded = function() {
-      console.log($rootScope.balance, $rootScope.balance !== "0")
       return $rootScope.balance !== "0";
     }
 
