@@ -229,21 +229,6 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       });
     }
     $scope.refreshBook();
-    
-    $scope.listenOrderbook = function() {
-      var base = {code: $scope.base_code, issuer: $scope.base_issuer};
-      var counter = {code: $scope.counter_code, issuer: $scope.counter_issuer};
-
-      //StellarApi.closeOrderbook();
-//      StellarApi.listenOrderbook(base, counter, function(res) {
-//        if(!_.isEqual($scope.book.stream, res)) {
-//          $scope.book.streamUpdate(res);
-//          console.warn('book stream', res);
-//          $scope.$apply();
-//        }
-//      });
-    };
-    //$scope.listenOrderbook();
 
     $scope.refreshingOffer = false;
     $scope.refreshOffer = function() {
@@ -380,8 +365,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.show_pair = !$scope.show_pair;
       if (!$scope.show_pair) {
         $scope.book.clean();
-        $scope.listenOrderbook();
         $scope.refreshOffer();
+        $scope.refreshBook();
         $scope.savePair();
       }
     }
@@ -404,8 +389,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.pick('counter', old_base_code, old_base_issuer);
       if (!$scope.show_pair) {
         $scope.book.clean();
-        $scope.listenOrderbook();
         $scope.refreshOffer();
+        $scope.refreshBook();
         $scope.savePair();
       }
     }

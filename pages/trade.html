@@ -214,14 +214,14 @@
 					<div class="listings"><div class="my">
 						<h3 class="offer_title" translate="your_sell_offers">Your sell offers</h3>
 						<div class="row head" ng-show="offers.ask.length">
-							<div class="col-xs-2 right" translate="price">Price</div>
-							<div class="col-xs-4 right" translate="amount">Amount</div>
+							<div class="col-xs-3 right" translate="price">Price</div>
+							<div class="col-xs-3 right" translate="amount">Amount</div>
 							<div class="col-xs-4 right" translate="total">Total</div>
 							<div class="col-xs-2 right" translate="action">Action</div>
 						</div>
 						<div class="row" ng-repeat="item in offers.ask" ng-class="{cancelling: isCancelling(item.id)}">
-							<div class="col-xs-2 right">{{item.price | fmtnum}} {{item.total.currency}}</div>
-							<div class="col-xs-4 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency}}</div>
+							<div class="col-xs-3 right">{{item.price | fmtnum}} {{item.total.currency}}</div>
+							<div class="col-xs-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency}}</div>
 							<div class="col-xs-4 right">{{item.total.value | fmtnum}} {{item.total.currency}}</div>
 							<div class="col-xs-2 action">
 								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(item.id)"></i>
