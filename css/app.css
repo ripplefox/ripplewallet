@@ -74,6 +74,10 @@ body {
 	margin-top: 10px;
 }
 
+a.danger {
+  color: #E40000;
+}
+
 /* Custom page CSS
 -------------------------------------------------- */
 

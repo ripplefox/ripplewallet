@@ -69,21 +69,9 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
     access : {
       requiredLogin : true
     }
-  }).when('/hist_payments', {
-    templateUrl : 'pages/history_payments.html',
-    controller : 'PaymentsCtrl',
-    access : {
-      requiredLogin : true
-    }
-  }).when('/hist_effects', {
-    templateUrl : 'pages/history_effects.html',
-    controller : 'EffectsCtrl',
-    access : {
-      requiredLogin : true
-    }
-  }).when('/hist_trades', {
-    templateUrl : 'pages/history_trades.html',
-    controller : 'TradesCtrl',
+  }).when('/history', {
+    templateUrl : 'pages/history.html',
+    controller : 'HistoryCtrl',
     access : {
       requiredLogin : true
     }
@@ -194,7 +182,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       $rootScope.balance = "0";
       $rootScope.reserve = 0;
 
-      $rootScope.offers = {};
       $rootScope.events = [];
       $rootScope.history = [];
       $rootScope.balances = {};

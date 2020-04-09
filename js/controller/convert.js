@@ -42,14 +42,14 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
       $scope.send_done = false;
       $scope.send_error = '';
       
-      $rootScope.timer = null;
-      $rootScope.lastUpdateTime;
+      $scope.timer = null;
+      $scope.lastUpdateTime;
       XrpPath.open($rootScope.address, $rootScope.address, amount, function(err, data) {
-        $rootScope.lastUpdateTime = new Date();
-        clearInterval($rootScope.timer);
+        $scope.lastUpdateTime = new Date();
+        clearInterval($scope.timer);
         timer = setInterval(function() {
           $scope.$apply(function() {
-            $scope.lastUpdate = round((new Date() - $rootScope.lastUpdateTime) / 1000);
+            $scope.lastUpdate = round((new Date() - $scope.lastUpdateTime) / 1000);
           });
         }, 1000);
 
@@ -86,7 +86,7 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
       $scope.asset = $scope.paths[code];
       $scope.finding = false;
       XrpPath.close();
-      clearInterval($rootScope.timer);
+      clearInterval($scope.timer);
       $scope.mode = 'confirm';
     };
     $scope.cancelConfirm = function() {
@@ -143,7 +143,7 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
     };
     
     $scope.$on("$destroy", function() {
-      clearInterval($rootScope.timer);
+      clearInterval($scope.timer);
       XrpPath.close();
     });
    
