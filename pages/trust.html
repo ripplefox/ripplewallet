@@ -16,8 +16,8 @@
 							code="{{asset.code}}" address="{{asset.issuer}}"></gateway>
 					</div>
 					<div class="row__shareOption">
-						<button class="s-button btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
-						<button class="s-button btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
+						<button class="btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
+						<button class="btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
 					</div>
 				</div>
 			</div>
@@ -66,8 +66,8 @@
 								code="{{asset.code}}" address="{{asset.issuer}}"></gateway>
 				</div>
 				<div class="row__shareOption">
-					<button class="s-button btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
-					<button class="s-button btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
+					<button class="btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
+					<button class="btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
 				</div>
 			</div>
 			
@@ -121,7 +121,7 @@
 							</div>
 						</div>
 					</div>
-					<button class="s-button btn btn-success" 
+					<button class="btn btn-success" 
 							ng-show="manual_code && isValidAddress(manual_issuer)" 
 							ng-click="addTrust(manual_code, manual_issuer, manual_amount)" 
 							ng-disabled="isChanging(manual_code, manual_issuer)">{{'trust_add' | translate}} {{manual_code}}</button>

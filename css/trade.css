@@ -193,13 +193,6 @@ a.AssetPairRow:hover .AssetPair__separator {
 	padding-top: 12px;
 }
 
-.s-button {
-    display: inline-block;
-    margin: 0;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
 .s-alert--success {
     border: 1px solid #383;
     background: #d6e7d6;
@@ -224,6 +217,109 @@ a.AssetPairRow:hover .AssetPair__separator {
 
 .lightenZeros__unemph {
 	opacity: 0.4;
+}
+
+.offers_pad {
+	margin: 0 auto;
+	margin-bottom: 18px;
+	padding: 15px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	background: #fff;
+	border: 1px solid #dedfe0;
+	border-radius: 3px;
+}
+
+.offers_pad .bidoffer {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+.offers_pad .askoffer {
+	padding-left: 10px;
+	padding-right: 0;
+}
+
+.offers_pad .manager_title {
+	padding: 10px;
+  margin: 0 -15px 15px -15px;
+  font: bold 15px 'OpenSansRegular';
+  text-align: left;
+  text-transform: uppercase;
+  background: #f2f2f2;
+}
+
+.offers_pad .bidoffer .row,
+.offers_pad .askoffer .row {
+  margin: 0 0 20px;
+}
+
+.listings .input-field {
+	display: flex;
+}
+
+.listings .submit-field {
+	padding: 0 15px;
+}
+
+.listings .submit-field .overview {
+	margin-bottom: 10px;
+	border-top: 1px solid #dedfe0;
+	padding-top: 12px;
+	font-size: 14px;
+}
+
+.listings .input-lable {
+	font: 18px 'OpenSansRegular';
+  color: #777;
+  line-height:34px;
+}
+
+.input-group .form-control:first-child,
+.input-group-addon:first-child,
+.input-group-btn:first-child > .btn,
+.input-group-btn:first-child > .dropdown-toggle,
+.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group-addon {
+	font-family: Consolas,Monaco,monospace;
+}
+
+.input-group-addon:first-child {
+  border-right: 0;
+}
+
+.input-group .form-control:last-child,
+.input-group-addon:last-child,
+.input-group-btn:last-child > .btn,
+.input-group-btn:last-child > .dropdown-toggle,
+.input-group-btn:first-child > .btn:not(:first-child) {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.input-group-addon:last-child {
+  border-left: 0;
+}
+
+.input-group-btn {
+  position: relative;
+  white-space: nowrap;
+}
+
+.input-group-btn > .btn {
+  position: relative;
+}
+
+.input-group-btn > .btn + .btn {
+  margin-left: -4px;
+}
+
+.input-group-btn > .btn:hover,
+.input-group-btn > .btn:active {
+  z-index: 2;
 }
 
 .orderbook_pad {
