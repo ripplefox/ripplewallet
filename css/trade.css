@@ -193,59 +193,6 @@ a.AssetPairRow:hover .AssetPair__separator {
 	padding-top: 12px;
 }
 
-.ManageOffers__table {
-  width: 100%;
-  text-align: right;
-  font-size: 16px;
-}
-
-.ManageOffers__table .issuer {
-  font-size: 11px;
-  color: #b3b3b3;
-}
-
-.ManageOffers__table__header {
-	background: #f4f4f5;
-	font-weight: bold;
-	text-align: center;
-}
-
-.ManageOffers__table__header__item {
-	padding: 4px 8px 4px 2px;
-	text-align: right;
-}
-
-.ManageOffers__table__header__left {
-	padding: 4px 8px 4px 12px;
-	text-align: left;
-}
-
-.ManageOffers__table__row {
-	
-}
-
-.ManageOffers__table__row:hover {
-	background: #fdfdc8;
-}
-
-.ManageOffers__table__row__item {
-	padding: 4px 8px 4px 2px;
-	text-align: right;
-	font-family: 'Ubuntu Mono';
-}
-
-.ManageOffers__table__row__left {
-	padding: 4px 8px 4px 12px;
-	text-align: left;
-	font-family: 'Ubuntu Mono';
-}
-
-.ManageOffers__table__row__none {
-	padding: 4px 8px;
-	text-align: center;
-	font-family: 'Ubuntu Mono';
-}
-
 .s-button {
     display: inline-block;
     margin: 0;
@@ -277,6 +224,208 @@ a.AssetPairRow:hover .AssetPair__separator {
 
 .lightenZeros__unemph {
 	opacity: 0.4;
+}
+
+.orderbook_pad {
+	margin: 0 auto;
+	margin-bottom: 18px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	background: #fff;
+	border: 1px solid #dedfe0;
+	border-radius: 3px;
+}
+
+.orderbook_header {
+	border-bottom: 1px solid #dedfe0;
+	border-radius: 3px 3px 0 0;
+	padding: 11px 18px 9px 18px;
+	font-size: 21px;
+}
+
+.orderbook .title {
+  padding: 10px;
+  margin: 0 -15px 15px -15px;
+  font: bold 15px 'OpenSansRegular';
+  text-align: center;
+  text-transform: uppercase;
+  background: #f2f2f2;
+}
+
+.orderbook .head {
+  margin-bottom: 10px;
+  font: 18px 'OpenSansRegular';
+}
+
+.orderbook .head .currency {
+  color: #B6B6B6;
+  font: 15px 'OpenSansRegular';
+}
+
+.orderbook .my {
+  font-weight: bold;
+  color: #177716;
+}
+
+.orderbook .my .insig {
+  font-weight: normal;
+  color: #177716;
+}
+
+.orderbook .my .delete {
+  margin: 0 10px 0 0;
+  text-decoration: none;
+}
+
+@media (min-width: 767px) {
+  .orderbook .bids {
+    border-right: 3px solid #c7c7c7;
+    text-align: right;
+  }
+  .orderbook .asks {
+    border-left: 3px solid #c7c7c7;
+    text-align: right;
+  }
+}
+
+@media (max-width: 767px) {
+  .orderbook .asks {
+    padding-top: 10px;
+    border-top: 6px solid #ccc;
+  }
+}
+
+.orderbook .bids .row,
+.orderbook .asks .row {
+  padding: 5px 0;
+  text-align: right;
+}
+
+.orderbook .bids .row:nth-child(odd),
+.orderbook .asks .row:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.orderbook a {
+  color: inherit;
+}
+
+.orderbook .message {
+  text-align: center;
+  font-size: 14px;
+}
+
+.orderbook .issuer {
+  font-size: 10px;
+  color: #B6B6B6;
+}
+
+.listings_pad {
+	margin: 0 auto;
+	margin-bottom: 18px;
+	padding: 0 15px;
+	padding-bottom: 15px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	background: #fff;
+	border: 1px solid #dedfe0;
+	border-radius: 3px;
+}
+
+.listings_pad .bidoffer {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+.listings_pad .askoffer {
+	padding-left: 10px;
+	padding-right: 0;
+}
+
+.listings_header {
+	padding: 11px 18px 9px 18px;
+	font-size: 21px;
+}
+
+.listings {
+  padding: 0 15px;
+  background: #fafafa;
+  border: 1px solid #e1e1e1;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  background-clip: padding-box;
+}
+
+.listings .offer_title {
+  padding: 10px;
+  margin: 0 -15px 0 -15px;
+  font: bold 15px 'OpenSansRegular';
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.listings .my .head {
+  font-weight: bold;
+}
+
+.listings .my .row:first-child {
+  border-top: none;
+}
+
+.listings .my .row {
+  border-top: 1px solid #EBEBEB;
+}
+
+.listings .my .row:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.listings .my .row > div {
+  padding: 8px;
+  border-right: 1px solid #EBEBEB;
+}
+
+.listings .my .row > div:last-child {
+  text-align: right;
+  border-right: none;
+}
+
+.listings .my .row .issuer {
+  font-size: 11px;
+  color: #b3b3b3;
+}
+
+@media (max-width: 767px) {
+  .listings .my .row {
+    padding: 4px;
+    border: none;
+  }
+  .listings .my .row > div {
+    padding: 4px;
+    border: none;
+  }
+  .listings .my .row div:before {
+    display: inline-block;
+    width: 100px;
+    font-weight: bold;
+    content: " " attr(data-label);
+  }
+}
+
+.listings .emptyMessage {
+  margin: 10px 0;
+}
+
+.cancelling {
+  color: #b3b3b3;
+}
+
+.cancelling .action a {
+  display: none;
+}
+
+.cancelling .action i {
+  font-size: 20px;
 }
 
 .alternatives {
