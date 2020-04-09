@@ -1,8 +1,8 @@
 /* global _, myApp, round, RippleAPI */
 const rewriter = require('./js/ripple/jsonrewriter.js');
 
-myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager', 'XrpPath',
-  function($rootScope, AuthenticationFactory, SM, XrpPath) {
+myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager', 'XrpPath', 'XrpOrderbook',
+  function($rootScope, AuthenticationFactory, SM, XrpPath, XrpOrderbook) {
 
     let _ownerCount = 0;
     let _xrpBalance = "";
@@ -17,11 +17,16 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     function key(code, issuer) {
       return code == 'XRP' ? code : code + '.' + issuer;
     };
+    
+    function toTimestamp(rpepoch) {
+      return (rpepoch + 0x386D4380) * 1000;
+    };
 
     return {
       set remote(remote) {
         _remote = remote;
         XrpPath.remote = remote;
+        XrpOrderbook.remote = remote;
         
         if (this.address) {
           this.queryAccount();
@@ -123,6 +128,54 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
+      checkOffers(address) {
+        address = address || this.address;
+        return new Promise(async (resolve, reject)=>{
+          try {
+            if (!_remote.isConnected())  await _remote.connect();
+            let page = await _remote.getOrders(address, {limit: 200});
+            resolve(page);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      },
+      
+      checkTx(marker, address) {
+        var address = address || this.address;
+        var params = {
+            account: address,
+            ledger_index_min: -1,
+            limit: 5,
+            binary: false
+        };
+        if (marker) {
+          params.marker = marker;
+        }
+        console.log(params);
+        return new Promise(async (resolve, reject)=>{
+          if (!_remote.isConnected()) {
+            await _remote.connect();
+          }
+          _remote.request('account_tx', params).then(data => {
+            var transactions = [];
+            if (data.transactions) {
+              data.transactions.forEach(function (e) {
+                var tx = rewriter.processTxn(e.tx, e.meta, address);
+                console.log(address, e.tx, e.meta, tx);
+                if (tx) {
+                  transactions.push(tx);
+                }
+              });
+            }
+            resolve(transactions);
+          }).catch(err => {
+            console.error('getTx', err);
+            reject(err);
+          });
+        });
+      },
+      
       changeTrust(code, issuer, limit, ripplingDisabled = true) {
         const trustline = {
           currency: code,
@@ -216,28 +269,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
               ripplingDisabled: line.ripplingDisabled
           };
         }
-        /*
-        _balances.forEach((asset)=>{
-          var keystr = key(asset.currency, asset.counterparty);
-          if (keystr !== 'XRP') {
-            var trust = _trustlines[keystr];
-            if (asset.value == "0" && trust.specification.limit == "0") {
-              return; // do not show line others trusted
-            }
-            if (!lines[asset.currency]) {
-              lines[asset.currency] = {};
-            }
-            const item = {
-              code : asset.currency,
-              issuer : asset.counterparty,
-              balance : asset.value,
-              limit: trust.specification.limit,
-              ripplingDisabled: trust.specification.ripplingDisabled
-            };
-            lines[asset.currency][asset.counterparty] = item;
-          }
-        });
-        */
         $rootScope.lines = lines;
         $rootScope.$broadcast("balanceChange");
         $rootScope.$apply();
@@ -345,6 +376,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       _updateOffer(offer) {
         console.log('_updateOffer', offer);
+        $rootScope.$broadcast("offerChange");
       },
       
       _processTx(tx, meta, is_historic) {

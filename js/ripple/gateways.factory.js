@@ -72,11 +72,24 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
     
     return {
       getGateway(code, issuer) {
+        if (code === $rootScope.currentNetwork.coin.code) {
+          return {
+            logo : $rootScope.currentNetwork.coin.logo
+          }
+        }
         return  _asset2gateway[key(code, issuer)] || _asset2gateway[issuer] ||_gateways["unkown"];
       },
       
       get gateways() {
         return _gateways;
+      },
+      
+      get defaultTradeAssets() {
+        return [
+          {code : 'CNY', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
+          {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
+          {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'}
+        ]
       }
     };
   } ]);

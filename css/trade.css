@@ -229,6 +229,8 @@ a.AssetPairRow:hover .AssetPair__separator {
 .orderbook_pad {
 	margin: 0 auto;
 	margin-bottom: 18px;
+	padding: 0 15px;
+	padding-bottom: 15px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
 	background: #fff;
 	border: 1px solid #dedfe0;
@@ -236,10 +238,18 @@ a.AssetPairRow:hover .AssetPair__separator {
 }
 
 .orderbook_header {
-	border-bottom: 1px solid #dedfe0;
-	border-radius: 3px 3px 0 0;
-	padding: 11px 18px 9px 18px;
+	padding: 11px 18px 9px 0;
 	font-size: 21px;
+}
+
+.orderbook .bookboard {
+	padding: 0;
+  border: 1px solid #e1e1e1;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  background-clip: padding-box;
 }
 
 .orderbook .title {
@@ -341,7 +351,7 @@ a.AssetPairRow:hover .AssetPair__separator {
 }
 
 .listings_header {
-	padding: 11px 18px 9px 18px;
+	padding: 11px 18px 9px 0;
 	font-size: 21px;
 }
 
@@ -362,6 +372,13 @@ a.AssetPairRow:hover .AssetPair__separator {
   font: bold 15px 'OpenSansRegular';
   text-align: center;
   text-transform: uppercase;
+}
+
+.listings .message {
+	margin: 0 -15px 0 -15px;
+  text-align: center;
+  font-size: 14px;
+  background: #fff;
 }
 
 .listings .my .head {
