@@ -227,7 +227,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let result = await _remote.submit(signedTransaction);
             resolve(result);
           } catch (err) {
-            console.error('convert', err);
+            err.data ? console.error(err.data) : console.error('convert', payment, err);
             reject(err);
           }
         });

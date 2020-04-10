@@ -115,7 +115,7 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
         srcAmount = {
             currency : alt.source_amount.currency,
             counterparty : alt.source_amount.issuer,
-            value : round(alt.source_amount.value * 1.01, 15).toString()
+            value : new BigNumber(new BigNumber(alt.source_amount.value).multipliedBy(1.01).toPrecision(16)).toString()
         }
       }
       if ($scope.dst_currency == $rootScope.currentNetwork.coin.code) {
@@ -127,7 +127,7 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
         dstAmount = {
             currency : $scope.dst_currency,
             counterparty : $rootScope.address,
-            value : round($scope.dst_amount, 15).toString()
+            value : new BigNumber(new BigNumber($scope.dst_amount).toPrecision(16)).toString()
         }
       }
       XrpApi.convert(srcAmount, dstAmount, alt.paths_computed).then(result => {
