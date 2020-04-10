@@ -4,9 +4,15 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
   function($scope, $rootScope, XrpApi, XrpOrderbook, SettingFactory, Gateways) {
     $scope.offers = {
       origin : null,
+      all : {},
       ask : [],
       bid : [],
-      all : {},
+      clean : function() {
+        this.origin = null;
+        this.all = {};
+        this.ask = [];
+        this.bid = [];
+      },
       update : function(data) {
         this.origin = data;
         this.all = {};
@@ -249,6 +255,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.$on("offerChange", function() {
       console.debug('offerChange event got');
       $scope.refreshOffer();
+      $scope.refreshBook();
     });
 
     $scope.buying = false;
@@ -300,10 +307,10 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope[type + '_fail'] = "";
       var option = {
         type : type,
-        currency : $scope.base_code,
-        issuer   : $scope.base_issuer,
-        base        : $scope.counter_code,
-        base_issuer : $scope.counter_issuer
+        base        : $scope.base_code,
+        base_issuer : $scope.base_issuer,
+        counter        : $scope.counter_code,
+        counter_issuer : $scope.counter_issuer
       };
       if (type == 'buy') {
         option.amount = $scope.buy_amount;
@@ -312,19 +319,19 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         option.amount = $scope.sell_amount;
         option.price  = $scope.sell_price;
       }
-      StellarApi.offer(option, function(err, hash) {
+      XrpApi.offer(option).then(result => {
         $scope[type + 'ing'] = false;
-        if (err) {
-          $scope[type + '_fail'] = StellarApi.getErrMsg(err);
-        } else {
-          $scope[type + '_ok'] = true;
-          $scope[type + '_amount'] = "";
-          $scope[type + '_price'] = "";
-          $scope[type + '_volume'] = "";
-        }
+        $scope[type + '_ok'] = true;
+        $scope[type + '_amount'] = "";
+        $scope[type + '_price'] = "";
+        $scope[type + '_volume'] = "";
         $scope.$apply();
-        //$scope.refreshBook();
         $scope.refreshOffer();
+        $scope.refreshBook();
+      }).catch(err => {
+        $scope[type + 'ing'] = false;
+        $scope[type + '_fail'] = err.message;
+        $scope.$apply();
       });
     }
 
@@ -333,30 +340,13 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       return !!$scope.offerDelete[id];
     }
     
-    $scope.cancel = function(offer_id, type) {
-      var offer = {id: offer_id};
-
+    $scope.cancel = function(offer_id) {
       $scope.offerDelete[offer_id] = true;
-      if (type === 'bid') {
-        offer.price = $scope.offers.bid[offer_id].price;
-        offer.selling = getAsset($scope.counter_code, $scope.counter_issuer);
-        offer.buying  = getAsset($scope.base_code, $scope.base_issuer);
-      } else if (type === 'ask') {
-        offer.price = $scope.offers.ask[offer_id].price;
-        offer.selling = getAsset($scope.base_code, $scope.base_issuer);
-        offer.buying  = getAsset($scope.counter_code, $scope.counter_issuer);
-      } else {
-        // type === 'all'
-        offer.price = $scope.offers.all[offer_id].price;
-        offer.selling = getAsset($scope.offers.all[offer_id].sell_code, $scope.offers.all[offer_id].sell_issuer);
-        offer.buying  = getAsset($scope.offers.all[offer_id].buy_code, $scope.offers.all[offer_id].buy_issuer);
-      }
       $scope.cancel_error = "";
-      StellarApi.cancel(offer, function(err, hash){
-        if (err) {
-          $scope.cancel_error = StellarApi.getErrMsg(err);
-        }
+      XrpApi.cancelOffer(offer_id).then(result => {
         $scope.refreshOffer();
+      }).catch(err => {
+        $scope.cancel_error = err.message;
       });
     }
 
@@ -365,6 +355,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.show_pair = !$scope.show_pair;
       if (!$scope.show_pair) {
         $scope.book.clean();
+        $scope.offers.clean();
+        $scope.offerDelete = {};
         $scope.refreshOffer();
         $scope.refreshBook();
         $scope.savePair();
@@ -389,6 +381,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.pick('counter', old_base_code, old_base_issuer);
       if (!$scope.show_pair) {
         $scope.book.clean();
+        $scope.offers.clean();
+        $scope.offerDelete = {};
         $scope.refreshOffer();
         $scope.refreshBook();
         $scope.savePair();
@@ -437,14 +431,6 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       return obj;
     }
 
-    function getAsset(code, issuer) {
-      if (typeof code == 'object') {
-        issuer = code.issuer;
-        code = code.code;
-      }
-      return code == $rootScope.currentNetwork.coin.code ? new StellarSdk.Asset.native() : new StellarSdk.Asset(code, issuer);
-    }
-    
     function key(code, issuer) {
       return code == $rootScope.currentNetwork.coin.code ? code : code + '.' + issuer;
     };

@@ -233,10 +233,44 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      cancelOffer (offer_id) {
+      
+      offer(options) {
+        let totalPriceValue = new BigNumber(options.amount).multipliedBy(options.price).toString();
+        const order = {
+          'direction': options.type,
+          'quantity'  : {value: options.amount.toString()},
+          'totalPrice': {value: totalPriceValue}
+        };
+        if (options.base_issuer) {
+          order.quantity.currency = options.base;
+          order.quantity.counterparty = options.base_issuer;
+        } else {
+          order.quantity.currency = 'XRP';
+        }
+        if (options.counter_issuer) {
+          order.totalPrice.currency = options.counter;
+          order.totalPrice.counterparty = options.counter_issuer;
+        } else {
+          order.totalPrice.currency = 'XRP';
+        }
+        order.memos = [{data: 'foxlet', type: 'client', format: 'plain/text'}];
         return new Promise(async (resolve, reject) => {
-          const orderCancellation = {orderSequence: offer_id};
-          orderCancellation.memos = [{data: 'foxlet', type: 'client', format: 'plain/text'}];
+          try {
+            let prepared = await _remote.prepareOrder(this.address, order);
+            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            let result = await _remote.submit(signedTransaction);
+            resolve(result);
+          } catch (err) {
+            console.error('offer', err);
+            reject(err);
+          }
+        });
+      },
+      
+      cancelOffer (offer_id) {
+        const orderCancellation = {orderSequence: offer_id};
+        orderCancellation.memos = [{data: 'foxlet', type: 'client', format: 'plain/text'}];
+        return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);

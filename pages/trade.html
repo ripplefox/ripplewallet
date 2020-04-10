@@ -188,6 +188,7 @@
 					<a class="btn btn-success btn-sm" ng-click="refreshOffer()" ng-disabled="refreshingOffer">
 						<span class="glyphicon glyphicon-refresh"></span> {{'refresh' | translate}}
 					</a>
+					<a class="danger" ng-show="cancel_error">{{cancel_error}}</a>
 					<div style="float:right"><input type="checkbox" ng-model="showAdvanced">{{ 'advanced' | translate}}</div>
 				</div>
 			
@@ -257,8 +258,6 @@
 						<div ng-hide="objKeyLength(offers.all)" class="message" translate="no_offers">You haven't placed any orders.</div>
 				</div>
 			</div>
-			
-			<div class="s-alert s-alert--error OfferMaker__message" ng-show="cancel_error">{{cancel_error}}</div>
 		</div>
 		
 		<div class="orderbook_pad row" ng-show="!show_pair">
