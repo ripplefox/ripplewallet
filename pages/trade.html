@@ -68,13 +68,13 @@
 									website="{{native.website}}" code="{{currentNetwork.coin.code}}" address=""></gateway>
 						</div>
 						<div class="row__shareOption">
-							<button class="s-button btn btn-success"
+							<button class="btn btn-success"
 								ng-click="pick('base', currentNetwork.coin.code, '')"
 								ng-disabled="isBase(currentNetwork.coin.code, '')"
 								translate="as_base">As Base Asset</button>
 						</div>
 						<div class="row__shareOption">
-							<button class="s-button btn btn-success"
+							<button class="btn btn-success"
 								ng-click="pick('counter', currentNetwork.coin.code, '')"
 								ng-disabled="isCounter(currentNetwork.coin.code, '')"
 								translate="as_counter">As Counter Asset</button>
@@ -86,13 +86,13 @@
 										website="{{gateway.website}}" code="{{line.code}}" address="{{line.issuer}}"></gateway>
 							</div>
 							<div class="row__shareOption">
-								<button class="s-button btn btn-success"
+								<button class="btn btn-success"
 									ng-click="pick('base', line.code, line.issuer)"
 									ng-disabled="isBase(line.code, line.issuer)"
 									translate="as_base">As Base Asset</button>
 							</div>
 							<div class="row__shareOption">
-								<button class="s-button btn btn-success"
+								<button class="btn btn-success"
 									ng-click="pick('counter', line.code, line.issuer)"
 									ng-disabled="isCounter(line.code, line.issuer)"
 									translate="as_counter">As Counter Asset</button>
@@ -103,81 +103,84 @@
 		</div>
 		
 		
-		<div class="island island--pb" ng-show="!show_pair">
-			<div class="OfferMakers island__sub">
-				<div class="OfferMakers_maker island__sub__division">
-					<div>
-						<h3 class="island__sub__division__title island__sub__division__title--left">{{'buy' | translate}} {{base_code}}</h3>
-						<table class="OfferMaker__table">
-							<tbody>
-								<tr class="OfferMaker__table__row">
-									<td class="OfferMaker__table__label" translate="order_amount">Amount</td>
-									<td class="OfferMaker__table__input">
-										<input type="text" class="OfferMaker__table__input__input" ng-model="buy_amount" ng-change="calculate('buy_amount')">
-									</td>
-								</tr>
-								<tr class="OfferMaker__table__row">
-									<td class="OfferMaker__table__label" translate="price_of_each">Price of Each</td>
-									<td class="OfferMaker__table__input">
-										<input type="text" class="OfferMaker__table__input__input" ng-model="buy_price" ng-change="calculate('buy_price')">
-									</td>
-								</tr>
-								<tr class="OfferMaker__table__row">
-									<td class="OfferMaker__table__label">{{'order_value' | translate}} ({{counter_code}})</td>
-									<td class="OfferMaker__table__input">
-										<input type="text" class="OfferMaker__table__input__input" ng-model="buy_volume" ng-change="calculate('buy_volume')">
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="OfferMaker__overview">
-							<div class="OfferMaker__youHave">
+		<div class="offers_pad row" ng-show="!show_pair">
+			<div class="bidoffer col-xs-12 col-sm-6">
+				<div class="listings">
+					<h3 class="manager_title">{{'buy' | translate}} {{base_code}}</h3>
+					<div class="row input-field">
+							<div class="col-xs-4 input-lable" translate="order_amount">Amount</div>
+							<div class="col-xs-8">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="buy_amount" ng-change="calculate('buy_amount')">
+									<div class="input-group-addon">{{base_code}}</div>
+								</div>
+							</div>
+					</div>
+					<div class="row input-field">
+							<div class="col-xs-4 input-lable" translate="price_of_each">price_of_each</div>
+							<div class="col-xs-8">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="buy_price" ng-change="calculate('buy_price')">
+									<div class="input-group-addon">{{counter_code}}</div>
+								</div>
+							</div>
+					</div>
+					<div class="row input-field">
+							<div class="col-xs-4 input-lable">{{'order_value' | translate}}</div>
+							<div class="col-xs-8">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="buy_volume" ng-change="calculate('buy_volume')">
+									<div class="input-group-addon">{{counter_code}}</div>
+								</div>
+							</div>
+					</div>
+					<div class="row submit-field">
+							<div class="overview">
 								{{'you_have' | translate}} {{getBalance(counter_code, counter_issuer)}} {{counter_code}}
 							</div>
-							<div class="s-alert s-alert--success OfferMaker__message" ng-show="buy_ok" translate="offer_success">Offer successfully created</div>
-							<div class="s-alert s-alert--error OfferMaker__message" ng-show="buy_fail">{{buy_fail}}</div>
-							<button class="s-button btn btn-success" ng-click="offer('buy')" ng-disabled="buying">{{'buy' | translate}} {{base_code}}</button>
-						</div>
+							<div class="s-alert s-alert--success" ng-show="buy_ok" translate="offer_success">Offer successfully created</div>
+							<div class="s-alert s-alert--error" ng-show="buy_fail">{{buy_fail}}</div>
+							<button class="btn btn-success" ng-click="offer('buy')" ng-disabled="buying">{{'buy' | translate}} {{base_code}}</button>
 					</div>
-				</div>
-				<div class="OfferMakers_maker island__sub__division">
-					<div>
-						<h3 class="island__sub__division__title island__sub__division__title--left">{{'sell' | translate}} {{base_code}}</h3>
-						<table class="OfferMaker__table">
-							<tbody>
-								<tr class="OfferMaker__table__row">
-									<td class="OfferMaker__table__label" translate="order_amount" translate="order_amount">Amount</td>
-									<td class="OfferMaker__table__input">
-										<input type="text" class="OfferMaker__table__input__input" ng-model="sell_amount" ng-change="calculate('sell_amount')">
-									</td>
-								</tr>
-								<tr class="OfferMaker__table__row">
-									<td class="OfferMaker__table__label" translate="price_of_each">Price of Each</td>
-									<td class="OfferMaker__table__input">
-										<input type="text" class="OfferMaker__table__input__input" ng-model="sell_price" ng-change="calculate('sell_price')">
-									</td>
-								</tr>
-								<tr class="OfferMaker__table__row">
-									<td class="OfferMaker__table__label">{{'order_value' | translate}} ({{counter_code}})</td>
-									<td class="OfferMaker__table__input">
-										<input type="text" class="OfferMaker__table__input__input" ng-model="sell_volume" ng-change="calculate('sell_volume')">
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
-						<div class="OfferMaker__overview">
-							<div class="OfferMaker__youHave">
-								{{'you_have' | translate}} {{getBalance(base_code, base_issuer)}} {{base_code}}
-							</div>
-							<div class="s-alert s-alert--success OfferMaker__message" ng-show="sell_ok" translate="offer_success">Offer successfully created</div>
-							<div class="s-alert s-alert--error OfferMaker__message" ng-show="sell_fail">{{sell_fail}}</div>
-							<button class="s-button btn btn-success" ng-click="offer('sell')" ng-disabled="selling">{{'sell' | translate}} {{base_code}}</button>
-						</div>
-
-					</div>
+						
 				</div>
 			</div>
+			<div class="askoffer col-xs-12 col-sm-6">
+				<div class="listings">
+					<h3 class="manager_title">{{'sell' | translate}} {{base_code}}</h3>
+					<div class="row input-field">
+							<div class="col-xs-4 input-lable" translate="order_amount">Amount</div>
+							<div class="col-xs-8 input-group">
+									<input type="text" class="form-control" ng-model="sell_amount" ng-change="calculate('sell_amount')">
+									<div class="input-group-addon">{{base_code}}</div>
+							</div>
+					</div>
+					<div class="row input-field">
+							<div class="col-xs-4 input-lable" translate="price_of_each">price_of_each</div>
+							<div class="col-xs-8 input-group">
+								<input type="text" class="form-control" ng-model="sell_price" ng-change="calculate('sell_price')">
+								<div class="input-group-addon">{{counter_code}}</div>
+							</div>
+					</div>
+					<div class="row input-field">
+							<div class="col-xs-4 input-lable">{{'order_value' | translate}}</div>
+							<div class="col-xs-8 input-group">
+								<input type="text" class="form-control" ng-model="sell_volume" ng-change="calculate('sell_volume')">
+								<div class="input-group-addon">{{counter_code}}</div>
+							</div>
+					</div>
+					<div class="row submit-field">
+							<div class="overview">
+								{{'you_have' | translate}} {{getBalance(base_code, base_issuer)}} {{base_code}}
+							</div>
+							<div class="s-alert s-alert--success" ng-show="sell_ok" translate="offer_success">Offer successfully created</div>
+							<div class="s-alert s-alert--error" ng-show="sell_fail">{{sell_fail}}</div>
+							<button class="btn btn-success" ng-click="offer('sell')" ng-disabled="selling">{{'sell' | translate}} {{base_code}}</button>
+					</div>
+					
+				</div>
+			</div>
+			
 		</div>
 		
 		<div class="listings_pad row" ng-show="!show_pair">

@@ -51,38 +51,6 @@ a.AssetPairRow:hover .AssetPair__separator {
 	color: #929597;
 }
 
-.OfferMaker__table {
-	width: 100%;
-}
-
-.OfferMaker__table input, select, textarea {
-	color: #3a3f43;
-	padding: .35em 1em .3166em;
-}
-
-.OfferMaker__table__row {
-	height: 50px;
-}
-
-.OfferMaker__table__label {
-	min-width: 100px;
-}
-
-.OfferMaker__table__input {
-	width: auto;
-	min-width: 100px;
-}
-
-.OfferMaker__table__input__input {
-	width: 100%;
-}
-
-.OfferMaker__overview {
-	margin-top: 12px;
-	border-top: 1px solid #dedfe0;
-	padding-top: 12px;
-}
-
 .OfferTable {
 	width: 100%;
 	text-align: right;
@@ -153,45 +121,7 @@ a.AssetPairRow:hover .AssetPair__separator {
 	font-family: 'Ubuntu Mono';
 }
 
-.OfferMaker__table {
-	width: 100%;
-}
 
-.OfferMaker__table__row {
-	height: 50px;
-}
-
-.OfferMaker__table__label {
-	min-width: 100px;
-}
-
-.OfferMaker__table__input {
-	width: auto;
-	min-width: 100px;
-}
-
-.OfferMaker__message {
-	font-size: 13.5px;
-}
-
-.OfferMaker__errorList {
-	margin-left: 2em;
-}
-
-.OfferMaker__youHave {
-	font-size: 13.5px;
-	margin-bottom: 0.5em;
-}
-
-.OfferMaker__table__input__input {
-	width: 100%;
-}
-
-.OfferMaker__overview {
-	margin-top: 12px;
-	border-top: 1px solid #dedfe0;
-	padding-top: 12px;
-}
 
 .s-alert--success {
     border: 1px solid #383;
@@ -266,11 +196,11 @@ a.AssetPairRow:hover .AssetPair__separator {
 	border-top: 1px solid #dedfe0;
 	padding-top: 12px;
 	font-size: 14px;
+	color: #777;
 }
 
 .listings .input-lable {
 	font: 18px 'OpenSansRegular';
-  color: #777;
   line-height:34px;
 }
 

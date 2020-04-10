@@ -192,10 +192,10 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         });
         
         this.asks = this.asks.filter(item => {
-          return new BigNumber(order.amount.value).isGreaterThan("0.001") || new BigNumber(order.volume.value).isGreaterThan("0.001");
+          return new BigNumber(item.gets_value).isGreaterThan("0.001") || new BigNumber(item.pays_value).isGreaterThan("0.001");
         });
         this.bids = this.bids.filter(item => {
-          return new BigNumber(order.amount.value).isGreaterThan("0.001") || new BigNumber(order.volume.value).isGreaterThan("0.001");
+          return new BigNumber(item.gets_value).isGreaterThan("0.001") || new BigNumber(item.pays_value).isGreaterThan("0.001");
         });
         
         var displayNum = 20;
