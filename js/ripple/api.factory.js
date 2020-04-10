@@ -21,6 +21,11 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     function toTimestamp(rpepoch) {
       return (rpepoch + 0x386D4380) * 1000;
     };
+    
+    function convertAmount(amount) {
+      amount.value = new BigNumber(new BigNumber(amount.value).toPrecision(16)).toString();
+      return amount;
+    };
 
     return {
       set remote(remote) {
@@ -211,11 +216,11 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         const payment = {
             "source": {
               "address": this.address,
-              "maxAmount": srcAmount
+              "maxAmount": convertAmount(srcAmount)
             },
             "destination": {
               "address": this.address,
-              "amount": destAmount
+              "amount": convertAmount(destAmount)
             },
             "paths" : JSON.stringify(paths),
             "allowPartialPayment": true
