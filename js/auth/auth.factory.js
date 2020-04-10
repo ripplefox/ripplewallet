@@ -138,14 +138,8 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
     sign(address, txtJson) {
       const kp = this.availablePKs[address];
       if (!kp) throw new Error(`No keypair found for ${address}`);
-      try {
-        var signedTransaction = Id.sign(txtJson, kp.secret);
-        return signedTransaction;
-      } catch(e) {
-        console.error('sign error', e);
-        console.log(e.data);
-        throw e;
-      }
+      var signedTransaction = Id.sign(txtJson, kp.secret);
+      return signedTransaction;
     }
 
     //

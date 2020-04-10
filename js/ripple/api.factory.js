@@ -183,18 +183,16 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           limit: limit,
           ripplingDisabled: ripplingDisabled
         };
-
-        return new Promise((resolve, reject)=> {
-          _remote.prepareTrustline(this.address, trustline).then(prepared => {
+        return new Promise(async (resolve, reject)=> {
+          try {
+            let prepared = await _remote.prepareTrustline(this.address, trustline);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
-            _remote.submit(signedTransaction).then(result => {
-                console.info(result);
-                resolve(result);
-              }).catch (err => {
-              console.info('changeTrust', err);
-              reject(err);
-            });
-          });
+            let result = await _remote.submit(signedTransaction);
+            resolve(result);
+          } catch (err) {
+            console.info('changeTrust', err);
+            reject(err);
+          }
         });
       },
       
@@ -222,17 +220,32 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             "paths" : JSON.stringify(paths),
             "allowPartialPayment": true
         }
-        return new Promise((resolve, reject)=>{
-          _remote.preparePayment(this.address, payment).then(prepared => {
+        return new Promise(async (resolve, reject)=>{
+          try {
+            let prepared = await _remote.preparePayment(this.address, payment);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
-            _remote.submit(signedTransaction).then(result => {
-              console.info(result);
-              resolve(result);
-            }).catch (err => {
-              console.info('convert', err);
-              reject(err);
-            });
-          });
+            let result = await _remote.submit(signedTransaction);
+            resolve(result);
+          } catch (err) {
+            console.error('convert', err);
+            reject(err);
+          }
+        });
+      },
+      
+      cancelOffer (offer_id) {
+        return new Promise(async (resolve, reject) => {
+          const orderCancellation = {orderSequence: offer_id};
+          orderCancellation.memos = [{data: 'foxlet', type: 'client', format: 'plain/text'}];
+          try {
+            let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
+            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            let result = await _remote.submit(signedTransaction);
+            resolve(result);
+          } catch (err) {
+            console.error('cancelOffer', err);
+            reject(err);
+          }
         });
       },
       
