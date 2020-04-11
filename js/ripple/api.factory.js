@@ -151,7 +151,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         var params = {
             account: address,
             ledger_index_min: -1,
-            limit: 5,
+            limit: 30,
             binary: false
         };
         if (marker) {

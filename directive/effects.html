@@ -1,7 +1,39 @@
+
 <ul ng-show="tx.effects" class="effects">
 		<li ng-repeat="effect in tx.showEffects" ng-switch="effect.type">
-			<!-- ngSwitchWhen: offer_funded -->
-			<!-- ngSwitchWhen: offer_partially_funded -->
+			<span ng-switch-when="offer_funded">
+				<span ng-show="effect.sell">
+					{{ 'you_sold' | translate }}
+					<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency}}</strong> 
+					{{ 'you_sold_for' | translate }} 
+					<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency}}</strong>
+				</span>
+				<span ng-hide="effect.sell">
+					{{ 'you_bought' | translate }} 
+					<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency}}</strong> 
+					{{ 'you_bought_for' | translate }} 
+					<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency}}</strong>
+				</span>
+				({{ 'price' | translate }} {{effect.price | rpamount:{precision: 4} }}){{ 'order_filled' | translate}}
+			</span>
+			<span ng-switch-when="offer_partially_funded">
+				<span ng-show="effect.sell">
+					{{ 'you_sold' | translate }}
+					<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency}}</strong> 
+					{{ 'you_sold_for' | translate }} 
+					<strong>{{effect.paid | rpamount}} {{effect.paid | rpcurrency}}</strong>
+				</span>
+				<span ng-hide="effect.sell">
+					{{ 'you_bought' | translate }}
+					<strong>{{effect.paid | rpamount}} {{effect.paid | rpcurrency}}</strong> 
+					{{ 'you_bought_for' | translate }} 
+					<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency}}</strong>
+				</span>
+				({{ 'price' | translate }} {{effect.price | rpamount:{precision: 4} }}).
+				<span ng-show="effect.cancelled" translate="rest_cancel"></span>
+				<span ng-hide="effect.deleted">{{'order_has' | translate}} {{effect.remaining | rpamount}} {{effect.remaining | rpcurrency}} {{'remaining' | translate}}</span>
+			</span>
+
 			<!-- ngSwitchWhen: offer_cancelled -->
 			<!-- ngSwitchWhen: offer_created -->
 			<span ng-switch-when="offer_bought">
@@ -17,6 +49,6 @@
 			<!-- ngSwitchWhen: trust_change_remote -->
 			<!-- ngSwitchWhen: trust_change_balance -->
 			<!-- ngSwitchWhen: balance_change -->
+			<span ng-switch-default>{{effect.type}}</span>
 		</li>
-		<li ng-switch-default>{{effect.type}}</li>
 </ul>

@@ -1,13 +1,12 @@
-<div class="row {{tx.transaction.type}}">
-	<div class="col-xs-2">
+<div class="row">
+	<div class="col-xs-3">
 		{{tx.date | date:'yyyy-MM-dd HH:mm:ss'}}
 	</div>
-	<div class="col-xs-10">
-		<div class="hash">
-			{{'transaction' | translate}}: <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a>
-		</div>
-		<div>
-			{{tx.transaction.type}}
+	<div class="col-xs-9">
+		<div class="hash"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
+		<div class="transaction">
+			<effects></effects>
+			<div ng-show="tx.transaction">{{tx.transaction.type}} 此类型未解析，请截图反馈给我们改进</span>
 		</div>
 	</div>
 </div>
