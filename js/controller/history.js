@@ -17,8 +17,7 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
           var item = filterEffects(tx);
           $scope.history.push(item);
         });
-        console.log(data);
-        console.log($scope.history);
+        console.debug(data);
         $scope.$apply();
       }).catch(err => {
         $scope.loading = false;

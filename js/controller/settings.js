@@ -38,6 +38,7 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
       $scope.network_coin = SettingFactory.getCoin(type);
     }
     $scope.addServer = function() {
+      $scope.server_port = $scope.server_port || 443;
       $scope.network_servers.push({"server": $scope.server_url, "port": $scope.server_port});
       SettingFactory.setServers($scope.network_servers, $scope.network_type);
     }

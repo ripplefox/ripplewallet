@@ -224,7 +224,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.countdown = 30;
       XrpOrderbook.checkBook(info).then(data => {
         if (!$scope.book.origin || !_.isEqual($scope.book.origin.asks, data.asks) || !_.isEqual($scope.book.origin.bids, data.bids)) {
-          console.log('book changed', $scope.book);
+          console.debug('book changed', $scope.book);
         }
         $scope.book.update(data);
         $scope.refreshingBook = false;

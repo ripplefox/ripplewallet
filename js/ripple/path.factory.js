@@ -10,6 +10,11 @@ myApp.factory('XrpPath', ['$rootScope', function($rootScope) {
       _remote = remote;
     },
     
+    connect() {
+      if (!_remote) throw new Error("NotConnectedError");
+      return _remote.isConnected() ? Promise.resolve() : _remote.connect();
+    },
+    
     close() {
       if (_myHandler) {
         _remote.connection.removeListener('path_find', _myHandler);

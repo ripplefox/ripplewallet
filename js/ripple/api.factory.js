@@ -39,6 +39,11 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
+      connect() {
+        if (!_remote) throw new Error("NotConnectedError");
+        return _remote.isConnected() ? Promise.resolve() : _remote.connect();
+      },
+      
       init() {
         if (this.address && _remote) {
           this.queryAccount();
@@ -62,9 +67,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       checkFunded(address) {
         return new Promise(async (resolve, reject)=>{
-          if (!_remote.isConnected()) {
-            await _remote.connect();
-          }
+          await this.connect();
           _remote.getAccountInfo(address || this.address).then(() => {
               resolve(true);
           }).catch(e => {
@@ -79,9 +82,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       checkInfo(address) {
         return new Promise(async (resolve, reject)=>{
-          if (!_remote.isConnected()) {
-            await _remote.connect();
-          }
+          await this.connect();
           _remote.getAccountInfo(address || this.address).then((info) => {
             _xrpBalance = info.xrpBalance;
             _ownerCount = info.ownerCount;
@@ -98,9 +99,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       checkBalances(address) {
         return new Promise(async (resolve, reject)=>{
-          if (!_remote.isConnected()) {
-            await _remote.connect();
-          }
+          await this.connect();
           _remote.getBalances(address || this.address).then((bal) => {
             _balances = bal;
             resolve(bal);
@@ -113,9 +112,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       checkTrustlines(address) {
         return new Promise(async (resolve, reject)=>{
-          if (!_remote.isConnected()) {
-            await _remote.connect();
-          }
+          await this.connect();
           _remote.getTrustlines(address || this.address).then((ret) => {
             let lines = {};
             ret.forEach((item)=>{
@@ -137,7 +134,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         address = address || this.address;
         return new Promise(async (resolve, reject)=>{
           try {
-            if (!_remote.isConnected())  await _remote.connect();
+            await this.connect();
             let page = await _remote.getOrders(address, {limit: 200});
             resolve(page);
           } catch (err) {
@@ -159,15 +156,12 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
         return new Promise(async (resolve, reject)=>{
           try {
-            if (!_remote.isConnected()) {
-              await _remote.connect();
-            }
+            await this.connect();
             let data = await _remote.request('account_tx', params);
             var transactions = [];
             if (data.transactions) {
               data.transactions.forEach(function (e) {
                 var tx = rewriter.processTxn(e.tx, e.meta, address);
-                console.log(e, tx);
                 if (tx) {
                   transactions.push(tx);
                 }

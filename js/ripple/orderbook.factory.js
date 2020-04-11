@@ -17,6 +17,11 @@ myApp.factory('XrpOrderbook', ['$rootScope', 'AuthenticationFactory', function($
       _remote = remote;
     },
     
+    connect() {
+      if (!_remote) throw new Error("NotConnectedError");
+      return _remote.isConnected() ? Promise.resolve() : _remote.connect();
+    },
+    
     checkBook(info, address) {
       address = address || this.address;
       if (this.nativeCode === info.base.currency) {
@@ -29,9 +34,7 @@ myApp.factory('XrpOrderbook', ['$rootScope', 'AuthenticationFactory', function($
       }
       return new Promise(async (resolve, reject)=>{
         try {
-          if (!_remote.isConnected()) {
-            await _remote.connect();
-          }
+          await this.connect();
           const response = await _remote.getOrderbook(address, info, {limit: 30});
           resolve(response);
         } catch (err) {
