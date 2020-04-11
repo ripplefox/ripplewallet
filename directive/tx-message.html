@@ -1,0 +1,14 @@
+<div class="row">
+	<div class="col-xs-3">
+		{{tx.date | date:'yyyy-MM-dd HH:mm:ss'}}
+	</div>
+	<div class="col-xs-9">
+		<div class="transaction">
+			<span ng-show="tx.transaction.type == 'accountset'" translate="accountset">Account details have been changed</span>
+			<span ng-show="tx.transaction.type == 'rippling'" translate="rippling">Rippling</span>
+			<span ng-show="tx.transaction.type == 'failed'" translate="failedtx">Failed transaction</span>
+			<effects></effects>
+		</div>
+		<div class="hash"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
+	</div>
+</div>

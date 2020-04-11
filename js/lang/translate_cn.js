@@ -143,6 +143,9 @@ var translate_cn = {
   order_cancel: '委托单（用',
   order_cancel_for: '购入',
   order_cancel_due: '）因为资金不足被取消。',
+  accountset: '账号信息已更新',
+  rippling: '同种货币互相置换',
+  failedtx: '失败的交易',
 
   choose : '选择',
   example : '示例',

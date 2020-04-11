@@ -59,7 +59,13 @@ myApp.directive('txOffercancel', [ function() {
     replace : true
   }
 } ]);
-
+myApp.directive('txMessage', [ function() {
+  return {
+    restrict : 'E',
+    templateUrl : 'directive/tx-message.html',
+    replace : true
+  }
+} ]);
 myApp.directive('txDefault', [ function() {
   return {
     restrict : 'E',

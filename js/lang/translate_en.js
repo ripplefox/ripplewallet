@@ -143,6 +143,9 @@ var translate_en = {
   order_cancel: 'Order (',
   order_cancel_for: 'for',
   order_cancel_due: ') has been cancelled due to lack of funds.',
+  accountset: 'Account details have been changed',
+  rippling: 'Rippling',
+  failedtx: 'Failed transaction',
   
   choose : 'Choose',
   example : 'example',

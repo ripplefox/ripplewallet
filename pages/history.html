@@ -17,8 +17,9 @@
 					<tx-convert ng-switch-when="exchange"></tx-convert>
 					<tx-offer ng-switch-when="offernew"></tx-offer>
 					<tx-offercancel ng-switch-when="offercancel"></tx-offercancel>
-					<tx-payment ng-switch-when="createAccount"></tx-payment>
-					<tx-trust ng-switch-when="changeTrust"></tx-trust>
+					<tx-message ng-switch-when="accountset"></tx-message>
+					<tx-message ng-switch-when="rippling"></tx-message>
+					<tx-message ng-switch-when="failed"></tx-message>
 					<tx-default ng-switch-default></tx-default>
 				</div>
 			</div>
