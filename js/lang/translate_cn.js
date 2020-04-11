@@ -142,6 +142,10 @@ var translate_cn = {
   you_cancel_for: '购入',
   you_trust: '你把',
   you_trust_for: '的信任额度调整为',
+  trust_you: '把对你的信任额度调整为',
+  you_sent: '你发送了',
+  you_sent_to: '给',
+  sent_you: '给你发送了',
   order_cancel: '委托单（用',
   order_cancel_for: '购入',
   order_cancel_due: '）因为资金不足被取消。',
@@ -295,6 +299,6 @@ var translate_cn = {
   new_version_available: '发现新版本',
 
   /** Error **/
-  NotFoundError : '瑞波网络未找到该账号，请先激活此账号。激活需要至少1 {{code}}。每个授信和委托单需要额外冻结0.5 {{code}}，建议至少用3 {{code}}完成激活。',
-  changeTrustLowReserve : '瑞波资金不足，无法授信新资产。每个授信需要额外冻结0.5 {{code}}。'
+  NotFoundError : '瑞波网络未找到该账号，请先激活此账号。激活需要至少20 {{code}}。每个授信和委托单需要额外冻结5 {{code}}，建议至少用31 {{code}}完成激活。',
+  NotConnectedError : '未连接到服务器，请过一会儿再试。'
 }

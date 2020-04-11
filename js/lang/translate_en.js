@@ -142,6 +142,10 @@ var translate_en = {
   you_cancel_for: 'for',
   you_trust: 'You now trust',
   you_trust_for: 'for',
+  trust_you: 'now trusts you for',
+  you_sent: 'You sent',
+  you_sent_to: 'to',
+  sent_you: 'sent you',
   order_cancel: 'Order (',
   order_cancel_for: 'for',
   order_cancel_due: ') has been cancelled due to lack of funds.',
@@ -296,5 +300,5 @@ var translate_en = {
 
   /** Error **/
   NotFoundError : 'The resource was not found. You must have at least 1 {{name}} in your account for it to be activated! Each trust line or offer requires a 0.5 {{name}}  reserve in addition. To make things easy, send at least 3 {{name}}s to the account.',
-  changeTrustLowReserve : 'Not enough funds to create a new trust line. Each trust line requires a 0.5 {{name}} reserve in addition.'
+  NotConnectedError : 'Not connected, please retry later.'
 }
