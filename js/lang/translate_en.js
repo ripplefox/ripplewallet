@@ -140,6 +140,8 @@ var translate_en = {
   you_buy_for: 'for',
   you_cancel: 'You cancelled an order accepting',
   you_cancel_for: 'for',
+  you_trust: 'You now trust',
+  you_trust_for: 'for',
   order_cancel: 'Order (',
   order_cancel_for: 'for',
   order_cancel_due: ') has been cancelled due to lack of funds.',

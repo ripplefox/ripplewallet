@@ -1,11 +1,21 @@
-<div class="feed-item">
-	<div class="feed-item-icon">
-		<div class="circle circle-blue" translate="trust"></div>
+<div class="row trusted">
+	<div class="col-xs-3">
+		{{tx.date | date:'yyyy-MM-dd HH:mm:ss'}}
 	</div>
-	<div class="feed-item-comment">{{item.tx.operations[0].line.issuer}}</div>
-
-	<div class="payment">
-		<div class="txamount">{{item.tx.operations[0].limit}} {{item.tx.operations[0].line.code}}</div>
-		<div class="timestamp">{{item.date | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+	<div class="col-xs-9">
+		<div class="transaction">
+				<span ng-show="tx.transaction.type == 'trusted'">
+					{{ tx.transaction.counterparty }} now trusts you for
+					<strong>{{tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency}}</strong>
+				</span>
+				<span ng-show="tx.transaction.type == 'trusting'">
+					{{'you_trust' | translate}} <strong>{{tx.transaction.counterparty}}</strong>
+					{{'you_trust_for' | translate}}
+					<strong>{{tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency}}</strong>
+				</span>
+                    
+				<effects></effects>
+		</div>
+		<div class="hash"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
 	</div>
 </div>

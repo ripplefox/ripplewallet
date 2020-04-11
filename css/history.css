@@ -18,11 +18,11 @@
   list-style-type: none;
 }
 
-.history .trusted,
 .history .received {
   background-color: #e4efd9;
 }
 
+.history .trusted,
 .history .trusting {
   background-color: #D9EDF7;
 }

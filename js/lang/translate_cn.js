@@ -140,6 +140,8 @@ var translate_cn = {
   you_buy_for: '花费',
   you_cancel: '你取消了委托单：用',
   you_cancel_for: '购入',
+  you_trust: '你把',
+  you_trust_for: '的信任额度调整为',
   order_cancel: '委托单（用',
   order_cancel_for: '购入',
   order_cancel_due: '）因为资金不足被取消。',
