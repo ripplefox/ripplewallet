@@ -1,20 +1,24 @@
-<div class="feed-item">
-	<div class="feed-item-icon">
-		<div class="circle circle-blue" translate="offer" ng-show="{{item.tx.operations[0].amount}}"></div>
-		<div class="circle circle-blue" translate="offer_cancel" ng-hide="{{item.tx.operations[0].amount}}"></div>
+<div class="row offernew">
+	<div class="col-xs-3">
+		{{tx.date | date:'yyyy-MM-dd HH:mm:ss'}}
 	</div>
-	<div class="feed-item-comment">
-		<span ng-if="item.source_account !== address" class="timestamp nowrap">{{'source_account' | translate}}: {{item.source_account}}</span>
-		<span>{{item.tx.operations[0].selling.issuer ? item.tx.operations[0].selling.code : item.nativeCode}}/{{item.tx.operations[0].buying.issuer ? item.tx.operations[0].buying.code : item.nativeCode}}</span>
-	</div>
-
-	<div class="payment">
-		<div class="txamount">
-		{{item.tx.operations[0].amount}} {{item.tx.operations[0].selling.issuer ? item.tx.operations[0].selling.code : item.nativeCode}} 
-		<span class="glyphicon glyphicon-arrow-right"></span>
-		{{item.tx.operations[0].buying.issuer ? item.tx.operations[0].buying.code : item.nativeCode}}
-		
-		{{'price' | translate}}: {{item.tx.operations[0].price}}</div>
-		<div class="timestamp">{{item.date | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+	<div class="col-xs-9">
+		<div class="hash"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
+		<div class="transaction">
+				<span ng-show="tx.transaction.sell">
+					{{ 'you_sell' | translate }}
+					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency}}</strong>
+					{{ 'you_sell_for' | translate }}
+					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency}}</strong>
+				</span>
+				<span ng-hide="tx.transaction.sell">
+					{{ 'you_buy' | translate }}
+					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency}}</strong>
+					{{ 'you_buy_for' | translate }}
+					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency}}</strong>
+				</span>
+				
+				<effects></effects>
+		</div>
 	</div>
 </div>

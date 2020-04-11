@@ -128,6 +128,10 @@ var translate_en = {
   you_convert_to: 'to',
   you_bought: 'You bought',
   you_bought_for: 'for', 
+  you_sell: 'You created an order to sell',
+  you_sell_for: 'for',
+  you_buy: 'You created an order to buy',
+  you_buy_for: 'for',
   
   choose : 'Choose',
   example : 'example',

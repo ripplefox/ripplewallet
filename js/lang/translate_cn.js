@@ -40,7 +40,7 @@ var translate_cn = {
   confirm: '确定',
   
   /** Balance & Trust **/
-  balance : '资产',
+  balance : '余额',
   reserve   : '冻结：',
   total : '总量',
   trust : '授信',
@@ -128,6 +128,10 @@ var translate_cn = {
   you_convert_to: '到',
   you_bought: '你买到',
   you_bought_for: '花费', 
+  you_sell: '你创建了一个卖单，卖出',
+  you_sell_for: '得到',
+  you_buy: '你创建了一个买单，买入',
+  you_buy_for: '花费',
 
   choose : '选择',
   example : '示例',
