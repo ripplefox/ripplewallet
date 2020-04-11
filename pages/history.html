@@ -16,13 +16,9 @@
 				<div ng-repeat="tx in history" ng-switch="tx.transaction.type">
 					<tx-convert ng-switch-when="exchange"></tx-convert>
 					<tx-offer ng-switch-when="offernew"></tx-offer>
-					<tx-offercancel ng-switch-when="offercancel"></tx-payment>
+					<tx-offercancel ng-switch-when="offercancel"></tx-offercancel>
 					<tx-payment ng-switch-when="createAccount"></tx-payment>
 					<tx-trust ng-switch-when="changeTrust"></tx-trust>
-					<tx-options ng-switch-when="setOptions"></tx-options>
-					<tx-data ng-switch-when="manageData"></tx-data>
-					<tx-inflation ng-switch-when="inflation"></tx-inflation>
-					<tx-batch ng-switch-when="batch"></tx-batch>
 					<tx-default ng-switch-default></tx-default>
 				</div>
 			</div>

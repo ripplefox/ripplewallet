@@ -13,7 +13,7 @@
 					{{ 'you_bought_for' | translate }} 
 					<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency}}</strong>
 				</span>
-				({{ 'price' | translate }} {{effect.price | rpamount:{precision: 4} }}){{ 'order_filled' | translate}}
+				({{ 'price' | translate }} <strong>{{effect.price | rpamount:{precision: 4} }}</strong>){{ 'order_filled' | translate}}
 			</span>
 			<span ng-switch-when="offer_partially_funded">
 				<span ng-show="effect.sell">
@@ -28,19 +28,25 @@
 					{{ 'you_bought_for' | translate }} 
 					<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency}}</strong>
 				</span>
-				({{ 'price' | translate }} {{effect.price | rpamount:{precision: 4} }})
+				({{ 'price' | translate }} <strong>{{effect.price | rpamount:{precision: 4} }}</strong>)
 				<span ng-show="effect.cancelled" translate="rest_cancel"></span>
 				<span ng-hide="effect.deleted">{{'order_has' | translate}} {{effect.remaining | rpamount}} {{effect.remaining | rpcurrency}} {{'remaining' | translate}}</span>
 			</span>
-
+      <span ng-switch-when="offer_cancelled">
+				{{ 'order_cancel' | translate }}
+				<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency}}</strong>
+				{{ 'order_cancel_for' | translate }}
+				<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency}}</strong> 
+				{{ 'order_cancel_due' | translate }}
+			</span>
 			<!-- ngSwitchWhen: offer_cancelled -->
 			<!-- ngSwitchWhen: offer_created -->
 			<span ng-switch-when="offer_bought">
 				{{ 'you_bought' | translate }}
 				<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency}}</strong> 
 				{{ 'you_bought_for' | translate }}
-				<strong class="ng-binding">{{effect.paid | rpamount}} {{effect.paid | rpcurrency}}</strong> 
-				(price:<strong> {{effect.price | rpamount:{invert: true} }}</strong>)
+				<strong>{{effect.paid | rpamount}} {{effect.paid | rpcurrency}}</strong> 
+				({{ 'price' | translate }} <strong>{{effect.price | rpamount:{invert: true} }}</strong>)
 			</span>
 			<!-- ngSwitchWhen: trust_create_local -->
 			<!-- ngSwitchWhen: trust_create_remote -->
