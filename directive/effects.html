@@ -1,4 +1,3 @@
-
 <ul ng-show="tx.effects" class="effects">
 		<li ng-repeat="effect in tx.showEffects" ng-switch="effect.type">
 			<span ng-switch-when="offer_funded">
@@ -29,7 +28,7 @@
 					{{ 'you_bought_for' | translate }} 
 					<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency}}</strong>
 				</span>
-				({{ 'price' | translate }} {{effect.price | rpamount:{precision: 4} }}).
+				({{ 'price' | translate }} {{effect.price | rpamount:{precision: 4} }})
 				<span ng-show="effect.cancelled" translate="rest_cancel"></span>
 				<span ng-hide="effect.deleted">{{'order_has' | translate}} {{effect.remaining | rpamount}} {{effect.remaining | rpcurrency}} {{'remaining' | translate}}</span>
 			</span>

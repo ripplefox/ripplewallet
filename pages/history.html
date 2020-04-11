@@ -16,7 +16,7 @@
 				<div ng-repeat="tx in history" ng-switch="tx.transaction.type">
 					<tx-convert ng-switch-when="exchange"></tx-convert>
 					<tx-offer ng-switch-when="offernew"></tx-offer>
-					<tx-payment ng-switch-when="payment"></tx-payment>
+					<tx-offercancel ng-switch-when="offercancel"></tx-payment>
 					<tx-payment ng-switch-when="createAccount"></tx-payment>
 					<tx-trust ng-switch-when="changeTrust"></tx-trust>
 					<tx-options ng-switch-when="setOptions"></tx-options>

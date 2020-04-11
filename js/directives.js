@@ -52,10 +52,10 @@ myApp.directive('txOffer', [ function() {
     replace : true
   }
 } ]);
-myApp.directive('txOptions', [ function() {
+myApp.directive('txOffercancel', [ function() {
   return {
     restrict : 'E',
-    templateUrl : 'directive/tx-options.html',
+    templateUrl : 'directive/tx-offercancel.html',
     replace : true
   }
 } ]);

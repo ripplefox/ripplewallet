@@ -41,7 +41,7 @@ myApp.filter('rpamount', function () {
       opts.max_sig_digits = 5;
     }
     
-    var amount = input;
+    var amount = ripple.Amount.from_json(input);
     if (opts.invert) {
       amount = amount.invert();
     }
@@ -62,7 +62,8 @@ myApp.filter('rpamount', function () {
 
 myApp.filter('rpcurrency', function($filter) {
   return function(input, nativecode) {
+    var amount = ripple.Amount.from_json(input);
     nativecode = nativecode || 'XRP';
-    return input.issuer().to_json() ? input.currency().to_human() : nativecode;
+    return amount.issuer().to_json() ? amount.currency().to_human() : nativecode;
   }
 });
