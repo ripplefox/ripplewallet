@@ -1,0 +1,40 @@
+<section class="col-xs-12 content">
+	<group>
+	<div class="so-back islandBack islandBack--t">
+		<div class="island">
+			<div class="island__header">{{'history' | translate}}
+				<a class="btn btn-success btn-sm" ng-click="refresh()" ng-disabled="loading">
+					<span class="glyphicon glyphicon-refresh"></span> {{'refresh' | translate}}</a>
+
+			</div>
+			<div class="AddTrustFromDirectory">
+				<div class="s-alert s-alert--alert" ng-show="error_msg">
+						<ul class="AddTrust__errorList">
+							<li>{{error_msg | translate:currentNetwork.coin}}</li>
+						</ul>
+				</div>
+				<div class="history class="col-xs-12">
+					<div ng-repeat="tx in history" ng-switch="tx.transaction.type">
+						<tx-convert ng-switch-when="exchange"></tx-convert>
+						<tx-payment ng-switch-when="payment"></tx-payment>
+						<tx-payment ng-switch-when="createAccount"></tx-payment>
+						<tx-trust ng-switch-when="changeTrust"></tx-trust>
+						<tx-offer ng-switch-when="manageOffer"></tx-offer>
+						<tx-options ng-switch-when="setOptions"></tx-options>
+						<tx-data ng-switch-when="manageData"></tx-data>
+						<tx-inflation ng-switch-when="inflation"></tx-inflation>
+						<tx-batch ng-switch-when="batch"></tx-batch>
+						<tx-default ng-switch-default></tx-default>
+					</div>
+				</div>
+      </div>
+        	
+      <div class="txfoot">
+				<div translate="loading" ng-show="loading">Loading...</div>
+				<a href="" ng-click="load_more()" translate="load_more" ng-show="marker && !loading">Load more</a>
+				<div translate="no_more" ng-show="!marker && !loading">No more transactions left</div>
+			</div>
+		</div>
+	</div>
+	</group>
+</section>

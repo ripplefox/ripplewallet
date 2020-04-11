@@ -1,0 +1,17 @@
+<div class="row exchange">
+	<div class="col-xs-3">
+		{{tx.date | date:'yyyy-MM-dd HH:mm:ss'}}
+	</div>
+	<div class="col-xs-9">
+		<div class="hash"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
+		<div class="transaction">
+			<span>
+				{{ 'you_convert' | translate }}
+				<strong>{{tx.transaction.spent | rpamount}} {{tx.transaction.spent | rpcurrency}}</strong>
+				{{ 'you_convert_to' | translate }}
+				<strong>{{tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency}}</strong>
+			</span>
+			<effects></effects>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,22 @@
+<ul ng-show="tx.effects" class="effects">
+		<li ng-repeat="effect in tx.showEffects" ng-switch="effect.type">
+			<!-- ngSwitchWhen: offer_funded -->
+			<!-- ngSwitchWhen: offer_partially_funded -->
+			<!-- ngSwitchWhen: offer_cancelled -->
+			<!-- ngSwitchWhen: offer_created -->
+			<span ng-switch-when="offer_bought">
+				{{ 'you_bought' | translate }}
+				<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency}}</strong> 
+				{{ 'you_bought_for' | translate }}
+				<strong class="ng-binding">{{effect.paid | rpamount}} {{effect.paid | rpcurrency}}</strong> 
+				(price:<strong> {{effect.price | rpamount:{invert: true} }}</strong>)
+			</span>
+			<!-- ngSwitchWhen: trust_create_local -->
+			<!-- ngSwitchWhen: trust_create_remote -->
+			<!-- ngSwitchWhen: trust_change_local -->
+			<!-- ngSwitchWhen: trust_change_remote -->
+			<!-- ngSwitchWhen: trust_change_balance -->
+			<!-- ngSwitchWhen: balance_change -->
+		</li>
+		<li ng-switch-default>{{effect.type}}</li>
+</ul>

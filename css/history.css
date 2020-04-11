@@ -1,3 +1,52 @@
+.history .hash {
+	font-size: 12px;
+}
+
+.history .hash a:link,
+.history .hash a:visited {
+	color: #AAAAAA;
+	text-decoration:none;
+}
+
+.history .effects {
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+}
+
+.history .effects li {
+  list-style-type: none;
+}
+
+.history .trusted,
+.history .received {
+  background-color: #e4efd9;
+}
+
+.history .trusting {
+  background-color: #D9EDF7;
+}
+
+.history .sent {
+  background-color: #ECDFDE;
+}
+
+.history .exchange,
+.history .offernew {
+  background-color: #FCF8E3;
+}
+
+.history .offerfunded {
+  background-color: #FCF8E3;
+}
+
+.history .offerpartiallyfunded {
+  background-color: #FCF8E3;
+}
+
+.history .offercancel {
+  background-color: #eee;
+}
 
 .HistoryTable {
 	width: 100%;

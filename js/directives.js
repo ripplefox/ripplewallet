@@ -16,6 +16,14 @@ myApp.directive('gateway', [ function() {
   }
 } ]);
 
+myApp.directive('effects', [ function() {
+  return {
+    restrict : 'E',
+    templateUrl : 'directive/effects.html',
+    replace : true
+  }
+} ]);
+
 myApp.directive('txPayment', [ function() {
   return {
     restrict : 'E',
@@ -23,10 +31,10 @@ myApp.directive('txPayment', [ function() {
     replace : true
   }
 } ]);
-myApp.directive('txPathPayment', [ function() {
+myApp.directive('txConvert', [ function() {
   return {
     restrict : 'E',
-    templateUrl : 'directive/tx-pathPayment.html',
+    templateUrl : 'directive/tx-convert.html',
     replace : true
   }
 } ]);
@@ -51,27 +59,7 @@ myApp.directive('txOptions', [ function() {
     replace : true
   }
 } ]);
-myApp.directive('txData', [ function() {
-  return {
-    restrict : 'E',
-    templateUrl : 'directive/tx-data.html',
-    replace : true
-  }
-} ]);
-myApp.directive('txInflation', [ function() {
-  return {
-    restrict : 'E',
-    templateUrl : 'directive/tx-inflation.html',
-    replace : true
-  }
-} ]);
-myApp.directive('txBatch', [ function() {
-  return {
-    restrict : 'E',
-    templateUrl : 'directive/tx-batch.html',
-    replace : true
-  }
-} ]);
+
 myApp.directive('txDefault', [ function() {
   return {
     restrict : 'E',

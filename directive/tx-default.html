@@ -1,13 +1,13 @@
-<div class="feed-item">
-	<div class="feed-item-icon">
-		<div ng-class="{true: 'circle circle-green', false: 'circle circle-red'}[item.tx.operations[0].isInbound]">
-			{{item.tx.operations[0].type}}
-		</div>
+<div class="row {{tx.transaction.type}}">
+	<div class="col-xs-2">
+		{{tx.date | date:'yyyy-MM-dd HH:mm:ss'}}
 	</div>
-	<div class="feed-item-comment">Unknown Type</div>
-
-	<div class="payment">
-		<div class="txamount"> </div>
-		<div class="timestamp">{{item.date | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+	<div class="col-xs-10">
+		<div class="hash">
+			{{'transaction' | translate}}: <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a>
+		</div>
+		<div>
+			{{tx.transaction.type}}
+		</div>
 	</div>
 </div>

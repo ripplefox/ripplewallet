@@ -157,27 +157,27 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         if (marker) {
           params.marker = marker;
         }
-        console.log(params);
         return new Promise(async (resolve, reject)=>{
-          if (!_remote.isConnected()) {
-            await _remote.connect();
-          }
-          _remote.request('account_tx', params).then(data => {
+          try {
+            if (!_remote.isConnected()) {
+              await _remote.connect();
+            }
+            let data = await _remote.request('account_tx', params);
             var transactions = [];
             if (data.transactions) {
               data.transactions.forEach(function (e) {
                 var tx = rewriter.processTxn(e.tx, e.meta, address);
-                console.log(address, e.tx, e.meta, tx);
+                console.log(e, tx);
                 if (tx) {
                   transactions.push(tx);
                 }
               });
             }
-            resolve(transactions);
-          }).catch(err => {
+            resolve({marker: data.marker, transactions: transactions});
+          } catch (err) {
             console.error('getTx', err);
             reject(err);
-          });
+          }
         });
       },
       
