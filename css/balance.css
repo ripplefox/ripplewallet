@@ -40,6 +40,14 @@
 	font-size: 21px;
 }
 
+.island .header {
+	background-color: #f4f4f5;
+	margin: 0;
+	padding: 11px 18px 9px 18px;
+	font-size: 21px;
+}
+
+
 .island__separator {
 	border-top: 1px solid #dedfe0;
 	width: 100%;
