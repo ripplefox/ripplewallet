@@ -88,18 +88,6 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
     access : {
       requiredLogin : true
     }
-  }).when('/ico', {
-    templateUrl : 'pages/ico.html',
-    controller : 'IcoCtrl',
-    access : {
-      requiredLogin : true
-    }
-  }).when('/ico/:type', {
-    templateUrl : 'pages/ico.html',
-    controller : 'IcoCtrl',
-    access : {
-      requiredLogin : true
-    }
   }).when('/settings', {
     templateUrl : 'pages/settings.html',
     controller : 'SettingsCtrl',

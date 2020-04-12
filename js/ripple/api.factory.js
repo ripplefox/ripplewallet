@@ -82,18 +82,16 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       checkInfo(address) {
         return new Promise(async (resolve, reject)=>{
-          await this.connect();
-          _remote.getAccountInfo(address || this.address).then((info) => {
-            _xrpBalance = info.xrpBalance;
-            _ownerCount = info.ownerCount;
-            _sequence = info.sequence;
+          try {
+            await this.connect();
+            let info = await _remote.getAccountInfo(address || this.address);
             resolve(info);
-          }).catch(e => {
-            if (e.data.error === 'actNotFound') {
-              e.funded = false;
+          } catch(e){
+            if (e.data && e.data.error === 'actNotFound') {
+              e.unfunded = true;
             }
             reject(e);
-          });
+          };
         });
       },
       
@@ -284,6 +282,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       queryAccount(callback) {
         this.checkInfo().then(info => {
+          _xrpBalance = info.xrpBalance;
+          _ownerCount = info.ownerCount;
+          _sequence = info.sequence;
           return this.checkTrustlines();
         }).then(lines => {
           this._updateRootInfo();
