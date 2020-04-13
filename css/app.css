@@ -134,6 +134,10 @@ code {
 	white-space:nowrap;
 }
 
+.pd {
+	padding: 15px;
+}
+
 .block {
 	display: block !important;
 }
