@@ -15,6 +15,7 @@
 					{{'sent_you' | translate}}
 					<strong>{{tx.transaction.amountSent || tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency}}</strong>
 				</span>
+				<span ng-show="tx.tag">{{'tx_tag' | translate}} <strong>{{tx.tag}}</strong>)</span>
 
 				<effects></effects>
 		</div>

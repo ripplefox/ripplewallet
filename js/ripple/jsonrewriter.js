@@ -602,6 +602,8 @@ var JsonRewriter = module.exports = {
       obj.transaction.type = 'rippling';
     }
 
+    obj.tag = tx.DestinationTag;
+    obj.invoice = tx.InvoiceID;
     obj.tx_type = tx.TransactionType;
     obj.tx_result = meta.TransactionResult;
     obj.fee = tx.Fee;

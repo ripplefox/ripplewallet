@@ -82,8 +82,8 @@ var translate_cn = {
   sending_to   : '正在发送到',
   send_done    : '发送成功',
   not_funded   : '未激活。请发送至少20个{{code}}创建该账号。建议至少发31个。',
-  already_has  : '账号目前持有',
   no_send_path : '找不到你和目标账户之间的路径。',
+  you_sending : '你将把{{code}}发送到',
 
   contacts : '联系人',
   contact  : '联系人',
@@ -156,6 +156,7 @@ var translate_cn = {
   accountset: '账号信息已更新',
   rippling: '同种货币互相置换',
   failedtx: '失败的交易',
+  tx_tag: '。(标签',
 
   choose : '选择',
   example : '示例',

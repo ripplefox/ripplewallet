@@ -82,8 +82,8 @@ var translate_en = {
   sending_to   : 'Sending to',
   send_done    : 'Asset successfully sent.',
   not_funded   : 'Not funded. To create this account, send it at least 20 {{name}}s ({{code}}).',
-  already_has  : 'The account has',
   no_send_path : 'Unable to find a path between you and the destination account.',
+  you_sending : 'You are sending {{code}} to',
 
   contacts : 'Contacts',
   contact  : 'Contact',
@@ -156,6 +156,7 @@ var translate_en = {
   accountset: 'Account details have been changed',
   rippling: 'Rippling',
   failedtx: 'Failed transaction',
+  tx_tag: '. (Tag',
   
   choose : 'Choose',
   example : 'example',
