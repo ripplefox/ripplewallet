@@ -125,11 +125,11 @@ myApp.factory('SettingFactory', function($window) {
       return type === 'other' ? $window.localStorage[`network_coin/${type}`] : this.NETWORKS[this.getNetworkType()].coin.code;
     },
 
-    setFedNetwork : function(domain) {
-      $window.localStorage['fed_network'] = domain;
+    setFedStellar : function(domain) {
+      $window.localStorage['fed_stellar'] = domain;
     },
-    getFedNetwork : function(url) {
-      return $window.localStorage['fed_network'] || 'fed.network';
+    getFedStellar : function(url) {
+      return $window.localStorage['fed_network'] || 'ripplefox.com';
     },
     setFedRipple : function(domain) {
       $window.localStorage['fed_ripple'] = domain;

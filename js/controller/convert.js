@@ -60,6 +60,7 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
         } else {
           console.log(data);
           $scope.found = true;
+          $scope.paths = {};
           data.alternatives.forEach(alt => {
             if ("string" === typeof alt.source_amount) {
               $scope.paths[$rootScope.currentNetwork.coin.code] = {

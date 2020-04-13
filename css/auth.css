@@ -40,6 +40,22 @@
   padding: 15px;
 } 
 
+.noborder {
+	border: none !important;
+}
+
+.nopadding {
+	padding: 0 !important;
+}
+
+.nopadding-left {
+	padding-left: 0;
+}
+
+.nopadding-right {
+	padding-right: 0;
+}
+
 .form-group p.error-text {
   display: none;
 }

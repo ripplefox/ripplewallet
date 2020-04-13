@@ -146,12 +146,14 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       $location.path(url);
     };
 
-
+    $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
+    $rootScope.native = $rootScope.currentNetwork.coin;
+    
     $rootScope.balance = "0"; //native asset;
     $rootScope.reserve = 0;
     $rootScope.lines = {}; // lines.CNY.xxx = {code: 'CNY', issuer: 'xxx', balance: 200, limit: 1000}
     $rootScope.getBalance = function(code, issuer) {
-      if (code == $rootScope.currentNetwork.coin.code) {
+      if (code == $rootScope.native.code) {
         return $rootScope.balance;
       } else {
         return $rootScope.lines[code] && $rootScope.lines[code][issuer] ? $rootScope.lines[code][issuer].balance : 0;
@@ -194,7 +196,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       return Gateways.getGateway(code, issuer);
     }
     
-    $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
     $rootScope.isPublicNetwork = function() {
       return this.currentNetwork.name == "Ripple Public Network";
     }

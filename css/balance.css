@@ -47,6 +47,10 @@
 	font-size: 21px;
 }
 
+.island .success {
+  font-size: 13px;
+  color: green;
+}
 
 .island__separator {
 	border-top: 1px solid #dedfe0;
