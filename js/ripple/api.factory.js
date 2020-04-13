@@ -95,16 +95,31 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
+      checkSettings(address) {
+        return new Promise(async (resolve, reject)=>{
+          try {
+            await this.connect();
+            let data = await _remote.getSettings(address || this.address);
+            resolve(data);
+          } catch(e){
+            if (e.data && e.data.error === 'actNotFound') {
+              e.unfunded = true;
+            }
+            reject(e);
+          };
+        });
+      },
+      
       checkBalances(address) {
         return new Promise(async (resolve, reject)=>{
-          await this.connect();
-          _remote.getBalances(address || this.address).then((bal) => {
-            _balances = bal;
+          try {
+            await this.connect();
+            let bal = await _remote.getBalances(address || this.address);
             resolve(bal);
-          }).catch(e => {
+          } catch(e) {
             console.error('getBalance', e);
             reject(e);
-          });
+          }
         });
       },
       
