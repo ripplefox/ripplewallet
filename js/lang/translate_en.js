@@ -157,6 +157,7 @@ var translate_en = {
   rippling: 'Rippling',
   failedtx: 'Failed transaction',
   tx_tag: '. (Tag',
+  another_payment: 'Send another payment',
   
   choose : 'Choose',
   example : 'example',

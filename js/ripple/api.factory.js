@@ -110,6 +110,21 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
+      checkCurrencies(address) {
+        return new Promise(async (resolve, reject)=>{
+          try {
+            await this.connect();
+            let data = await _remote.request('account_currencies', {account: address || this.address});
+            resolve(data);
+          } catch(e){
+            if (e.data && e.data.error === 'actNotFound') {
+              e.unfunded = true;
+            }
+            reject(e);
+          };
+        });
+      },
+      
       checkBalances(address) {
         return new Promise(async (resolve, reject)=>{
           try {
@@ -208,16 +223,37 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      convert(srcAmount, destAmount, paths) {
+      payment(destinationAddress, srcAmount, destAmount, tag) {
+        const payment = {
+            "source": {
+              "address": this.address,
+              "maxAmount": convertAmount(srcAmount)
+            },
+            "destination": {
+              "address": destinationAddress,
+              "amount": convertAmount(destAmount)
+            }
+        }
+        if (tag) payment.destination.tag = Number(tag);
+        return new Promise(async (resolve, reject)=>{
+          try {
+            let prepared = await _remote.preparePayment(this.address, payment);
+            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            let result = await _remote.submit(signedTransaction);
+            resolve(result);
+          } catch (err) {
+            err.data ? console.error(err.data) : console.error('payment', payment, err);
+            reject(err);
+          }
+        });
+      },
+      
+      pathPayment(destinationAddress, srcAmount, destAmount, paths, tag, partial) {
         //remove the type, type_hex to pass checkTxSerialization in sign function
         paths.forEach(path => {
           path.forEach(asset => {
-            if (asset.type) {
-              delete asset.type;
-            }
-            if (asset.type_hex) {
-              delete asset.type_hex;
-            }
+            delete asset.type;
+            delete asset.type_hex;
           });
         });
         const payment = {
@@ -226,12 +262,13 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
               "maxAmount": convertAmount(srcAmount)
             },
             "destination": {
-              "address": this.address,
+              "address": destinationAddress,
               "amount": convertAmount(destAmount)
             },
             "paths" : JSON.stringify(paths),
-            "allowPartialPayment": true
+            "allowPartialPayment": !!partial
         }
+        if (tag) payment.destination.tag = Number(tag);
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
@@ -239,12 +276,15 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let result = await _remote.submit(signedTransaction);
             resolve(result);
           } catch (err) {
-            err.data ? console.error(err.data) : console.error('convert', payment, err);
+            err.data ? console.error(err.data) : console.error('pathPayment', payment, err);
             reject(err);
           }
         });
       },
       
+      convert(srcAmount, destAmount, paths) {
+        return this.pathPayment(this.address, srcAmount, destAmount, paths, null, true);
+      },
       
       offer(options) {
         let totalPriceValue = new BigNumber(options.amount).multipliedBy(options.price).toString();

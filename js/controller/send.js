@@ -5,11 +5,18 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     console.log('Send to', $routeParams);
     var native = $rootScope.currentNetwork.coin;
     $scope.currencies = [];
-    for (var code in $rootScope.lines) {
-      $scope.currencies.push(code);
-    }
-    
     $scope.asset = {code: native.code};
+    $scope.init = function(){
+      $scope.mode = 'input';
+      $scope.asset.amount = 0;
+      $scope.service_amount = 0;
+      $scope.finding = false;
+      $scope.found = false;
+      $scope.send_error = "";
+      $scope.paths = [];
+    }
+    $scope.init();
+    
     $scope.input_address;
     $scope.tag_require = false;
     $scope.disallow_xrp = false;
@@ -17,7 +24,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.sending;
     $scope.send_done = false;
 
-    console.log($scope.asset);
     $scope.initSend = function(){
       if (AuthenticationFactory.getContact($routeParams.name)) {
         $scope.input_address = $routeParams.name;
@@ -25,15 +31,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       }
     }
 
-    $scope.send_error = {
-      invalid : false,
-      domain : false,
-      memo : '',
-      message : '',
-      hasError : function() {
-        return this.invalid || this.domain || this.message;
-      }
-    };
+    
     $scope.target_domain;
     $scope.real_address;
     $scope.real_not_fund = false;
@@ -44,17 +42,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.is_federation;
     $scope.is_contact;
 
-    $scope.setMemoType = function(type) {
-      $scope.memo_type = type;
-    };
-    $scope.isValidMemo = function() {
-      if ($scope.memo) {
-        $scope.send_error.memo = Id.isValidMemo($scope.memo_type, $scope.memo);
-      } else {
-        $scope.send_error.memo = '';
-      }
-      return !$scope.send_error.memo;
-    };
     $scope.pickCode = function(code) {
       console.log($scope.asset.code, '->', code);
       $scope.asset.code = code;
@@ -117,7 +104,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     };
     
     $scope.paths = [];
-    $scope.finding = false;
+    
     $scope.updatePath = function() {
       $scope.invalid_amount = !$scope.asset.amount || $scope.asset.amount <= 0;
       if ($scope.invalid_amount) {
@@ -341,26 +328,11 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.tag_require = !!settings.requireDestinationTag;
         $scope.disallow_xrp = !!settings.disallowIncomingXRP;
         $scope.$apply();
-        return XrpApi.checkBalances(snapshot);
-      }).then(balances => {
+        return XrpApi.checkCurrencies(snapshot);
+      }).then(data => {
+        console.log(data);
         $scope.act_loading = false;
-        $scope.currencies = [];
-        var total = {};
-        var balstr = [];
-        balances.forEach(line => {
-          total[line.currency] = (total[line.currency] || 0) + parseFloat(line.value);
-        });
-        for (var code in total) {
-          if (code !== native.code) {
-            $scope.currencies.push(code);
-            if (total[code] != 0) balstr.push(fmtbal(code, total[code]));
-          } else {
-            if (total[code] != 0) balstr.push(fmtbal(code, total[code]));
-          }
-        }
-        $scope.already_has = balstr.join(', ');
-        console.log(snapshot, 'balances', total);
-        console.log(snapshot, 'balances', balances);
+        $scope.currencies = data.receive_currencies;
         $scope.$apply();
       }).catch(err => {
         $scope.act_loading = false;
@@ -374,27 +346,91 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.$apply();
       });
     };
+    
+    $scope.pickPath = function(code) {
+      if ($scope.tag) {
+        var tag = Number($scope.tag);
+        $scope.invalid_tag = !(Number.isInteger(tag) && tag > 0 && tag < Math.pow(256, 4));
+      } else {
+        $scope.invalid_tag = false;
+      }
+      console.log($scope.tag, $scope.invalid_tag);
+      if ($scope.invalid_tag) return;
+      $scope.path = $scope.paths.find(item => {return item.code == code});
+      if (!$scope.path && code == native.code) {
+        // send XRP/native
+        $scope.path = {
+            origin : null,
+            code  : native.code,
+            value : $scope.asset.amount.toString(),
+            rate  : "1"
+        }
+      }
+      $scope.finding = false;
+      XrpPath.close();
+      clearInterval(timer);
+      $scope.mode = 'confirm';
+    };
+    $scope.cancelConfirm = function() {
+      $scope.mode = 'input';
+      $scope.updatePath();
+    }
 
-    $scope.send_asset = function() {
+    $scope.send_confirmed = function() {
+      $scope.mode = 'submit';
       $scope.sending = true;
       $scope.send_done = false;
-      $scope.send_error.message = '';
+      $scope.send_error = '';
+      console.log('sending', $scope.asset, $scope.tag);
       
-      console.log($scope.asset);
-
-      StellarApi.send($scope.real_address, $scope.asset.code, $scope.asset.issuer,
-        $scope.asset.amount, $scope.memo_type, $scope.memo, function(err, hash){
-          $scope.sending = false;
-
-          if (err) {
-            $scope.send_error.message = StellarApi.getErrMsg(err);
-          } else {
-            $scope.service_amount = 0;
-            $scope.asset.amount = 0;
-            $scope.send_done = true;
+      var alt = $scope.path.origin;
+      var srcAmount, dstAmount;
+      if (alt) {
+        if ("string" === typeof alt.source_amount) {
+          srcAmount = {
+              currency : 'drops',
+              value : round(alt.source_amount * 1.01).toString()
           }
-          $rootScope.$apply();
-        });
+        } else {
+          srcAmount = {
+              currency : alt.source_amount.currency,
+              counterparty : alt.source_amount.issuer,
+              value : new BigNumber(alt.source_amount.value).multipliedBy(1.01).toString()
+          }
+        }
+      } else {
+        srcAmount = {
+            currency : 'drops',
+            value : round($scope.asset.amount * 1000000).toString()
+        }
+      }
+      if ($scope.asset.code == native.code) {
+        dstAmount = {
+            currency : 'drops',
+            value : round($scope.asset.amount * 1000000).toString()
+        }
+      } else {
+        dstAmount = {
+            currency : $scope.asset.code,
+            counterparty : $scope.real_address,
+            value : $scope.asset.amount.toString()
+        }
+      }
+      
+      var payment = !alt ? XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag) :
+                       XrpApi.pathPayment($scope.real_address, srcAmount, dstAmount, alt.paths_computed, $scope.tag);
+      payment.then(result => {
+        $scope.sending = false;
+        $scope.send_done = true;
+        $scope.service_amount = 0;
+        $scope.asset.amount = 0;
+        $rootScope.$apply();
+      }).catch(err => {
+        $scope.sending = false;
+        console.error(err);
+        $scope.send_error = err.message;
+        $rootScope.$apply();
+      });
     };
 
     function autoCompleteURL(address) {

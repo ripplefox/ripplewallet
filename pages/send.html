@@ -2,96 +2,143 @@
 	<div class="so-back islandBack islandBack--t">
 		<div class="island form-group">
 			<div class="header" translate="send_money">Send money.</div>
-			<div class="row">
-					<div class="col-xs-12 col-sm-6 col-md-6">
-						<label translate="recipient">Recipient</label> {{asset2}}
-						<input type="text" class="form-control" required="true"
-							ng-model="input_address" ng-change="resolve()" ng-model-options="{debounce:800}"
-							placeholder="{{'name_or_address' | translate}}" list="contacts">
-						<datalist id="contacts">
-							<option ng-repeat="entry in contacts" value="{{entry.name}}">{{entry.address}}</option>
-						</datalist>
-						<div ng-show="input_address != real_address" class="success">{{real_address}}</div>
-						<div ng-show="invalid_address" class="error" translate="invalid_address">invalid address</div>
+			<group ng-show="mode == 'input'">
+					<div class="row">
+							<div class="col-xs-12 col-sm-6 col-md-6">
+								<label translate="recipient">Recipient</label> {{asset2}}
+								<input type="text" class="form-control" required="true"
+									ng-model="input_address" ng-change="resolve()" ng-model-options="{debounce:800}"
+									placeholder="{{'name_or_address' | translate}}" list="contacts">
+								<datalist id="contacts">
+									<option ng-repeat="entry in contacts" value="{{entry.name}}">{{entry.address}}</option>
+								</datalist>
+								<div ng-show="input_address != real_address" class="success">{{real_address}}</div>
+								<div ng-show="invalid_address" class="error" translate="invalid_address">invalid address</div>
+							</div>
 					</div>
-			</div>
-			<form name="sendForm">
-				<div class="row noborder" ng-show="show_dt_field || true">
-						<div class="col-xs-12 col-sm-6 col-md-6">
-							<label translate="receive">Receive</label>
-							<div class="row noborder nopadding">
-								<div class="col-xs-8 nopadding-left">
-									<input type="number" autocomplete="off" placeholder="0.00" class="form-control"
-										ng-model="asset.amount" ng-change="updatePath()" ng-model-options="{debounce:800}" required="true">
+					<form name="sendForm">
+						<div class="row noborder" ng-show="show_dt_field || true">
+								<div class="col-xs-12 col-sm-6 col-md-6">
+									<label translate="receive">Receive</label>
+									<div class="row noborder nopadding">
+										<div class="col-xs-8 nopadding-left">
+											<input type="text" autocomplete="off" placeholder="0.00" class="form-control"
+												ng-model="asset.amount" ng-change="updatePath()" ng-model-options="{debounce:800}" required="true">
+										</div>
+										<div class="col-xs-4 nopadding-right">
+											<div class="dropdown">
+										    <button class="btn btn-default dropdown-toggle form-control" type="button" data-toggle="dropdown">
+										    {{asset.code}} <span class="caret"></span></button>
+										    <ul class="dropdown-menu" role="menu">
+										    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
+										      <li role="presentation" ng-repeat="code in currencies">
+										      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code}}</a>
+										      </li>
+										    </ul>
+										  </div>
+										</div>
+									</div>
+									<div ng-show="disallow_xrp && asset.code==native.code" class="error" translate="disallow_xrp" translate-values="native">Recipient does not allow XRP payments. Are you sure you want to send XRP anyway?</div>
+									<div ng-show="invalid_amount" class="error" translate="invalid_amount">Invalid amount.</div>
 								</div>
-								<div class="col-xs-4 nopadding-right">
-									<div class="dropdown">
-								    <button class="btn btn-default dropdown-toggle form-control" type="button" data-toggle="dropdown">
-								    {{asset.code}} <span class="caret"></span></button>
-								    <ul class="dropdown-menu" role="menu">
-								    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
-								      <li role="presentation" ng-repeat="code in currencies">
-								      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code}}</a>
-								      </li>
-								    </ul>
-								  </div>
-								</div>
-							</div>
-							<div ng-show="disallow_xrp && asset.code==native.code" class="error" translate="disallow_xrp" translate-values="native">Recipient does not allow XRP payments. Are you sure you want to send XRP anyway?</div>
-							<div ng-show="invalid_amount" class="error" translate="invalid_amount">Invalid amount.</div>
 						</div>
-				</div>
-				
-				<div class="row noborder" ng-show="show_dt_field || true">
-						<div class="col-xs-12 col-sm-6 col-md-6">
-							<label translate="dest_tag">Destination tag</label>
-							<input name="tag" type="text" class="form-control" ng-model="tag" ng-required="tag_require">
-							<div ng-show="tag_require" translate="tag_need">Recipient requires a destination tag to be
-								specified for the transaction. If you don't know the destination tag, please contact them before doing a transaction.</div>
+						
+						<div class="row noborder" ng-show="show_dt_field || true">
+								<div class="col-xs-12 col-sm-6 col-md-6">
+									<label translate="dest_tag">Destination tag</label>
+									<input name="tag" type="text" class="form-control" ng-model="tag" ng-required="tag_require">
+									<div ng-show="tag_require" translate="tag_need">Recipient requires a destination tag to be
+										specified for the transaction. If you don't know the destination tag, please contact them before doing a transaction.</div>
+									<div ng-show="invalid_tag" class="error" translate="error_invalid_tag">invalid tag</div>
+								</div>
+						</div>
+						
+						<div class="row noborder">
+							<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
+								<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="">发送 {{asset.code}}</button>
 							</div>
-							<div ng-show="invalid_tag" class="error" translate="invalid_tag">invalid tag</div>
-				</div>
-				
-				<div class="row noborder">
-					<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
-						<button type="submit" class="btn btn-block btn-success" ng-click="pick(asset_code)" ng-disabled="">发送 {{asset.code}}</button>
+						</div>
+						
+						<div class="row form-group alternatives" ng-show="found">
+								<div class="message" ng-show="!paths.length">{{ 'no_send_path' | translate}}</div>
+								<div ng-repeat="alt in paths" class="col-xs-12 col-sm-6 col-md-4">
+									<div class="am">
+										<span class="amnt">{{alt.value}}</span>
+										<span class="currency">{{alt.code}}</span>
+										<div class="ex">(<span class="rate">{{alt.rate}}</span><span class="pair">{{asset.code}}/{{alt.code}}</span>)</div>
+									</div>
+									<button type="submit" ng-click="pickPath(alt.code)" class="btn btn-block btn-success">{{'send' | translate}} {{alt.code}}</button>
+								</div>
+						</div>
+						<div class="row pathupdate" ng-show="found">
+							<div class="col-xs-12"><span>{{'path_updated' | translate}} {{lastUpdate}} {{'seconds_ago' | translate}}</span></div>
+						</div>
+						
+					</form>
+					<div class="row noborder" ng-show="act_loading">
+						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'account_loading' | translate}} {{input_address}}</div>
 					</div>
-				</div>
+					<div class="row noborder" ng-show="finding && !found">
+						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'calculating' | translate}}</div>
+					</div>
+					<div class="row" ng-show="send_error">
+						<div class="s-alert s-alert--error">
+							<div ng-show="send_error">{{send_error}}</div>
+						</div> 
+					</div>
+					<div class="row" ng-show="(is_federation || real_not_fund || already_has) && real_address && !sending && !send_done">
+						<div class="s-alert s-alert--info">
+							<div ng-show="real_not_fund" translate="not_funded" translate-values="native">Not funded</div>
+							<div ng-show="is_federation || is_contact">{{real_address}}</div>
+						</div> 
+					</div>
+				</group>
 				
-				<div class="row form-group alternatives" ng-show="found">
-						<div class="message" ng-show="!paths.length">{{ 'no_send_path' | translate}}</div>
-						<div ng-repeat="alt in paths" class="col-xs-12 col-sm-6 col-md-4">
-							<div class="am">
-								<span class="amnt">{{alt.value}}</span>
-								<span class="currency">{{alt.code}}</span>
-								<div class="ex">(<span class="rate">{{alt.rate}}</span><span class="pair">{{asset.code}}/{{alt.code}}</span>)</div>
-							</div>
-							<button type="submit" ng-click="pick(alt.code)" class="btn btn-block btn-success">{{'send' | translate}} {{alt.code}}</button>
+				<group ng-show="mode == 'confirm'">
+				  <div class="mode-confirm row">
+						<p translate="you_sending" translate-values="path">You are sending XRP to</p>
+						<p class="amount_feedback">
+							<span class="value">{{input_address}} </span>
+							<span class="currency" ng-show="is_federation || is_contact">{{real_address}}</span>
+						</p>
+						<p translate="will_receive">Recipient will receive</p>
+						<p class="amount_feedback"><span class="value">{{asset.amount}} </span><span class="currency">{{asset.code}}</span></p>
+						<p translate="pay_most">You will pay at most</p>
+						<p class="amount_feedback"><span class="value">{{path.value}} </span><span class="currency">{{path.code}}</span><span ng-show="path.origin">± 1%</span></p>
+						<p translate="are_you_sure">Are you sure?</p>
+					</div>
+					
+					<div class="row">
+						<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+							<button ng-click="cancelConfirm()" class="btn btn-block btn-default back">« {{'back' | translate}}</button>
 						</div>
-				</div>
-				<div class="row pathupdate" ng-show="found">
-					<div class="col-xs-12"><span>{{'path_updated' | translate}} {{lastUpdate}} {{'seconds_ago' | translate}}</span></div>
-				</div>
+						<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+							<button ng-click="send_confirmed()" class="btn btn-block btn-success submit">{{'confirm' | translate}}</button>
+						</div>
+					</div>
+				</group>
 				
-			</form>
-			<div class="row noborder" ng-show="act_loading">
-				<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'account_loading' | translate}} {{input_address}}</div>
-			</div>
-			<div class="row noborder" ng-show="finding && !found">
-				<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'calculating' | translate}}</div>
-			</div>
-			<div class="row" ng-show="send_error">
-				<div class="s-alert s-alert--error">
-					<div ng-show="send_error">{{send_error}}</div>
-				</div> 
-			</div>
-			<div class="row" ng-show="(is_federation || real_not_fund || already_has) && real_address && !sending && !send_done">
-				<div class="s-alert s-alert--info">
-					<div ng-show="real_not_fund" translate="not_funded" translate-values="native">Not funded</div>
-					<div ng-show="is_federation || is_contact">{{real_address}}</div>
-					<div ng-show="already_has">{{'already_has' | translate}} {{already_has}}</div>
-				</div> 
-			</div>
+				<group ng-show="mode == 'submit'">
+					<div class="row form-group" ng-show="sending">
+							<div class="message">
+								<i class="fa fa-spinner fa-pulse"></i> {{ 'submitting' | translate}}
+						  </div>
+				  </div>
+				  <div class="row form-group block" ng-show="send_done">
+							<div class="message">
+								<h2 class="result-success" translate="submitted">Your transaction has been submitted.</h2>
+						  	<p translate="act_will_upd">Your account will update once the transaction has cleared.</p>
+						  </div>
+							<hr>
+					  	<div class="actionLink"><a href="" ng-click="init()" translate="another_payment">Do another conversion</a></div>
+					  	<div class="actionLink"><a href="" ng-click="goTo('balance')" translate="go_balance">Back to balance</a></div>
+				  </div>
+				  <div class="row form-group block" ng-show="send_error">
+						<div class="s-alert s-alert--error">{{send_error}}</div>
+						<hr>
+					  <div class="actionLink"><a href="" ng-click="init()" translate="another_payment">Do another conversion</a></div>
+					</div>
+				</group>
 		</div>
 
 	<div class="so-back islandBack">
@@ -109,7 +156,7 @@
 				</label>
 				<label class="s-inputGroup AddTrust__inputGroup">
 					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="amount">Amount</span>
-					<input type="number" autocomplete="off" class="s-inputGroup__item S-flexItem-share"
+					<input type="text" autocomplete="off" class="s-inputGroup__item S-flexItem-share"
 						ng-model="asset.amount"
 						ng-disabled="quote_id"
 						placeholder="{{'example' | translate}}: 100.25">

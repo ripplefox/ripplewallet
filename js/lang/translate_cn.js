@@ -98,7 +98,7 @@ var translate_cn = {
   error_same_contact : '该联系人已存在',
   error_need_address : '请输入一个账号地址',
   error_invalid_address : '不是有效的账号地址',
-  error_invalid_tag     : '标签号应该是正整数',
+  error_invalid_tag     : '不是有效的标签号',
   error_already_name    : '已有同名联系人',
 
   /** Convert **/
@@ -117,7 +117,7 @@ var translate_cn = {
   submitted     : '交易信息已经提交。',
   act_will_upd  : '您的账户会在交易完成后即时更新。',
   back_convert  : '进行另一个兑换',
-  go_balance    : '返回到资产界面',
+  go_balance    : '返回到余额界面',
 
   /** History **/
   history: '历史',
@@ -157,6 +157,7 @@ var translate_cn = {
   rippling: '同种货币互相置换',
   failedtx: '失败的交易',
   tx_tag: '。(标签',
+  another_payment: '进行另一笔支付',
 
   choose : '选择',
   example : '示例',
