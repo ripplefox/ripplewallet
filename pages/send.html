@@ -27,8 +27,12 @@
 										</div>
 										<div class="col-xs-4 nopadding-right">
 											<div class="dropdown">
-										    <button class="btn btn-default dropdown-toggle form-control" type="button" data-toggle="dropdown">
-										    {{asset.code}} <span class="caret"></span></button>
+										    <button class="btn btn-default dropdown-toggle form-control nopadding" ng-disabled="!currencies.length" type="button" data-toggle="dropdown">
+										    	<div class="content" style="">
+										    		<div class="currency">{{asset.code}} </div>
+										    		<div class="dropdown-addon"><i class="fa fa-sort-desc" aria-hidden="true"></i></div>
+										    	</div>
+										    </button>
 										    <ul class="dropdown-menu" role="menu">
 										    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
 										      <li role="presentation" ng-repeat="code in currencies">

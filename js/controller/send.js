@@ -1,7 +1,7 @@
 /* global myApp */
 
-myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 'XrpPath', 'Id', 'SettingFactory', 'AuthenticationFactory', '$http',
-  function($scope, $rootScope, $routeParams, XrpApi, XrpPath, Id, SettingFactory, AuthenticationFactory, $http) {
+myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 'XrpPath', 'Id', 'SettingFactory', 'AuthenticationFactory', 'Federation', '$http',
+  function($scope, $rootScope, $routeParams, XrpApi, XrpPath, Id, SettingFactory, AuthenticationFactory, Federation, $http) {
     console.log('Send to', $routeParams);
     var native = $rootScope.currentNetwork.coin;
     $scope.currencies = [];
@@ -49,10 +49,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     };
     
     $scope.resetService = function(){
-      $scope.send_error.invalid = false;
-      $scope.send_error.domain = false;
-      $scope.send_error.message = '';
-      $scope.memo_require = false;
+      $scope.send_error = '';
+      $scope.tag_require = false;
       $scope.send_done = false;
 
       $scope.real_address = '';
@@ -102,8 +100,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.resolveFederation($scope.full_address);
       }
     };
-    
-    $scope.paths = [];
     
     $scope.updatePath = function() {
       $scope.invalid_amount = !$scope.asset.amount || $scope.asset.amount <= 0;
@@ -181,13 +177,30 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
     $scope.resolveFederation = function(snapshot) {
       console.debug('resolve', snapshot);
-      var i = snapshot.indexOf("*");
+      var i = snapshot.indexOf("@");
       var prestr = snapshot.substring(0, i);
       var domain = snapshot.substring(i+1);
 
       $scope.target_domain = domain;
       $scope.act_loading = true;
-
+      
+      Federation.get(domain).then(txt => {
+        console.log('resolve', txt);
+        $scope.fed_error = false;
+        $scope.fed_loading = false;
+        $scope.fed_currencies = (txt.currencies || []).map(code => {
+          return {code: code, issuer: txt.accounts[0]};
+        });
+      }).catch(err => {
+        if (snapshot !== $scope.fed_url) {
+          return;
+        }
+        $scope.fed_currencies = [];
+        $scope.fed_error = true;
+        $scope.fed_loading = false;
+        console.log(snapshot, err);
+      });
+      /*
       StellarSdk.StellarTomlResolver.resolve(domain).then(function(stellarToml) {
         $scope.fed_url = stellarToml.FEDERATION_SERVER;
         var server = new StellarSdk.FederationServer(stellarToml.FEDERATION_SERVER, domain, {});
@@ -244,7 +257,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.act_loading = false;
         $scope.$apply();
       });
-
+      */
     };
 
     $scope.$watch('service_currency', function () { $scope.quote(); }, true);
