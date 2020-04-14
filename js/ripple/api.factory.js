@@ -223,7 +223,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      payment(destinationAddress, srcAmount, destAmount, tag) {
+      payment(destinationAddress, srcAmount, destAmount, tag, invoice) {
         const payment = {
             "source": {
               "address": this.address,
@@ -235,6 +235,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             }
         }
         if (tag) payment.destination.tag = Number(tag);
+        if (invoice) payment.invoiceID = invoice;
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
@@ -248,7 +249,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      pathPayment(destinationAddress, srcAmount, destAmount, paths, tag, partial) {
+      pathPayment(destinationAddress, srcAmount, destAmount, paths, tag, invoice, partial) {
         //remove the type, type_hex to pass checkTxSerialization in sign function
         paths.forEach(path => {
           path.forEach(asset => {
@@ -269,6 +270,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             "allowPartialPayment": !!partial
         }
         if (tag) payment.destination.tag = Number(tag);
+        if (invoice) payment.invoiceID = invoice;
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
@@ -283,7 +285,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
       
       convert(srcAmount, destAmount, paths) {
-        return this.pathPayment(this.address, srcAmount, destAmount, paths, null, true);
+        return this.pathPayment(this.address, srcAmount, destAmount, paths, null, null, true);
       },
       
       offer(options) {

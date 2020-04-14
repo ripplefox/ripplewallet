@@ -9,14 +9,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.init = function(){
       $scope.mode = 'input';
       $scope.asset.amount = 0;
-      $scope.service_amount = 0;
-      $scope.invoice = "";
-      $scope.finding = false;
-      $scope.found = false;
       $scope.send_error = "";
-      $scope.paths = [];
+      $scope.stopPath(true);
+      $scope.resolve();
     }
-    $scope.init();
     
     $scope.input_address;
     $scope.tag_require = false;
@@ -25,11 +21,11 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.sending;
     $scope.send_done = false;
 
-    $scope.initSend = function(){
+    $scope.runOnceWhenOpen = function(){
       if (AuthenticationFactory.getContact($routeParams.name)) {
         $scope.input_address = $routeParams.name;
-        $scope.resolve();
       }
+      $scope.init();
     }
     
     $scope.act_loading;
@@ -43,6 +39,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.real_not_fund = false;
       $scope.send = [];
       $scope.extra_fields = [];
+      $scope.invoice = "";
 
       $scope.service_error = "";
       $scope.service_amount = 0;
@@ -55,7 +52,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     
     $scope.resolve = function() {
       $scope.resetService();
-      $scope.stopPath();
+      $scope.stopPath(true);
 
       if (AuthenticationFactory.getContact($scope.input_address)){
         var contact = AuthenticationFactory.getContact($scope.input_address);
@@ -92,17 +89,20 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.updatePath();
     };
     
-    $scope.stopPath = function() {
+    $scope.stopPath = function(clean) {
       $scope.finding = false;
       clearInterval(timer);
       XrpPath.close();
+      if (clean) {
+        $scope.paths = [];
+        $scope.found = false;
+      }
     }
     
     $scope.updatePath = function() {
       $scope.invalid_amount = !$scope.asset.amount || $scope.asset.amount <= 0;
       if ($scope.invalid_amount) {
-        $scope.paths = [];
-        $scope.stopPath();
+        $scope.stopPath(true);
         return;
       }
       
@@ -123,9 +123,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.lastUpdate = 0;
       
       var snapshot = $scope.real_address;
+      console.log('open', amount);
       XrpPath.open($rootScope.address, snapshot, amount, function(err, data) {
         if (snapshot !== $scope.real_address){
-          console.log($scope.real_address, 'changed from', snapshot);
+          console.warn($scope.real_address, 'is not same as', snapshot);
           return;
         }
         startTimer();
@@ -134,7 +135,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
           $scope.send_error = err.message;
           $scope.stopPath();
         } else {
-          console.log(data);
+          console.log('path', data);
           $scope.found = true;
           $scope.paths = [];
           var current = null;
@@ -296,11 +297,16 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         console.log(data);
         $scope.act_loading = false;
         $scope.currencies = data.receive_currencies;
+        if ($scope.currencies.indexOf($scope.asset.code) < 0) {
+          $scope.pickCode(native.code);
+        }
         $scope.$apply();
+        $scope.updatePath();
       }).catch(err => {
         $scope.act_loading = false;
         if (err.unfunded) {
           $scope.real_not_fund = true;
+          $scope.currencies = [];
           $scope.pickCode(native.code);
         } else {
           $scope.send_error.message = err.message;
@@ -378,8 +384,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         }
       }
       
-      var payment = !alt ? XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag) :
-                       XrpApi.pathPayment($scope.real_address, srcAmount, dstAmount, alt.paths_computed, $scope.tag);
+      var payment = !alt ? XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag, $scope.invoice) :
+                       XrpApi.pathPayment($scope.real_address, srcAmount, dstAmount, alt.paths_computed, $scope.tag, $scope.invoice);
       payment.then(result => {
         $scope.sending = false;
         $scope.send_done = true;
@@ -436,7 +442,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.stopPath();
     });
 
-    $scope.initSend();
+    $scope.runOnceWhenOpen();
 
 } ]);
 

@@ -17,7 +17,7 @@
 							</div>
 					</div>
 					
-					<group ng-hide="is_federation && extra_fields && false">
+					<group ng-hide="is_federation && extra_fields">
 								<div class="row noborder">
 										<div class="col-xs-12 col-sm-6 col-md-6">
 											<label translate="will_recv">Recipient will receive</label>
@@ -31,7 +31,7 @@
 												    <button class="btn btn-default dropdown-toggle form-control nopadding" ng-disabled="!currencies.length" type="button" data-toggle="dropdown">
 												    	<div class="content" style="">
 												    		<div class="currency">{{asset.code}} </div>
-												    		<div class="dropdown-addon"><i class="fa fa-sort-desc" aria-hidden="true"></i></div>
+												    		<div class="dropdown-addon" ng-show="currencies.length"><i class="fa fa-sort-desc" aria-hidden="true"></i></div>
 												    	</div>
 												    </button>
 												    <ul class="dropdown-menu" role="menu">
@@ -93,7 +93,7 @@
 										<label translate="will_recv">Recipient will receive</label>
 										<div class="input-group">
 											<input type="number" autocomplete="off" placeholder="0.00" class="form-control"
-											  ng-model="service_amount" ng-change="quote()" ng-model-options="{debounce:800}" required="true">
+											  ng-model="service_amount" ng-model-options="{debounce:800}" required="true">
 											<div class="input-group-addon">{{service_currency}}</div>
 										</div>
 									</div>
@@ -141,10 +141,10 @@
 				<group ng-show="mode == 'confirm'">
 				  <div class="mode-confirm row">
 						<p translate="you_sending" translate-values="path">You are sending XRP to</p>
-						<p class="amount_feedback">
-							<span class="value">{{input_address}} </span>
-							<span class="currency" ng-show="real_address && real_address != input_address">{{real_address}}</span>
-						</p>
+						<div class="dest_feedback">
+							<div class="value">{{input_address}}</div>
+							<div class="extra" ng-show="real_address && real_address != input_address">{{real_address}}</div>
+						</div>
 						<p translate="will_receive">Recipient will receive</p>
 						<p class="amount_feedback"><span class="value">{{asset.amount}} </span><span class="currency">{{asset.code}}</span></p>
 						<p translate="pay_most">You will pay at most</p>

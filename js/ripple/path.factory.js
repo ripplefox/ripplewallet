@@ -42,7 +42,6 @@ myApp.factory('XrpPath', ['$rootScope', function($rootScope) {
         'destination_account': dest_act,
         'destination_amount': xrpDropsOrAmountObj
       }).then(response => {
-        console.log('open', response);
         handler(null, response);
       }).catch(err => {
         console.error("Error request 'path_find' subcommand 'create': ", err);

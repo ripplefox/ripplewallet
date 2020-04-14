@@ -189,7 +189,7 @@ a.AssetPairRow:hover .AssetPair__separator {
   border-bottom-right-radius: 0;
 }
 
-.input-group-addon {
+.addon-font {
 	font-family: Consolas,Monaco,monospace;
 }
 
@@ -535,9 +535,15 @@ a.AssetPairRow:hover .AssetPair__separator {
   font-size: 20px;
 }
 
-.mode-confirm .amount_feedback {
-    padding: 20px;
-    margin: 0 0 10px 0;
-    font: 34px 'OpenSansLight';
-    background: #f3f3f3;
+.mode-confirm .amount_feedback,
+.mode-confirm .dest_feedback {
+  padding: 20px;
+  margin: 0 0 10px 0;
+  font: 34px 'OpenSansLight';
+  background: #f3f3f3;
+}
+
+.mode-confirm .dest_feedback .extra {
+  font-size: 18px;
+  color: #999;
 }
