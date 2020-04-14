@@ -185,6 +185,10 @@ myApp.factory('Id', function($window) {
     isValidSecret : function(secret) {
       return _ripple.isValidSecret(secret);
     },
+    isValidEmail : function(email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
     generateAccount : function() {
       var keypair = _ripple.generateAddress();
       return {address: keypair.address, secret: keypair.secret};

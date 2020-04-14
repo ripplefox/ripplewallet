@@ -35,7 +35,7 @@ myApp.factory('XrpOrderbook', ['$rootScope', 'AuthenticationFactory', function($
       return new Promise(async (resolve, reject)=>{
         try {
           await this.connect();
-          const response = await _remote.getOrderbook(address, info, {limit: 30});
+          const response = await _remote.getOrderbook(address, info, {limit: 40});
           resolve(response);
         } catch (err) {
           console.error(err);

@@ -347,7 +347,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           this._updateRootInfo();
           if (callback) { callback(); }
         }).catch(err => {
-          console.error(err);
+          if (err.data && err.data.error === 'actNotFound') {
+            $rootScope.unfunded = true;
+            $rootScope.$apply();
+          }
           if (callback) { callback(err); }
         });
       },

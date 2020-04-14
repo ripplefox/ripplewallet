@@ -2,13 +2,16 @@
 	<group>
 	<div class="so-back islandBack islandBack--t">
 		<div class="island">
-			<div class="island__header" ng-init="native=currentNetwork">
-				{{native.name | translate}} <strong></strong>
+			<div class="island__header">
+				{{currentNetwork.name | translate}} <strong></strong>
 				<a class="btn btn-success btn-sm" ng-click="refresh()" ng-disabled="working">
 					<span class="glyphicon glyphicon-refresh"></span> {{'refresh' | translate}}</a>
 			</div>
-			<div class="form-group service_alert" ng-hide="funded()">
-				<span translate="no_balance">Account not found. (Unfunded or Network error)</span>
+			<div class="row noborder" ng-hide="funded()">
+				<div class="s-alert s-alert--error">
+				  <span ng-show="unfunded" translate="NotFoundError" translate-values="native">Unfunded</span>
+					<span ng-hide="unfunded" translate="no_balance">Account not found. (Unfunded or Network error)</span>
+				</div>
 			</div>
 			<table class="BalancesTable">
 				<thead>
@@ -21,8 +24,7 @@
 				<tbody>
 					<tr class="BalancesTable__row">
 						<td>
-							<gateway name="" logo="{{native.coin.logo}}"
-								website="{{native.website}}" code="{{native.coin.code}}" address=""></gateway>
+							<gateway name="" logo="{{native.logo}}" website="" code="{{native.code}}" address=""></gateway>
 						</td>
 						<td class="BalancesTable__row__amount">
 							<span>{{balance | number : 6}}</span><br>

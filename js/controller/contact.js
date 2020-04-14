@@ -34,7 +34,7 @@ myApp.controller("ContactCtrl", ['$scope', '$rootScope', 'AuthenticationFactory'
       }
 
       if ($scope.contact.address) {
-        $scope.error['address'] = !Id.isValidAddress($scope.contact.address);
+        $scope.error['address'] = !Id.isValidAddress($scope.contact.address) && !Id.isValidEmail($scope.contact.address);
       } else {
         $scope.error['address'] = null;
       }
@@ -106,7 +106,7 @@ myApp.controller("ContactRowCtrl", ['$scope', '$rootScope', '$location', 'Authen
       }
 
       if ($scope.editaddress) {
-        $scope.error['address'] = !Id.isValidAddress($scope.editaddress);
+        $scope.error['address'] = !Id.isValidAddress($scope.editaddress) && !Id.isValidEmail($scope.editaddress);;
       } else {
         $scope.error['address'] = null;
       }
