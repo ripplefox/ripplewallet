@@ -157,6 +157,7 @@ var translate_en = {
   failedtx: 'Failed transaction',
   tx_tag: '. (Tag',
   another_payment: 'Send another payment',
+  request_quote: 'Requesting quote',
   
   choose : 'Choose',
   example : 'example',
@@ -306,5 +307,6 @@ var translate_en = {
   NotFoundError : 'The resource was not found. You must have at least 1 {{name}} in your account for it to be activated! Each trust line or offer requires a 0.5 {{name}}  reserve in addition. To make things easy, send at least 3 {{name}}s to the account.',
   NotConnectedError : 'Not connected, please retry later.',
   NoRippleTXT: 'Ripple.txt was not found.',
-  NoFederationUrl: 'Federation service url was not provided.'
+  NoFederationUrl: 'Federation service url was not provided.',
+  'Invalid Email' : 'Invalid Email address.'
 }

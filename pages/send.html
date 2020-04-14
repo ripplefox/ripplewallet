@@ -1,6 +1,6 @@
 <section class="col-xs-12 content">
 	<div class="so-back islandBack islandBack--t">
-		<div class="island form-group">
+		<div class="island islandBack form-group">
 			<div class="header" translate="send_money">Send money.</div>
 			<group ng-show="mode == 'input'">
 					<div class="row">
@@ -16,126 +16,126 @@
 								<div ng-show="invalid_address" class="error" translate="invalid_address">invalid address</div>
 							</div>
 					</div>
-					<form name="sendForm">
-						<div class="row noborder" ng-hide="is_federation && extra_fields">
-								<div class="col-xs-12 col-sm-6 col-md-6">
-									<label translate="receive">Receive</label>
-									<div class="row noborder nopadding">
-										<div class="col-xs-8 nopadding-left">
-											<input type="text" autocomplete="off" placeholder="0.00" class="form-control"
-												ng-model="asset.amount" ng-change="updatePath()" ng-model-options="{debounce:800}" required="true">
+					
+					<group ng-hide="is_federation && extra_fields && false">
+								<div class="row noborder">
+										<div class="col-xs-12 col-sm-6 col-md-6">
+											<label translate="will_recv">Recipient will receive</label>
+											<div class="row noborder nopadding">
+												<div class="col-xs-8 nopadding-left">
+													<input type="text" autocomplete="off" placeholder="0.00" class="form-control"
+														ng-model="asset.amount" ng-change="updatePath()" ng-model-options="{debounce:800}" required="true">
+												</div>
+												<div class="col-xs-4 nopadding-right">
+													<div class="dropdown">
+												    <button class="btn btn-default dropdown-toggle form-control nopadding" ng-disabled="!currencies.length" type="button" data-toggle="dropdown">
+												    	<div class="content" style="">
+												    		<div class="currency">{{asset.code}} </div>
+												    		<div class="dropdown-addon"><i class="fa fa-sort-desc" aria-hidden="true"></i></div>
+												    	</div>
+												    </button>
+												    <ul class="dropdown-menu" role="menu">
+												    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
+												      <li role="presentation" ng-repeat="code in currencies">
+												      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code}}</a>
+												      </li>
+												    </ul>
+												  </div>
+												</div>
+											</div>
+											<div ng-show="disallow_xrp && asset.code==native.code" class="error" translate="disallow_xrp" translate-values="native">Recipient does not allow XRP payments. Are you sure you want to send XRP anyway?</div>
+											<div ng-show="invalid_amount" class="error" translate="invalid_amount">Invalid amount.</div>
 										</div>
-										<div class="col-xs-4 nopadding-right">
-											<div class="dropdown">
-										    <button class="btn btn-default dropdown-toggle form-control nopadding" ng-disabled="!currencies.length" type="button" data-toggle="dropdown">
-										    	<div class="content" style="">
-										    		<div class="currency">{{asset.code}} </div>
-										    		<div class="dropdown-addon"><i class="fa fa-sort-desc" aria-hidden="true"></i></div>
-										    	</div>
-										    </button>
-										    <ul class="dropdown-menu" role="menu">
-										    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
-										      <li role="presentation" ng-repeat="code in currencies">
-										      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code}}</a>
-										      </li>
-										    </ul>
-										  </div>
+								</div>
+								<div class="row noborder">
+										<div class="col-xs-12 col-sm-6 col-md-6">
+											<label translate="dest_tag">Destination tag</label>
+											<input name="tag" type="text" class="form-control" ng-model="tag" ng-required="tag_require">
+											<div ng-show="tag_require" translate="tag_need">Recipient requires a destination tag to be
+												specified for the transaction. If you don't know the destination tag, please contact them before doing a transaction.</div>
+											<div ng-show="invalid_tag" class="error" translate="error_invalid_tag">invalid tag</div>
 										</div>
+								</div>
+								<div class="row noborder">
+									<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
+										<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="">发送 {{asset.code}}</button>
 									</div>
-									<div ng-show="disallow_xrp && asset.code==native.code" class="error" translate="disallow_xrp" translate-values="native">Recipient does not allow XRP payments. Are you sure you want to send XRP anyway?</div>
-									<div ng-show="invalid_amount" class="error" translate="invalid_amount">Invalid amount.</div>
 								</div>
-						</div>
-						
-						<div class="row noborder" ng-hide="is_federation && extra_fields">
-								<div class="col-xs-12 col-sm-6 col-md-6">
-									<label translate="dest_tag">Destination tag</label>
-									<input name="tag" type="text" class="form-control" ng-model="tag" ng-required="tag_require">
-									<div ng-show="tag_require" translate="tag_need">Recipient requires a destination tag to be
-										specified for the transaction. If you don't know the destination tag, please contact them before doing a transaction.</div>
-									<div ng-show="invalid_tag" class="error" translate="error_invalid_tag">invalid tag</div>
-								</div>
-						</div>
-						
-						<div class="row noborder" ng-hide="is_federation && extra_fields">
-							<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
-								<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="">发送 {{asset.code}}</button>
-							</div>
-						</div>
-						
-						<div class="row form-group alternatives" ng-show="found">
-								<div class="message" ng-show="!paths.length">{{ 'no_send_path' | translate}}</div>
-								<div ng-repeat="alt in paths" class="col-xs-12 col-sm-6 col-md-4">
-									<div class="am">
-										<span class="amnt">{{alt.value}}</span>
-										<span class="currency">{{alt.code}}</span>
-										<div class="ex">(<span class="rate">{{alt.rate}}</span><span class="pair">{{asset.code}}/{{alt.code}}</span>)</div>
-									</div>
-									<button type="submit" ng-click="pickPath(alt.code)" class="btn btn-block btn-success">{{'send' | translate}} {{alt.code}}</button>
-								</div>
-						</div>
-						<div class="row pathupdate" ng-show="found">
-							<div class="col-xs-12"><span>{{'path_updated' | translate}} {{lastUpdate}} {{'seconds_ago' | translate}}</span></div>
-						</div>
-					</form>
+					</group>
 					
 					<form name="serviceForm" ng-show="is_federation">
-						<div ng-repeat="field in extra_fields" ng-switch="field.type" class="row noborder">
-							<div ng-switch-when="label" class="col-xs-12 col-md-8">
-								<label ng-bind="field.label"></label>
-								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-							</div>
-							<div ng-switch-when="text" class="col-xs-12 col-md-8">
-								<label ng-bind="field.label"></label>
-								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-								<input type="text"
-									ng-model="field.value"
-									ng-model-options="{debounce:800}"
-									ng-required="{{field.required}}" class="form-control" />
-							</div>
-							<div ng-switch-when="select" class="col-xs-12 col-md-8">
-								<label ng-bind="field.label"></label>
-								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-								<select type="text" ng-model="field.value"
-									ng-required="{{field.required}}" class="form-control">
-									<option ng-repeat="option in field.options"
-										ng-bind="option.label" value="{{option.value}}"
-										ng-selected="option.selected" ng-disabled="option.disabled"></option>
-								</select>
-							</div>
-						</div>
-						<div class="row noborder" ng-show="service_currency">
-								<div class="col-xs-12 col-md-4">
-									<label translate="will_recv">Recipient will receive</label>
-									<div class="input-group">
-										<input type="number" autocomplete="off" placeholder="0.00" class="form-control"
-										  ng-model="service_amount" ng-change="quote()" ng-model-options="{debounce:800}" required="true">
-										<div class="input-group-addon">{{service_currency}}</div>
-									</div>
+							<div ng-repeat="field in extra_fields" ng-switch="field.type" class="row noborder">
+								<div ng-switch-when="label" class="col-xs-12 col-md-8">
+									<label ng-bind="field.label"></label>
+									<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
 								</div>
-						</div>
+								<div ng-switch-when="text" class="col-xs-12 col-md-8">
+									<label ng-bind="field.label"></label>
+									<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
+									<input type="text"
+										ng-model="field.value"
+										ng-model-options="{debounce:800}"
+										ng-required="{{field.required}}" class="form-control" />
+								</div>
+								<div ng-switch-when="select" class="col-xs-12 col-md-8">
+									<label ng-bind="field.label"></label>
+									<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
+									<select type="text" ng-model="field.value"
+										ng-required="{{field.required}}" class="form-control">
+										<option ng-repeat="option in field.options"
+											ng-bind="option.label" value="{{option.value}}"
+											ng-selected="option.selected" ng-disabled="option.disabled"></option>
+									</select>
+								</div>
+							</div>
+							<div class="row noborder" ng-show="service_currency">
+									<div class="col-xs-12 col-md-4">
+										<label translate="will_recv">Recipient will receive</label>
+										<div class="input-group">
+											<input type="number" autocomplete="off" placeholder="0.00" class="form-control"
+											  ng-model="service_amount" ng-change="quote()" ng-model-options="{debounce:800}" required="true">
+											<div class="input-group-addon">{{service_currency}}</div>
+										</div>
+									</div>
+							</div>
 					</form>
+					
+					<div class="row form-group alternatives" ng-show="found">
+							<div class="message" ng-show="!paths.length">{{ 'no_send_path' | translate}}</div>
+							<div ng-repeat="alt in paths" class="col-xs-12 col-sm-6 col-md-4">
+								<div class="am">
+									<span class="amnt">{{alt.value}}</span>
+									<span class="currency">{{alt.code}}</span>
+									<div class="ex">(<span class="rate">{{alt.rate}}</span><span class="pair">{{asset.code}}/{{alt.code}}</span>)</div>
+								</div>
+								<button type="submit" ng-click="pickPath(alt.code)" class="btn btn-block btn-success">{{'send' | translate}} {{alt.code}}</button>
+							</div>
+					</div>
+					<div class="row pathupdate" ng-show="found">
+						<div class="col-xs-12"><span>{{'path_updated' | translate}} {{lastUpdate}} {{'seconds_ago' | translate}}</span></div>
+					</div>
 					
 					<div class="row noborder" ng-show="act_loading">
 						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'account_loading' | translate}} {{input_address}}</div>
 					</div>
+					<div class="row noborder" ng-show="quote_loading">
+						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'request_quote' | translate}} {{input_address}}</div>
+					</div>
 					<div class="row noborder" ng-show="finding && !found">
 						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'calculating' | translate}}</div>
 					</div>
-					<div class="row" ng-show="send_error || service_error || (!serviceForm.$valid && service_currency)">
+					<div class="row" ng-show="real_not_fund">
+						<div class="s-alert s-alert--info" translate="not_funded" translate-values="native">Not funded</div>
+					</div>
+					<div class="row" ng-show="send_error || service_error || quote_error || (!serviceForm.$valid && service_currency)">
 						<div class="s-alert s-alert--error">
 							<div ng-show="send_error">{{send_error}}</div>
 							<div ng-show="service_error">{{service_error | translate}}</div>
+							<div ng-show="quote_error">{{quote_error | translate}}</div>
 							<div ng-show="!serviceForm.$valid && service_currency" translate="fill_form">Please fill the form correctly.</div>
 						</div> 
 					</div>
 					
-					<div class="row" ng-show="(is_federation || real_not_fund) && real_address && !sending && !send_done">
-						<div class="s-alert s-alert--info">
-							<div ng-show="real_not_fund" translate="not_funded" translate-values="native">Not funded</div>
-							<div ng-show="is_federation || is_contact">{{real_address}}</div>
-						</div> 
-					</div>
 				</group>
 				
 				<group ng-show="mode == 'confirm'">
@@ -143,7 +143,7 @@
 						<p translate="you_sending" translate-values="path">You are sending XRP to</p>
 						<p class="amount_feedback">
 							<span class="value">{{input_address}} </span>
-							<span class="currency" ng-show="is_federation || is_contact">{{real_address}}</span>
+							<span class="currency" ng-show="real_address && real_address != input_address">{{real_address}}</span>
 						</p>
 						<p translate="will_receive">Recipient will receive</p>
 						<p class="amount_feedback"><span class="value">{{asset.amount}} </span><span class="currency">{{asset.code}}</span></p>
@@ -185,150 +185,4 @@
 				</group>
 		</div>
 
-	<div class="so-back islandBack">
-		<div class="island">
-			<div class="island__header" translate="send">Send</div>
-			<div class="island__paddedContent">
-				<label class="s-inputGroup AddTrust__inputGroup">
-					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="recipient">Recipient</span>
-					<input type="text" class="s-inputGroup__item S-flexItem-share"
-						ng-model="input_address" ng-change="resolve()" ng-model-options="{ debounce:800}"
-						placeholder="{{'example' | translate}}: rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y" list="contacts">
-					<datalist id="contacts">
-						<option ng-repeat="entry in contacts" value="{{entry.name}}">{{entry.address}}</option>
-					</datalist>
-				</label>
-				<label class="s-inputGroup AddTrust__inputGroup">
-					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="amount">Amount</span>
-					<input type="text" autocomplete="off" class="s-inputGroup__item S-flexItem-share"
-						ng-model="asset.amount"
-						ng-disabled="quote_id"
-						placeholder="{{'example' | translate}}: 100.25">
-				</label>
-
-				<label class="s-inputGroup AddTrust__inputGroup dropdown">
-					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="dest_tag">Tag</span>
-					<input type="text" class="s-inputGroup__item S-flexItem-share"
-						ng-model="tag"
-						ng-disabled="tag_provided || quote_id"
-						placeholder="{{tag_require ? 'required' : 'optional' | translate}}">
-				</label>
-			</div>
-
-			<div>
-				<div class="island__paddedContent" ng-show="quote_id">
-					<form id="serviceForm" name="serviceForm" role="form">
-						<div ng-repeat="field in extra_fields" ng-switch="field.type" class="row">
-							<div ng-switch-when="label" class="col-xs-12 col-md-10">
-								<label ng-bind="field.label"></label>
-								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-							</div>
-							<div ng-switch-when="text" class="col-xs-12 col-md-10">
-								<label ng-bind="field.label"></label>
-								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-								<input type="text"
-									ng-model="field.value"
-									ng-model-options="{debounce:800}"
-									ng-required="{{field.required}}" class="form-control" />
-							</div>
-							<div ng-switch-when="select" class="col-xs-12 col-md-10">
-								<label ng-bind="field.label"></label>
-								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
-								<select type="text" ng-model="field.value"
-									ng-required="{{field.required}}" class="form-control">
-									<option ng-repeat="option in field.options"
-										ng-bind="option.label" value="{{option.value}}"
-										ng-selected="option.selected" ng-disabled="option.disabled"></option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group service_alert" ng-show="service_error">
-							<div>{{service_error}}</div>
-						</div>
-						<div class="row form-group" ng-show="service_currency">
-							<div class="col-xs-12 col-sm-6 col-md-5">
-								<label translate="will_recv">Recipient will receive</label>
-								<div class="amount-wrap">
-									<input type="number" autocomplete="off" placeholder="0.00"
-										class="input amount-big form-control"
-										ng-model="service_amount"
-										ng-model-options="{debounce:800}"
-										required="true">
-									<select class="select currency"
-										ng-model="service_currency"
-										ng-change="updateAsset()"
-										ng-disabled = "!mulipleAsset"
-										ng-class="{'disabled': !mulipleAsset}" required="">
-										<option value="{{asset.code}}.{{asset.issuer}}"
-											ng-repeat="asset in extra_assets"
-											ng-selected="service_currency == (asset.code + '.' + asset.issuer)">{{asset.code}}</option>
-									</select>
-								</div>
-							</div>
-						</div>
-					</form>
-
-					<div class="form-group service_alert" ng-show="!serviceForm.$valid && service_currency">
-						<div translate="fill_form">Please fill the form correctly.</div>
-					</div>
-					<div class="form-group service_alert" ng-show="quote_error">
-						<div>{{quote_error}}</div>
-					</div>
-
-					<div class="row form-group brdige_card_code" ng-show="quote_loading">
-						<label><i class="fa fa-spinner fa-pulse"></i> {{'analyzing' | translate}}</label>
-					</div>
-				</div>
-
-				<div class="island__separator"></div>
-				<div class="AddTrust__confirmation">
-					<div class="s-alert s-alert--alert" ng-show="input_address && send_error.hasError()">
-						<ul class="AddTrust__errorList">
-							<li translate="invalid_account" ng-show="send_error.invalid">Account is invalid</li>
-							<li ng-show="send_error.domain">{{target_domain}} {{'invalid_domain' | translate}}</li>
-							<li ng-show="send_error.message">{{send_error.message}}</li>
-						</ul>
-					</div>
-					<div class="s-alert s-alert--success" ng-show="send_done">
-						<ul class="AddTrust__errorList">
-							<li translate="send_done">Asset successfully sent.</li>
-						</ul>
-					</div>
-
-					<div class="row__message" ng-show="act_loading">
-						<i class="fa fa-spinner fa-pulse"></i> {{'account_loading' | translate}} {{input_address}}
-					</div>
-					<div class="s-alert s-alert--info" style="margin-bottom: 10px;" ng-show="(is_federation || real_not_fund) && real_address && !sending && !send_done">
-						<ul class="AddTrust__errorList">
-							<li ng-show="is_federation || is_contact">{{real_address}}</li>
-							<li ng-show="real_not_fund" translate="not_funded" translate-values="native">Not funded</li>
-						</ul>
-					</div>
-					<div class="row__message" style="margin-bottom: 10px;" ng-show="sending">
-						{{'sending_to' | translate}} {{real_address | shortaddress}}
-					</div>
-
-					<div class="btn-group-pretty" ng-show="asset.amount">
-						<label ng-class="{btn:true, active: isLine(line.code, line.issuer)}"
-							ng-click="pickToken(line.code, line.issuer)"
-							ng-repeat="line in send">
-							<span class="tick"></span>
-							<span class="amount">{{asset.amount | number : 4}}</span>
-							<div class="btn_card">
-								<img class="btn_card_logo" data-ng-src="{{line.logo}}">
-								<span class="title">{{line.code}}</span>
-								<span class="subtitle">{{line.name}}</span>
-							</div>
-						</label>
-					</div>
-
-					<button class="btn btn-success"
-						ng-show="asset.code"
-						ng-click="send_asset()"
-						ng-disabled="!asset.amount || !isValidAddress(real_address) || sending || (memo_require && !memo)">{{'send' | translate}} {{src_code}}</button>
-				</div>
-			</div>
-
-		</div>
-	</div>
 </section>

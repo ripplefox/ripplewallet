@@ -10,6 +10,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.mode = 'input';
       $scope.asset.amount = 0;
       $scope.service_amount = 0;
+      $scope.invoice = "";
       $scope.finding = false;
       $scope.found = false;
       $scope.send_error = "";
@@ -31,22 +32,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       }
     }
     
-    $scope.target_domain;
-    $scope.real_address;
-    $scope.real_not_fund = false;
-    $scope.send = [];
-    $scope.extra_fields = [];
-    $scope.extra_assets = [];
     $scope.act_loading;
     $scope.is_federation;
-    $scope.is_contact;
-
-    $scope.pickCode = function(code) {
-      console.log($scope.asset.code, '->', code);
-      $scope.asset.code = code;
-      $scope.updatePath();
-    };
-    
     $scope.resetService = function(){
       $scope.send_error = '';
       $scope.tag_require = false;
@@ -56,8 +43,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.real_not_fund = false;
       $scope.send = [];
       $scope.extra_fields = [];
-      $scope.extra_assets = [];
-      $scope.mulipleAsset = false;
 
       $scope.service_error = "";
       $scope.service_amount = 0;
@@ -65,14 +50,14 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
       $scope.fed_url = "";
       $scope.quote_url = "";
-      $scope.quote_id = "";
       $scope.quote_error = "";
     }
+    
     $scope.resolve = function() {
       $scope.resetService();
+      $scope.stopPath();
 
       if (AuthenticationFactory.getContact($scope.input_address)){
-        $scope.is_contact = true;
         var contact = AuthenticationFactory.getContact($scope.input_address);
         $scope.input_address = contact.name;
         $scope.full_address = contact.address;
@@ -81,7 +66,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
           $scope.tag = contact.dt;
         }
       } else {
-        $scope.is_contact = false;
         $scope.full_address = autoCompleteURL($scope.input_address);
       }
 
@@ -97,17 +81,28 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.resolveAccountInfo();
       } else {
         $scope.is_federation = true;
+        $scope.invalid_address = false;
         $scope.resolveFederation($scope.full_address);
       }
     };
     
+    $scope.pickCode = function(code) {
+      console.log($scope.asset.code, '->', code);
+      $scope.asset.code = code;
+      $scope.updatePath();
+    };
+    
+    $scope.stopPath = function() {
+      $scope.finding = false;
+      clearInterval(timer);
+      XrpPath.close();
+    }
+    
     $scope.updatePath = function() {
       $scope.invalid_amount = !$scope.asset.amount || $scope.asset.amount <= 0;
       if ($scope.invalid_amount) {
-        $scope.finding = false;
         $scope.paths = [];
-        clearInterval(timer);
-        XrpPath.close();
+        $scope.stopPath();
         return;
       }
       
@@ -137,8 +132,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
         if (err) {
           $scope.send_error = err.message;
-          $scope.finding = false;
-          XrpPath.close();
+          $scope.stopPath();
         } else {
           console.log(data);
           $scope.found = true;
@@ -181,7 +175,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       var prestr = snapshot.substring(0, i);
       var domain = snapshot.substring(i+1);
 
-      $scope.target_domain = domain;
       $scope.act_loading = true;
       $scope.service_error = "";
       Federation.get(domain).then(txt => {
@@ -208,6 +201,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         if (data.extra_fields) {
           $scope.service_currency = (data.currencies || data.assets)[0].currency;
           $scope.extra_fields = data.extra_fields;
+          $scope.quote_destination = data.destination;
           $scope.quote_url = data.quote_url;
         } else {
           $scope.extra_fields = null;
@@ -226,48 +220,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       /*
        * https://ripplefox.com/bridge?type=federation&domain=ripplefox.com&destination=yh&user=yh
        * https://ripplefox.com/bridge?type=quote&amount=100%2FCNY&destination=yh&address=rPVH2HkQPJz5WSrcdWLq2shxvHXR4H18Po&bank=CMB&bankAccount=6226123488888888&bankUser=%E5%BD%93&email=123%40ripplefox.com
-       * 
-      
-      StellarSdk.StellarTomlResolver.resolve(domain).then(function(stellarToml) {
-
-          if (data.error) {
-            $scope.send_error.message = data.detail || data.error;
-          } else {
-            if (data.extra_fields) {
-              $scope.quote_id = data.account_id;
-              $scope.extra_fields = data.extra_fields;
-              $scope.extra_assets = data.assets;
-              $scope.mulipleAsset = $scope.extra_assets.length > 1;
-              $scope.service_currency = $scope.extra_assets[0].code + "." + $scope.extra_assets[0].issuer;
-            } else {
-              $scope.resolveAccountInfo();
-            }
-          }
-
-          $scope.$apply();
-        }).catch(function(err){
-          if (snapshot !== $scope.full_address) {
-            return;
-          }
-          console.debug(prestr, err);
-          if (typeof err == "string") {
-            $scope.send_error.message = err;
-          } else {
-            $scope.send_error.message = err.detail || err.message || err;
-          }
-          $scope.act_loading = false;
-          $scope.$apply();
-        });
-
-      }).catch(function(err){
-        console.error(err);
-        if (snapshot !== $scope.full_address) {
-          return;
-        }
-        $scope.send_error.domain = true;
-        $scope.act_loading = false;
-        $scope.$apply();
-      });
       */
     };
 
@@ -277,19 +229,14 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
     $scope.quote_data;
     $scope.quote = function() {
-      //$scope.asset = {};
       if (!$scope.serviceForm || !$scope.serviceForm.$valid || !$scope.service_amount) {
         return;
       }
-
-      var arr = $scope.service_currency.split("."); // TODO: service_currencies
       var data = {
         type: "quote",
-        amount       : $scope.service_amount,
-        asset_code   : arr[0],
-        asset_issuer : arr[1],
-        account_id   : $scope.quote_id,
-        address      : $rootScope.address
+        amount       : $scope.service_amount + "/" + $scope.service_currency,
+        destination  : $scope.quote_destination,
+        address      : $rootScope.address,
       };
       $scope.extra_fields.forEach(function(field){
         if (field.name) {
@@ -299,43 +246,34 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
       var snapshot = JSON.stringify(data);
       $scope.quote_data = snapshot;
-
       $scope.quote_error = "";
       $scope.quote_loading = true;
       $http({
         method: 'GET',
-        url: $scope.fed_url,
+        url: $scope.quote_url || $scope.fed_url,
         params: data
       }).then(function(res) {
         if (snapshot !== $scope.quote_data) {
           return;
         }
-        $scope.send = res.data.send;
-        $scope.asset = $scope.send[0];
-        $scope.memo        = res.data.memo;
-        $scope.memo_type   = res.data.memo_type;
-        $scope.real_address = res.data.account_id;
-
-        var gateway = $rootScope.gateways.getSourceById($scope.asset.issuer);
-        $scope.asset.logo = gateway.logo;
-        $scope.asset.name = gateway.name;
-
+        console.log(res.data);
+        if (res.data.result === 'error') {
+          $scope.quote_error = res.data.error_message || res.data.error;
+        } else {
+          $scope.send = res.data.quote.send;
+          $scope.asset = {code: $scope.send[0].currency, amount: $scope.send[0].value};
+          $scope.tag = res.data.quote.destination_tag;
+          $scope.invoice = res.data.quote.invoice_id;
+          $scope.real_address = res.data.quote.destination_address || res.data.quote.address;
+          $scope.updatePath();
+        }
         $scope.quote_loading = false;
-        console.debug(res.data);
       }).catch(function(err) {
         if (snapshot !== $scope.quote_data) {
           return;
         }
-        console.debug(err);
-        if (typeof err == "string") {
-          $scope.quote_error = err;
-        } else {
-          if (err.data && err.data.detail) {
-            $scope.quote_error = err.data.detail;
-          } else {
-            $scope.quote_error = err.message;
-          }
-        }
+        console.error('quote', err);
+        $scope.quote_error = err.message;
         $scope.quote_loading = false;
       });
     };
@@ -391,9 +329,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
             rate  : "1"
         }
       }
-      $scope.finding = false;
-      XrpPath.close();
-      clearInterval(timer);
+      $scope.stopPath();
       $scope.mode = 'confirm';
     };
     $scope.cancelConfirm = function() {
@@ -497,8 +433,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     };
     
     $scope.$on("$destroy", function() {
-      clearInterval(timer);
-      XrpPath.close();
+      $scope.stopPath();
     });
 
     $scope.initSend();

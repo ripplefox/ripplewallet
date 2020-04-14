@@ -157,6 +157,7 @@ var translate_cn = {
   failedtx: '失败的交易',
   tx_tag: '。(标签',
   another_payment: '进行另一笔支付',
+  request_quote: '正在请求报价',
 
   choose : '选择',
   example : '示例',
@@ -306,5 +307,6 @@ var translate_cn = {
   NotFoundError : '瑞波网络未找到该账号，请先激活此账号。激活需要至少20 {{code}}。每个授信和委托单需要额外冻结5 {{code}}，建议至少用31 {{code}}完成激活。',
   NotConnectedError : '未连接到服务器，请过一会儿再试。',
   NoRippleTXT: '网站未提供ripple.txt文件',
-  NoFederationUrl: '网站未提供联邦协议服务'
+  NoFederationUrl: '网站未提供联邦协议服务',
+  'Invalid Email' : '电子邮箱地址不正确。'
 }
