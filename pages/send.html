@@ -17,7 +17,7 @@
 							</div>
 					</div>
 					<form name="sendForm">
-						<div class="row noborder" ng-show="show_dt_field || true">
+						<div class="row noborder" ng-hide="is_federation">
 								<div class="col-xs-12 col-sm-6 col-md-6">
 									<label translate="receive">Receive</label>
 									<div class="row noborder nopadding">
@@ -47,7 +47,7 @@
 								</div>
 						</div>
 						
-						<div class="row noborder" ng-show="show_dt_field || true">
+						<div class="row noborder" ng-hide="is_federation">
 								<div class="col-xs-12 col-sm-6 col-md-6">
 									<label translate="dest_tag">Destination tag</label>
 									<input name="tag" type="text" class="form-control" ng-model="tag" ng-required="tag_require">
@@ -57,7 +57,7 @@
 								</div>
 						</div>
 						
-						<div class="row noborder">
+						<div class="row noborder" ng-hide="is_federation">
 							<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
 								<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="">发送 {{asset.code}}</button>
 							</div>
@@ -77,20 +77,58 @@
 						<div class="row pathupdate" ng-show="found">
 							<div class="col-xs-12"><span>{{'path_updated' | translate}} {{lastUpdate}} {{'seconds_ago' | translate}}</span></div>
 						</div>
-						
 					</form>
+					
+					<form name="serviceForm" ng-show="is_federation">
+						<div ng-repeat="field in extra_fields" ng-switch="field.type" class="row noborder">
+							<div ng-switch-when="label" class="col-xs-12 col-md-8">
+								<label ng-bind="field.label"></label>
+								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
+							</div>
+							<div ng-switch-when="text" class="col-xs-12 col-md-8">
+								<label ng-bind="field.label"></label>
+								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
+								<input type="text"
+									ng-model="field.value"
+									ng-model-options="{debounce:800}"
+									ng-required="{{field.required}}" class="form-control" />
+							</div>
+							<div ng-switch-when="select" class="col-xs-12 col-md-8">
+								<label ng-bind="field.label"></label>
+								<p ng-show="field.hint" ng-bind="field.hint" class="field-hint"></p>
+								<select type="text" ng-model="field.value"
+									ng-required="{{field.required}}" class="form-control">
+									<option ng-repeat="option in field.options"
+										ng-bind="option.label" value="{{option.value}}"
+										ng-selected="option.selected" ng-disabled="option.disabled"></option>
+								</select>
+							</div>
+						</div>
+						<div class="row noborder" ng-show="service_currency">
+								<div class="col-xs-12 col-md-4">
+									<label translate="will_recv">Recipient will receive</label>
+									<div class="input-group">
+										<input type="number" autocomplete="off" placeholder="0.00" class="form-control"
+										  ng-model="service_amount" ng-change="quote()" ng-model-options="{debounce:800}" required="true">
+										<div class="input-group-addon">{{service_currency}}</div>
+									</div>
+								</div>
+						</div>
+					</form>
+					
 					<div class="row noborder" ng-show="act_loading">
 						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'account_loading' | translate}} {{input_address}}</div>
 					</div>
 					<div class="row noborder" ng-show="finding && !found">
 						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'calculating' | translate}}</div>
 					</div>
-					<div class="row" ng-show="send_error">
+					<div class="row" ng-show="send_error || service_error">
 						<div class="s-alert s-alert--error">
 							<div ng-show="send_error">{{send_error}}</div>
+							<div ng-show="service_error">{{service_error}}</div>
 						</div> 
 					</div>
-					<div class="row" ng-show="(is_federation || real_not_fund || already_has) && real_address && !sending && !send_done">
+					<div class="row" ng-show="(is_federation || real_not_fund) && real_address && !sending && !send_done">
 						<div class="s-alert s-alert--info">
 							<div ng-show="real_not_fund" translate="not_funded" translate-values="native">Not funded</div>
 							<div ng-show="is_federation || is_contact">{{real_address}}</div>
@@ -201,9 +239,6 @@
 										ng-selected="option.selected" ng-disabled="option.disabled"></option>
 								</select>
 							</div>
-						</div>
-						<div class="row form-group brdige_card_code" ng-show="service_loading">
-							<label><i class="fa fa-spinner fa-pulse"></i> {{'analyzing' | translate}}</label>
 						</div>
 						<div class="form-group service_alert" ng-show="service_error">
 							<div>{{service_error}}</div>

@@ -62,9 +62,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
       $scope.service_error = "";
       $scope.service_amount = 0;
-      $scope.service_currency = "";
+      $scope.service_currency = null;
 
       $scope.fed_url = "";
+      $scope.quote_url = "";
       $scope.quote_id = "";
       $scope.quote_error = "";
     }
@@ -183,24 +184,42 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
       $scope.target_domain = domain;
       $scope.act_loading = true;
-      
       Federation.get(domain).then(txt => {
-        console.log('resolve', txt);
         $scope.fed_error = false;
         $scope.fed_loading = false;
-        $scope.fed_currencies = (txt.currencies || []).map(code => {
-          return {code: code, issuer: txt.accounts[0]};
+        $scope.fed_url = txt.federation_url ? txt.federation_url[0] : null;
+        console.log('resolve', txt, $scope.fed_url);
+        return $http({
+          method: 'GET',
+          url: $scope.fed_url,
+          params: {
+            type : 'federation',
+            domain: domain,
+            destination: prestr
+          }
         });
-      }).catch(err => {
-        if (snapshot !== $scope.fed_url) {
+      }).then(res => {
+        if (snapshot !== $scope.full_address) {
           return;
         }
-        $scope.fed_currencies = [];
-        $scope.fed_error = true;
+        console.log(res.data);
+        $scope.fed_loading = false;
+        var data = res.data.federation_json;
+        $scope.service_currency = data.currencies[0].currency;
+        $scope.extra_fields = data.extra_fields;
+        $scope.quote_url = data.quote_url;
+      }).catch(err => {
+        if (snapshot !== $scope.full_address) {
+          return;
+        }
+        $scope.fed_error = err.message;
         $scope.fed_loading = false;
         console.log(snapshot, err);
       });
       /*
+       * https://ripplefox.com/bridge?type=federation&domain=ripplefox.com&destination=yh&user=yh
+       * https://ripplefox.com/bridge?type=quote&amount=100%2FCNY&destination=yh&address=rPVH2HkQPJz5WSrcdWLq2shxvHXR4H18Po&bank=CMB&bankAccount=6226123488888888&bankUser=%E5%BD%93&email=123%40ripplefox.com
+       * 
       StellarSdk.StellarTomlResolver.resolve(domain).then(function(stellarToml) {
         $scope.fed_url = stellarToml.FEDERATION_SERVER;
         var server = new StellarSdk.FederationServer(stellarToml.FEDERATION_SERVER, domain, {});
@@ -271,7 +290,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         return;
       }
 
-      var arr = $scope.service_currency.split(".");
+      var arr = $scope.service_currency.split("."); // TODO: service_currencies
       var data = {
         type: "quote",
         amount       : $scope.service_amount,
