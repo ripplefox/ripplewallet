@@ -62,7 +62,6 @@ var translate_en = {
   manual_add : 'Manually add trust',
   manual_desc: 'You can add trust manually if you know the account ID and asset code',
   issuer_invalid : 'Asset issuer account ID must be a valid account ID',
-  memo_invaid    : 'Invalid memo.',
   trust_granted  : 'Trust is granted!',
 
   /** send **/
@@ -167,7 +166,6 @@ var translate_en = {
   amount : 'Amount',
   optional : 'Optional',
   required : 'Required',
-  require_memo : 'Recipient requires a memo. Please make sure it is correct.',
 
   trade : 'Trade',
   normal: 'Normal',
@@ -306,5 +304,7 @@ var translate_en = {
 
   /** Error **/
   NotFoundError : 'The resource was not found. You must have at least 1 {{name}} in your account for it to be activated! Each trust line or offer requires a 0.5 {{name}}  reserve in addition. To make things easy, send at least 3 {{name}}s to the account.',
-  NotConnectedError : 'Not connected, please retry later.'
+  NotConnectedError : 'Not connected, please retry later.',
+  NoRippleTXT: 'Ripple.txt was not found.',
+  NoFederationUrl: 'Federation service url was not provided.'
 }

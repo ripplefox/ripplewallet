@@ -5,7 +5,7 @@
 			<group ng-show="mode == 'input'">
 					<div class="row">
 							<div class="col-xs-12 col-sm-6 col-md-6">
-								<label translate="recipient">Recipient</label> {{asset2}}
+								<label translate="recipient">Recipient</label>
 								<input type="text" class="form-control" required="true"
 									ng-model="input_address" ng-change="resolve()" ng-model-options="{debounce:800}"
 									placeholder="{{'name_or_address' | translate}}" list="contacts">
@@ -17,7 +17,7 @@
 							</div>
 					</div>
 					<form name="sendForm">
-						<div class="row noborder" ng-hide="is_federation">
+						<div class="row noborder" ng-hide="is_federation && extra_fields">
 								<div class="col-xs-12 col-sm-6 col-md-6">
 									<label translate="receive">Receive</label>
 									<div class="row noborder nopadding">
@@ -47,7 +47,7 @@
 								</div>
 						</div>
 						
-						<div class="row noborder" ng-hide="is_federation">
+						<div class="row noborder" ng-hide="is_federation && extra_fields">
 								<div class="col-xs-12 col-sm-6 col-md-6">
 									<label translate="dest_tag">Destination tag</label>
 									<input name="tag" type="text" class="form-control" ng-model="tag" ng-required="tag_require">
@@ -57,7 +57,7 @@
 								</div>
 						</div>
 						
-						<div class="row noborder" ng-hide="is_federation">
+						<div class="row noborder" ng-hide="is_federation && extra_fields">
 							<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
 								<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="">发送 {{asset.code}}</button>
 							</div>
@@ -122,12 +122,14 @@
 					<div class="row noborder" ng-show="finding && !found">
 						<div class="message"><i class="fa fa-spinner fa-pulse"></i> {{'calculating' | translate}}</div>
 					</div>
-					<div class="row" ng-show="send_error || service_error">
+					<div class="row" ng-show="send_error || service_error || (!serviceForm.$valid && service_currency)">
 						<div class="s-alert s-alert--error">
 							<div ng-show="send_error">{{send_error}}</div>
-							<div ng-show="service_error">{{service_error}}</div>
+							<div ng-show="service_error">{{service_error | translate}}</div>
+							<div ng-show="!serviceForm.$valid && service_currency" translate="fill_form">Please fill the form correctly.</div>
 						</div> 
 					</div>
+					
 					<div class="row" ng-show="(is_federation || real_not_fund) && real_address && !sending && !send_done">
 						<div class="s-alert s-alert--info">
 							<div ng-show="real_not_fund" translate="not_funded" translate-values="native">Not funded</div>
@@ -285,21 +287,6 @@
 							<li translate="invalid_account" ng-show="send_error.invalid">Account is invalid</li>
 							<li ng-show="send_error.domain">{{target_domain}} {{'invalid_domain' | translate}}</li>
 							<li ng-show="send_error.message">{{send_error.message}}</li>
-						</ul>
-					</div>
-					<div class="s-alert s-alert--alert" ng-hide="isValidMemo()">
-						<ul class="AddTrust__errorList">
-							<li>{{'memo_invaid' | translate}} {{send_error.memo}}</li>
-						</ul>
-					</div>
-					<div class="s-alert s-alert--alert" ng-hide="asset.code || quote_id">
-						<ul class="AddTrust__errorList">
-							<li translate="select_asset">Please select an asset to send.</li>
-						</ul>
-					</div>
-					<div class="s-alert s-alert--alert" ng-show="memo_require && !memo">
-						<ul class="AddTrust__errorList">
-							<li translate="require_memo">Recipient requires a memo. Please make sure it is correct.</li>
 						</ul>
 					</div>
 					<div class="s-alert s-alert--success" ng-show="send_done">

@@ -62,7 +62,6 @@ var translate_cn = {
   manual_add : '手动授信',
   manual_desc: '在了解发行方账号和资产代码的情况下，你可以手动进行授信操作。',
   issuer_invalid : '发行方账号必须是有效的瑞波地址编码。',
-  memo_invaid    : '备注必须是有效的。',
   trust_granted  : '设置信任额度成功！',
 
   /** send **/
@@ -167,7 +166,6 @@ var translate_cn = {
   amount : '金额',
   optional : '选填',
   required : '必填',
-  require_memo : '接收方需要Memo，请确保备注正确！',
 
   trade : '交易',
   normal: '标准',
@@ -306,5 +304,7 @@ var translate_cn = {
 
   /** Error **/
   NotFoundError : '瑞波网络未找到该账号，请先激活此账号。激活需要至少20 {{code}}。每个授信和委托单需要额外冻结5 {{code}}，建议至少用31 {{code}}完成激活。',
-  NotConnectedError : '未连接到服务器，请过一会儿再试。'
+  NotConnectedError : '未连接到服务器，请过一会儿再试。',
+  NoRippleTXT: '网站未提供ripple.txt文件',
+  NoFederationUrl: '网站未提供联邦协议服务'
 }

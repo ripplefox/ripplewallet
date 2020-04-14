@@ -11,13 +11,12 @@ myApp.factory('Federation', ['$rootScope', '$q', '$http',  function($rootScope, 
 
     var urls = [
       'https://www.' + domain + '/ripple.txt',
-      'https://' + domain + '/ripple.txt',
-      'https://ripple.' + domain + '/ripple.txt'
+      'https://' + domain + '/ripple.txt'
     ].reverse();
 
     var next = function() {
       if (!urls.length) {
-        txtPromise.reject(new Error("No ripple.txt found"));
+        txtPromise.reject(new Error("NoRippleTXT"));
         return;
       }
 

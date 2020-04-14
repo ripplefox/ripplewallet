@@ -30,7 +30,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.resolve();
       }
     }
-
     
     $scope.target_domain;
     $scope.real_address;
@@ -184,11 +183,13 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
       $scope.target_domain = domain;
       $scope.act_loading = true;
+      $scope.service_error = "";
       Federation.get(domain).then(txt => {
-        $scope.fed_error = false;
-        $scope.fed_loading = false;
         $scope.fed_url = txt.federation_url ? txt.federation_url[0] : null;
         console.log('resolve', txt, $scope.fed_url);
+        if (!$scope.fed_url) {
+          return Promise.reject(new Error("NoFederationUrl"));
+        }
         return $http({
           method: 'GET',
           url: $scope.fed_url,
@@ -203,40 +204,31 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
           return;
         }
         console.log(res.data);
-        $scope.fed_loading = false;
         var data = res.data.federation_json;
-        $scope.service_currency = data.currencies[0].currency;
-        $scope.extra_fields = data.extra_fields;
-        $scope.quote_url = data.quote_url;
+        if (data.extra_fields) {
+          $scope.service_currency = (data.currencies || data.assets)[0].currency;
+          $scope.extra_fields = data.extra_fields;
+          $scope.quote_url = data.quote_url;
+        } else {
+          $scope.extra_fields = null;
+          $scope.real_address = data.destination_address;
+          $scope.resolveAccountInfo();
+        }
+        $scope.act_loading = false;
       }).catch(err => {
         if (snapshot !== $scope.full_address) {
           return;
         }
-        $scope.fed_error = err.message;
-        $scope.fed_loading = false;
+        $scope.service_error = err.message;
+        $scope.act_loading = false;
         console.log(snapshot, err);
       });
       /*
        * https://ripplefox.com/bridge?type=federation&domain=ripplefox.com&destination=yh&user=yh
        * https://ripplefox.com/bridge?type=quote&amount=100%2FCNY&destination=yh&address=rPVH2HkQPJz5WSrcdWLq2shxvHXR4H18Po&bank=CMB&bankAccount=6226123488888888&bankUser=%E5%BD%93&email=123%40ripplefox.com
        * 
+      
       StellarSdk.StellarTomlResolver.resolve(domain).then(function(stellarToml) {
-        $scope.fed_url = stellarToml.FEDERATION_SERVER;
-        var server = new StellarSdk.FederationServer(stellarToml.FEDERATION_SERVER, domain, {});
-        server.resolveAddress(prestr).then(function(data){
-          console.debug(prestr, data);
-          $scope.act_loading = false;
-          $scope.send_error.message = '';
-          $scope.real_address = data.account_id;
-
-          if (data.memo) {
-            $scope.memo = data.memo.toString();
-            $scope.memo_type = data.memo_type;
-            $scope.memo_provided = true;
-          } else {
-            $scope.memo = '';
-            $scope.memo_provided = false;
-          }
 
           if (data.error) {
             $scope.send_error.message = data.detail || data.error;
@@ -349,7 +341,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     };
 
     $scope.resolveAccountInfo = function() {
-      if (!$scope.real_address || !Id.isValidAddress($scope.real_address)) {
+      $scope.invalid_address = !Id.isValidAddress($scope.real_address);
+      if ($scope.invalid_address) {
         return;
       }
       var snapshot = $scope.real_address;
