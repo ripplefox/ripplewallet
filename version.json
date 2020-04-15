@@ -1,0 +1,5 @@
+{
+  "name": "ReleaseVersion",
+  "version": "1.0.0",
+  "description": "Wallet will check this version file on github when open. It will notify user when version different."
+}
