@@ -1,7 +1,7 @@
 {
   "name": "ripplewallet",
   "version": "0.9.9",
-  "description": "RippleFox Desktop Client",
+  "description": "RippleFox Client",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -32,16 +32,16 @@
   "build": {
     "nwVersion": "0.44.4",
     "win": {
-      "productName": "RippleFox Wallet",
+      "productName": "Foxlet Ripple",
       "companyName": "RippleFox",
-      "icon": "./assets/ripplefox.ico"
+      "icon": "./assets/foxripple.ico"
     },
     "mac": {
-      "displayName": "RippleFox Wallet",
-      "icon": "./assets/ripplefox.icns"
+      "displayName": "Foxlet Ripple",
+      "icon": "./assets/foxripple.icns"
     }
   },
   "window": {
-    "icon": "./assets/ripplefox.png"
+    "icon": "./assets/foxripple.png"
   }
 }

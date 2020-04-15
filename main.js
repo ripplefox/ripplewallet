@@ -19,4 +19,6 @@ nw.Window.open('app.html', {position: 'center', width: 1024, height: 800, min_wi
   }
 });
 
-nw.Window.get().showDevTools();
+if (process.versions['nw-flavor'] === 'sdk') {
+  nw.Window.get().showDevTools();
+};
