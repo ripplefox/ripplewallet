@@ -8,7 +8,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
-  background: linear-gradient(150deg,rgba(100,200,255,.1),rgba(255,255,0,.2)),linear-gradient(90deg,rgba(255,255,255,.2),transparent),linear-gradient(30deg,#9291e0,#96dadb);
+  background: linear-gradient(10deg, #9291e0,#96dadb);
 }
 
 .header {

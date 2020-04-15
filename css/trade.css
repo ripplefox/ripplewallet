@@ -125,6 +125,7 @@ a.AssetPairRow:hover .AssetPair__separator {
 	opacity: 0.4;
 }
 
+.contact_pad,
 .offers_pad {
 	margin: 0 auto;
 	margin-bottom: 18px;
@@ -157,6 +158,18 @@ a.AssetPairRow:hover .AssetPair__separator {
 .offers_pad .bidoffer .row,
 .offers_pad .askoffer .row {
   margin: 0 0 20px;
+}
+
+.showall {
+}
+
+.showall input {
+	vertical-align:middle; 
+	margin-top:-5px;
+}
+
+.showall span {
+	font-size: 16px;
 }
 
 .listings .input-field {

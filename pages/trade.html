@@ -189,7 +189,7 @@
 						<span class="glyphicon glyphicon-refresh"></span> {{'refresh' | translate}}
 					</a>
 					<a class="danger" ng-show="cancel_error">{{cancel_error}}</a>
-					<div style="float:right"><input type="checkbox" ng-model="showAdvanced">{{ 'advanced' | translate}}</div>
+					<div class="showall" style="float:right"><input type="checkbox" ng-model="showAdvanced"> <span>{{'show_all' | translate}}</span></div>
 				</div>
 			
 				<div class="bidoffer col-xs-12 col-sm-6" ng-hide="showAdvanced">
@@ -248,8 +248,8 @@
 						<div class="row" ng-repeat="(id, item) in offers.all" ng-class="{cancelling: isCancelling(id)}">
 							<div class="col-sm-1">{{item.direction | translate}}</div>
 							<div class="col-sm-3 right">{{item.price | fmtnum}} {{item.total.currency}}</div>
-							<div class="col-sm-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency}}</div>
-							<div class="col-sm-3 right">{{item.total.value | fmtnum}} {{item.total.currency}}</div>
+							<div class="col-sm-3 right" title="{{item.quantity.counterparty}}">{{item.quantity.value | fmtnum}} {{item.quantity.currency}}</div>
+							<div class="col-sm-3 right" title="{{item.total.counterparty}}">{{item.total.value | fmtnum}} {{item.total.currency}}</div>
 							<div class="col-sm-2 action">
 								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(id)"></i>
 								<a href="javascript:" ng-click="cancel(item.id, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
