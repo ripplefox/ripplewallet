@@ -72,9 +72,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.tag_provided = false;
         $scope.real_address = $scope.full_address;
         $scope.invalid_address = !Id.isValidAddress($scope.real_address);
-        if (special_destinations[$scope.real_address]) {
-          $scope.tag_require = true;
-        }
         $scope.resolveAccountInfo();
       } else {
         $scope.is_federation = true;
@@ -289,7 +286,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.act_loading = true;
       XrpApi.checkSettings(snapshot).then(settings => {
         console.log(snapshot, 'settings', settings);
-        $scope.tag_require = !!settings.requireDestinationTag;
+        $scope.tag_require = !!settings.requireDestinationTag || !!special_destinations[$scope.real_address];
         $scope.disallow_xrp = !!settings.disallowIncomingXRP;
         $scope.$apply();
         return XrpApi.checkCurrencies(snapshot);
@@ -316,14 +313,18 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       });
     };
     
-    $scope.pickPath = function(code) {
+    $scope.checkTag = function(){
       if ($scope.tag) {
         var tag = Number($scope.tag);
         $scope.invalid_tag = !(Number.isInteger(tag) && tag > 0 && tag < Math.pow(256, 4));
       } else {
-        $scope.invalid_tag = false;
+        $scope.invalid_tag = $scope.tag_require;
       }
-      console.log($scope.tag, $scope.invalid_tag);
+    }
+    
+    $scope.pickPath = function(code) {
+      $scope.checkTag();
+      console.log('tag:', $scope.tag, $scope.invalid_tag, $scope.tag_require);
       if ($scope.invalid_tag) return;
       $scope.path = $scope.paths.find(item => {return item.code == code});
       if (!$scope.path && code == native.code) {
