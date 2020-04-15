@@ -32,12 +32,13 @@ myApp.controller("FooterCtrl", [ '$scope', '$translate', 'SettingFactory', '$htt
     $scope.new_version = false;
     $scope.diff = false;
     
-    
     $http({
       method: 'GET',
       url: "https://raw.githubusercontent.com/ripplefox/ripplewallet/master/version.json"
     }).then(function(res) {
       console.log(res.data);
+      $scope.new_version = res.data.version;
+      $scope.diff = $scope.new_version != $scope.version;
     });
   }]);
 

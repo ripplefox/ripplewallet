@@ -1,6 +1,6 @@
 {
   "name": "ripplewallet",
-  "version": "1.0.0",
+  "version": "0.9.9",
   "description": "RippleFox Desktop Client",
   "main": "main.js",
   "scripts": {
