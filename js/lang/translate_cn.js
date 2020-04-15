@@ -40,6 +40,7 @@ var translate_cn = {
   confirm: '确定',
   
   /** Balance & Trust **/
+  overview: '概况',
   balance : '余额',
   reserve   : '冻结：',
   total : '总量',
@@ -235,9 +236,6 @@ var translate_cn = {
   timeout_desc : '连接服务器节点的最大时间（秒）。',
   coin_ticket: '资产代码',
   fed_protocol: '联邦协议',
-  fed_network : '名称服务（~）',
-  fed_network_desc : '你可以用“~名字”来代替“名字*联邦.域名”。',
-  you_name_is : '你的名称是',
   fed_ripple  : '瑞波服务',
   fed_ripple_desc : '当你输入Ripple地址时，将自动用以下域名进行解析。',
   fed_bitcoin  : '比特币服务',

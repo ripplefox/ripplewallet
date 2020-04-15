@@ -28,7 +28,6 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
     }
     
     
-    $scope.fed_network = SettingFactory.getFedNetwork();
     $scope.fed_ripple  = SettingFactory.getFedRipple();
     $scope.fed_bitcoin = SettingFactory.getFedBitcoin();
     
@@ -78,7 +77,6 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
       }
 
       if (mode == 'federation') {
-        SettingFactory.setFedNetwork($scope.fed_network);
         SettingFactory.setFedRipple($scope.fed_ripple);
         SettingFactory.setFedBitcoin($scope.fed_bitcoin);
       }

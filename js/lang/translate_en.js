@@ -40,6 +40,7 @@ var translate_en = {
   confirm: 'Confirm',
   
   /** Balance & Trust **/
+  overview: 'Overview',
   balance : 'Balance',
   reserve   : 'Reserve:',
   total : 'Total',
@@ -235,9 +236,6 @@ var translate_en = {
   timeout      : 'Network Timeout',
   timeout_desc : 'Timeout in seconds before considering a request to have failed.',
   fed_protocol: 'Federation Protocol',
-  fed_network : 'Name Service (~)',
-  fed_network_desc : 'You can use ~name instead of name*federation.domain.',
-  you_name_is : 'Your name is',
   fed_ripple  : 'Ripple Service',
   fed_ripple_desc : 'When you enter a Ripple address, it will use below domain to parse.',
   fed_bitcoin  : 'Bitcoin Service',

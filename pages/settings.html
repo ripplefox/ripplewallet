@@ -112,13 +112,6 @@
 		<div class="col-sm-9" ng-show="isMode('federation')">
 			<div class="row" style="margin-bottom: 20px;">
 				<div class="col-xs-12 col-md-10">
-					<label translate="fed_network">Name Service (~)</label>
-					<p>{{ 'fed_network_desc' | translate}} <span ng-show="fed_name">{{'you_name_is' | translate}} <strong>~{{fed_name}}</strong></span></p>
-					<input class="form-control" type="text" ng-model="fed_network" placeholder="fed.network" />
-				</div>
-			</div>
-			<div class="row" style="margin-bottom: 20px;">
-				<div class="col-xs-12 col-md-10">
 					<label translate="fed_ripple">Ripple Service</label>
 					<p translate="fed_ripple_desc">When you enter a Ripple address, it will use below domain to parse</p>
 					<input class="form-control" type="text" ng-model="fed_ripple" placeholder="ripplefox.com" />
