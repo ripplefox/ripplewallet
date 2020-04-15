@@ -37,6 +37,7 @@ myApp.factory('SettingFactory', function($window) {
         },
         tabs: ["history", "trade", "balance", "send", "trust"]
       },
+      /*
       other: {
         name: "User defined",
         translationKey: 'other_url',
@@ -51,6 +52,7 @@ myApp.factory('SettingFactory', function($window) {
         },
         tabs: ["history", "trade", "balance", "send", "trust"]
       }
+      */
     },
 
     setTimeout : function(timeout) {

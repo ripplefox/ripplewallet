@@ -27,7 +27,7 @@
 		<div class="col-sm-9" ng-show="isMode('network')">
 			<div class="row" style="margin-bottom: 20px;">
 				<div class="col-xs-12 col-md-10">
-					<label translate="selected_net">Selected Stellar Network</label>
+					<label translate="selected_net">Selected Ripple Network</label>
 					<ul>
 						<!-- <li><strong>Type: </strong><tt>{{active_network | translate}}</tt></li> -->
 						<li><strong>Network: </strong><tt>{{all_networks[active_network].name}}</tt></li>
@@ -81,7 +81,7 @@
 			<div class="row" style="margin-bottom: 20px;">
                 <div class="col-xs-12 col-md-10">
                     <label translate="max_fee">Max Fee</label>
-                    <p>{{ 'max_fee_desc' | translate }} {{network_coin}}</p>
+                    <p>{{ 'max_fee_desc' | translate }} ({{network_coin}})</p>
                     <input class="form-control" type="number" ng-model="network_maxfee" placeholder="0.2" />
                 </div>
             </div>
