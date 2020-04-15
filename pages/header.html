@@ -32,13 +32,18 @@
 	      	<li ng-hide="isPublicNetwork()"><a href="javascript:"  ng-click="goTo('/settings')"><i class="fa fa-exclamation-triangle"></i> {{currentNetwork.name | translate}}</a></li>
 	        <li>
 	        	<a href="javascript:"  ng-click="goTo('/security')" title="{{address}}">
-	        		<span class="glyphicon glyphicon-user"></span>
-	        		<span>{{address | shortaddress}}</span>
+	        		<i class="fa fa-user"></i> <span>{{address}}</span>
 	        	</a>
 	        </li>
-	        <li><a href="javascript:"  ng-click="goTo('/settings')"><span class="glyphicon glyphicon-cog"></span> {{'settings' | translate}}</a></li>
-	        <li><a href="javascript:" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> {{'logout' | translate}}</a></li>
+	        <li class="settings">
+	        		<a class="dropdown-toggle" href="javascript:" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
+		        	<ul class="dropdown-menu" role="menu">
+		        		<li role="presentation"><a role="menuitem" href="javascript:" ng-click="goTo('/settings')"><i class="fa fa-cogs"></i> {{'settings' | translate}}</a></li>
+		        		<li role="presentation"><a role="menuitem" href="javascript:" ng-click="logout()"><i class="fa fa-sign-out"></i> {{'logout' | translate}}</a></li>
+		        	</ul>
+	        </li>
 	      </ul>
+
 	    </div>
 	  </div>
 	</nav>
