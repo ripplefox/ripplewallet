@@ -80,79 +80,6 @@
 	position: relative
 }
 
-.input.amount-big {
-	font-size: 32px;
-	font-weight: 400;
-	padding-right: 130px;
-	margin-bottom: 0;
-	height: 60px;
-}
-
-select.select {
-	background: url(../img/arrow-down-blue.png) 95% no-repeat;
-	padding: 10px 30px 10px 10px;
-	font-size: 16px;
-	border: none;
-	font-weight: 400;
-	outline: 0;
-	line-height: auto;
-	cursor: pointer;
-	border-radius: 5px;
-	color: #057EEF;
-	-moz-appearance: none;
-	appearance: none;
-	background-size: 20px 11px;
-	background-color: rgba(255, 255, 255, 0)
-}
-
-select.select:hover {
-	background-color: #e6e6e6
-}
-
-select.select.currency {
-	position: absolute;
-	right: 0;
-	top: 0;
-	padding-right: 50px;
-	background-position: 80%;
-	padding-left: 30px;
-	-webkit-border-top-left-radius: 0;
-	-webkit-border-bottom-left-radius: 0;
-	-moz-border-border-top-left-radius: 0;
-	-moz-border-bottom-left-radius: 0;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	z-index: 2;
-	height: 100%;
-	font-size: 20px;
-	font-weight: 600;
-	border: 2px solid rgba(5, 126, 239, 0)
-}
-
-select.select.currency.disabled {
-	background-image: none;
-	cursor: default;
-	padding-right: 30px
-}
-
-select.select.currency.disabled:hover {
-	background-color: rgba(255, 255, 255, 0)
-}
-
-select.select option {
-	background-color: rgba(255, 255, 255, .9);
-	color: #666;
-	padding: 3px 6px
-}
-
-select.select option:hover {
-	background-color: #00AFEF
-}
-
-.input, select.select {
-	-webkit-appearance: none
-}
-
 .btn-group-pretty {
 	padding: 15px;
 }
@@ -215,26 +142,6 @@ select.select option:hover {
 
 .btn-group-pretty .btn.active span.amount {
     color: rgba(255,255,255,1);
-}
-
-.btn-group-pretty .btn span.tick {
-	width: 32px;
-	height: 32px;
-	background-size: 32px auto;
-	background-image: url(../img/tick-white.png);
-	background-position: center;
-	background-repeat: no-repeat;
-	display: block;
-	position: absolute;
-	right: 20px;
-	top: 15px;
-	opacity: 0;
-	transition: .1s linear opacity;
-	transition-delay: .1s
-}
-
-.btn-group-pretty .btn.active span.tick {
-	opacity: 1
 }
 
 .btn-group-pretty .btn_card {

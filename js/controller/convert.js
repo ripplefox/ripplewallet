@@ -5,16 +5,21 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
     $scope.init = function(){
       $scope.mode = 'input';
       $scope.currencies = [];
-      $scope.currencies.push($rootScope.currentNetwork.coin.code);
       for (var code in $rootScope.lines) {
         $scope.currencies.push(code);
       }
       $scope.dst_amount = 0;
-      $scope.dst_currency = $scope.dst_currency? $scope.dst_currency : $scope.currencies[0];
+      $scope.dst_currency = $scope.dst_currency? $scope.dst_currency : $rootScope.native.code;
       $scope.paths = {};
       $scope.asset = {};
     }
     $scope.init();
+    
+    $scope.pickCode = function(code) {
+      console.log($scope.dst_currency, '->', code);
+      $scope.dst_currency = code;
+      $scope.updatePath();
+    };
 
     $scope.paths = {};
     $scope.finding = false;

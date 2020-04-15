@@ -1,30 +1,37 @@
 <section class="col-xs-12 content">
 	<div class="so-back islandBack islandBack--t">
-		<div class="island">
+		<div class="island islandBack form-group">
 			<div class="header" translate="convert_title">Convert one currency into another</div>
 			<group ng-show="mode == 'input'">
-				<div class="row form-group">
-					<div class="col-xs-12 col-sm-6 col-md-5">
-						<label translate="receive">Receive</label>
-						<div class="amount-wrap">
-							<input type="number" autocomplete="off" placeholder="0.00"
-								class="input amount-big form-control"
-								ng-model="dst_amount" 
-								ng-model-options="{debounce:800}"
-								ng-change="updatePath()"
-								required="true">
-							<select class="select currency"
-								ng-model="dst_currency"
-								ng-change="updatePath()"
-								ng-disabled = "false"
-								ng-class="{'disabled': !multipleAsset}" required="">
-								<option value="{{code}}" 
-									ng-repeat="code in currencies" 
-									ng-selected="dst_currency == code">{{code}}</option>
-							</select>
-						</div>
+					
+					<div class="row">
+							<div class="col-xs-12 col-sm-6 col-md-6">
+								<label translate="receive">Receive</label>
+								<div class="row noborder nopadding">
+										<div class="col-xs-8 nopadding-left">
+											<input type="number" autocomplete="off" placeholder="0.00" class="form-control"
+												ng-model="dst_amount" ng-change="updatePath()" ng-model-options="{debounce:800}" required="true">
+										</div>
+										<div class="col-xs-4 nopadding-right">
+											<div class="dropdown">
+										    <button class="btn btn-default dropdown-toggle form-control nopadding" ng-disabled="!currencies.length" type="button" data-toggle="dropdown">
+										    	<div class="content" style="">
+										    		<div class="currency">{{dst_currency}} </div>
+										    		<div class="dropdown-addon" ng-show="currencies.length"><i class="fa fa-sort-desc" aria-hidden="true"></i></div>
+										    	</div>
+										    </button>
+										    <ul class="dropdown-menu" role="menu">
+										    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
+										      <li role="presentation" ng-repeat="code in currencies">
+										      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code}}</a>
+										      </li>
+										    </ul>
+										  </div>
+										</div>
+									</div>
+						  </div>
 					</div>
-				</div>
+				
 				
 				<div class="row form-group alternatives" ng-hide="found">
 					<div class="message" ng-show="finding">
