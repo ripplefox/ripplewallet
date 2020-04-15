@@ -11,3 +11,6 @@ The client allows you to encrypt your secret key and store it as a file locally 
 ## 为什么需要这个钱包？
 
 - 人民需要什么样的钱包，我们就写什么样的钱包。
+- 用最新的开发包与瑞波网络交互。
+- 连接最快的服务器，优化中国区的访问。
+- 根据网关多年的经验，更好地服务用户。
