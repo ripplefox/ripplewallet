@@ -1,71 +1,26 @@
 <section class="col-xs-12 content">
-	<div class="page-header">
-	    <h3 translate="ripple_desktop_client">Ripple Desktop Client</h3>
-	</div>
-	
-	<p class="lead" translate="wallet_notice1"></p>
-	<ul class="lead">
-		<li><span translate="wallet_notice2"></span></li>
-		<li><span translate="wallet_notice3"></span></li>
-	</ul>
-	
-	<p class="lead" translate="app_open_source"></p>
-	<ul class="lead">
-		<li><span translate="github_feedback"></span> https://github.com/ripplefox/ripplewallet</li>
-		<li><span translate="qq_feedback"></span></li>
-	</ul>
-
-	<div class="island" ng-show="stellar_ticker && isPublicNetwork()">
-        <div class="row" >
-            <div class="row__shareOption" style="flex-grow: 1;">
-                <div style="display: block; text-align: left; align-items: baseline;">
-                    <p class="lead" translate="app_safe_notice">密钥保存在本地，一定要记得备份，备份，备份！自己的安全自己负责。</p>
-	                <p class="lead">
-	                    <span translate="app_open_source">钱包开源啦！ </span>
-	                    <span translate="app_feedback">有修改建议请到社区QQ群566413562里讨论。</span>
-	                    <a href="https://github.com/stellarchat/desktop-client" target="_blank"><code>https://github.com/stellarchat/desktop-client</code></a>
-	                </p>
-                    <div ng-show="isLangCN()">
-				        <p class="lead">
-				            使用教程：<a href="http://hx.ripplefox.com" target="_blank"><code>http://hx.ripplefox.com</code></a>
-				        </p>
-				        <p class="lead">
-				            中文维基与资讯传播：<a href="https://www.256kw.com/" target="_blank"><code>https://www.256kw.com/</code></a>
-				        </p>
-				    </div>
-    
-                </div>
-            </div>
-            <div class="row__shareOption" style="flex-grow: 1;">
-                <canvas id="pie" class="chart chart-pie chart-xs" chart-data="pie.data" chart-labels="pie.labels" chart-options="pie.options"></canvas>
-            </div>
-        </div>	    
-		<div class="row" >
-			<div class="row__shareOption">
-				<table class="table table-hover" style="border: 1px solid #dedfe0;">
-					<thead>
-						<tr>
-							<td><strong>{{currentNetwork.coin.code}}</strong></td>
-							<td><strong></td>
-							<td class="right"><strong>{{pie.total | number: 0}}</strong></td>
-							<td class="right"><strong>100 %</strong></td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="line in data">
-							<td>
-								{{line.curr}}
-							</td>
-							<td>
-								{{line.domain}}
-							</td>
-							<td class="right">{{line.volume | number : 0}}</td>
-							<td class="right">{{line.pct | number : 2}} %<br/>
-							</td>
-						</tr>
-					</tobdy>
-				</table>
+	<div class="so-back islandBack islandBack--t">
+		<div class="island islandBack form-group">
+			<div class="header" translate="ripple_desktop_client">Ripple Desktop Client</div>
+			<div class="row" style="padding-top: 40px;">
+				<div class="notice_pad">
+					<p class="lead" translate="wallet_notice1"></p>
+					<ul class="lead">
+						<li><span translate="wallet_notice2"></span></li>
+						<li><span translate="wallet_notice3"></span></li>
+					</ul>
+				</div>
 			</div>
+			<div class="row noborder">
+				<div class="notice_pad">
+							<p class="lead" translate="app_open_source"></p>
+							<ul class="lead">
+								<li><span translate="github_feedback"></span> https://github.com/ripplefox/ripplewallet</li>
+								<li><span translate="qq_feedback"></span></li>
+							</ul>
+				</div>
+			</div>
+		
 		</div>
 	</div>
 </section>

@@ -125,6 +125,16 @@ a.AssetPairRow:hover .AssetPair__separator {
 	opacity: 0.4;
 }
 
+.notice_pad {
+	margin: 0 auto;
+	margin-bottom: 18px;
+	padding: 15px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	background: #f4f4f5;
+	border: 1px solid #dedfe0;
+	border-radius: 3px;
+}
+
 .contact_pad,
 .offers_pad {
 	margin: 0 auto;
