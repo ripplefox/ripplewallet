@@ -4,7 +4,7 @@
 			<div class="settingPage">
 				<a href="javascript:" ng-class="{active: isMode('network')}" ng-click="setMode('network')"
 					translate="network">Network</a>
-				<a href="javascript:" ng-class="{active: isMode('federation')}" ng-click="setMode('federation')"
+				<a ng-hide="true" href="javascript:" ng-class="{active: isMode('federation')}" ng-click="setMode('federation')"
 					translate="fed_protocol">Federation Protocol</a>
 				<a href="javascript:" ng-class="{active: isMode('proxy')}" ng-click="setMode('proxy')"
 					translate="proxy">Proxy</a>
