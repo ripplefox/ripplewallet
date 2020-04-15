@@ -38,6 +38,7 @@ var translate_en = {
   cancel : 'Cancel',
   back   : 'Back',
   confirm: 'Confirm',
+  stop_countdown: 'Stop countdown',
   
   /** Balance & Trust **/
   overview: 'Overview',

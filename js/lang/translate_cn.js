@@ -38,6 +38,7 @@ var translate_cn = {
   cancel : '取消',
   back   : '返回',
   confirm: '确定',
+  stop_countdown: '停止倒计时',
   
   /** Balance & Trust **/
   overview: '概况',

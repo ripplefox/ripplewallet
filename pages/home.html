@@ -1,6 +1,6 @@
 <section class="col-xs-12 content">
-	<div class="so-back islandBack islandBack--t">
-		<div class="island islandBack form-group">
+	<div class="islandBack islandBack--t">
+		<div class="island islandBack">
 			<div class="header" translate="ripple_desktop_client">Ripple Desktop Client</div>
 			<div class="row" style="padding-top: 40px;">
 				<div class="notice_pad">
@@ -20,7 +20,11 @@
 							</ul>
 				</div>
 			</div>
-		
+			<div class="row noborder block">
+				<div class="actionLink"><a href="" ng-click="goTo('balance')">{{'go_balance' | translate}}</a></div>
+				<div class="actionLink"><a href="" ng-click="stopCountdown()" ng-hide="runOnce || stop">{{'stop_countdown' | translate}} ({{countdown}})</a></div>
+			</div>
+			
 		</div>
 	</div>
 </section>

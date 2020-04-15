@@ -409,7 +409,6 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     
     $scope.$on("$destroy", function() {
       clearInterval($scope.timer);
-      //XrpPath.close();
     });
     
     function sameAsset(code, issuer, code2, issuer2) {
