@@ -9,6 +9,7 @@ myApp.controller("BalanceCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
       XrpApi.queryAccount(function(err){
         $scope.$apply(function(){
           $scope.working = false;
+          $scope.removeState = {};
         });
         console.log($rootScope.lines);
       });
@@ -16,8 +17,9 @@ myApp.controller("BalanceCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
     $scope.delTrust = function(code, issuer) {
       $scope.setRemoving(code, issuer, true);
       XrpApi.changeTrust(code, issuer, "0").then(result => {
-        $scope.setRemoving(code, issuer, false);
-        $scope.$apply();
+        console.log(code + '.' + issuer + " remove submitted.")
+        //$scope.setRemoving(code, issuer, false);
+        //$scope.$apply();
       }).catch(err => {
         console.error(err);
         $scope.setRemoving(code, issuer, false);

@@ -187,7 +187,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
           params: {
             type : 'federation',
             domain: domain,
-            destination: prestr
+            destination: prestr,
+            address: $rootScope.address
           }
         });
       }).then(res => {
@@ -216,7 +217,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         console.log(snapshot, err);
       });
       /*
-       * https://ripplefox.com/bridge?type=federation&domain=ripplefox.com&destination=yh&user=yh
+       * https://ripplefox.com/bridge?type=federation&domain=ripplefox.com&destination=yh&address=rxx
        * https://ripplefox.com/bridge?type=quote&amount=100%2FCNY&destination=yh&address=rPVH2HkQPJz5WSrcdWLq2shxvHXR4H18Po&bank=CMB&bankAccount=6226123488888888&bankUser=%E5%BD%93&email=123%40ripplefox.com
       */
     };
