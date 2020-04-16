@@ -32,7 +32,7 @@
     "underscore": "^1.9.2"
   },
   "build": {
-    "nwVersion": "0.44.4",
+    "nwVersion": "0.45.2",
     "win": {
       "productName": "Foxlet Ripple",
       "companyName": "RippleFox",

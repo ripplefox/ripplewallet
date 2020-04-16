@@ -53,32 +53,35 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
       }
       return $rootScope.lines[code][issuer].limit > 0;
     };
-    $scope.changeState = {};
-    $scope.setChanging = function(code, issuer, state) {
-      if (!$scope.changeState[code]) {
-        $scope.changeState[code] = {};
-      }
-      $scope.changeState[code][issuer] = state;
-    };
+    
+    var changing = {};
+    var errors = {};
+    var states = {};
+    
     $scope.isChanging = function(code, issuer) {
-      if ($scope.changeState[code] && $scope.changeState[code][issuer]) {
-        return $scope.changeState[code][issuer];
-      } else {
-        return false;
-      }
+      return !!changing[key(code, issuer)];
     }
+    $scope.getError = function(code, issuer) {
+      return errors[key(code, issuer)] || "";
+    }
+    $scope.isDone = function(code, issuer) {
+      return !!states[key(code, issuer)];
+    }
+    
     $scope.addTrust = function(code, issuer, amount) {
       amount = amount || "1000000000";
-      $scope.trust_error = "";
-      $scope.trust_done = false;
-
-      $scope.setChanging(code, issuer, true);
+      var keystr = key(code, issuer);
+      
+      errors[keystr] = "";
+      states[keystr] = "";
+      changing[keystr] = true;
       XrpApi.changeTrust(code, issuer, amount).then(result => {
-        $scope.setChanging(code, issuer, false);
-        $scope.trust_done = true;
+        changing[keystr] = false;
+        states[keystr] = "done";
         $rootScope.$apply();
       }).catch(err => {
-        $scope.trust_error = err.message;
+        changing[keystr] = false;
+        errors[keystr] = err.message;
         $rootScope.$apply();
       });
     };
@@ -86,16 +89,24 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
     $scope.delTrust = function(code, issuer) {
       code = code || $scope.manual_code;
       issuer = issuer || $scope.manual_issuer;
-      $scope.setChanging(code, issuer, true);
-      $scope.trust_error = "";
-      $scope.trust_done = false;
+      var keystr = key(code, issuer);
+      
+      errors[keystr] = "";
+      states[keystr] = "";
+      changing[keystr] = true;
       XrpApi.changeTrust(code, issuer, "0").then(result => {
-        $scope.setChanging(code, issuer, false);
-        $scope.trust_done = true;
+        changing[keystr] = false;
+        states[keystr] = "done";
+        $rootScope.$apply();
       }).catch(err=>{
-        $scope.trust_error = err;
+        changing[keystr] = false;
+        errors[keystr] = err.message;
         $rootScope.$apply();
       });
+    };
+    
+    function key(code, issuer) {
+      return code == $rootScope.currentNetwork.coin.code ? code : code + '.' + issuer;
     };
     
   } ]);

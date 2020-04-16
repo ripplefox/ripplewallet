@@ -16,16 +16,24 @@
 					</div>
 					
 					<div ng-repeat="(name, gateway) in gatewaylist">
-						<div class="row" ng-repeat="asset in gateway.assets" ng-show="asset.list || show_all">
-							<div class="row__fixedAsset">
-								<gateway name="{{asset.name || gateway.name}}" logo="{{asset.logo || gateway.logo}}" website=""
-									code="{{asset.code}}" address="{{asset.issuer}}"></gateway>
+						<group ng-repeat="asset in gateway.assets" ng-show="asset.list || show_all">
+							<div class="row">
+								<div class="row__fixedAsset">
+									<gateway name="{{asset.name || gateway.name}}" logo="{{asset.logo || gateway.logo}}" website=""
+										code="{{asset.code}}" address="{{asset.issuer}}"></gateway>
+								</div>
+								<div class="row__shareOption">
+									<button class="btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
+									<button class="btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
+								</div>
 							</div>
-							<div class="row__shareOption">
-								<button class="btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
-								<button class="btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
+							<div class="row" ng-show="getError(asset.code, asset.issuer)">
+									<div class="s-alert s-alert--alert row__message">{{getError(asset.code, asset.issuer)}}</div>
 							</div>
-						</div>
+							<div class="row" ng-show="isDone(asset.code, asset.issuer)">
+									<div class="s-alert s-alert--success row__message" translate="trust_granted">Trust is granted!</div>
+							</div>
+						</group>
 					</div>
 					
 					<a href="" ng-click="showHide()">
@@ -84,22 +92,19 @@
 									</div>
 								</div>
 							</div>
-							
 		      	</form>
 		    	</div>
+				</div>
+				<div class="row" ng-show="getError(manual_code, manual_issuer)">
+						<div class="s-alert s-alert--alert row__message">{{getError(manual_code, manual_issuer)}}</div>
+				</div>
+				<div class="row" ng-show="isDone(manual_code, manual_issuer)">
+						<div class="s-alert s-alert--success row__message" translate="trust_granted">Trust is granted!</div>
 				</div>
 			</group>
 		</div>
 	</div>
 	
-	<div class="s-alert s-alert--alert row__message" ng-show="trust_error">
-		{{trust_error | translate:currentNetwork.coin}}
-	</div>
-	<div class="s-alert s-alert--success row__message" ng-show="trust_done" translate="trust_granted">
-		Trust is granted!
-	</div>
-
-
 	<div class="so-back islandBack" ng-hide="true">
 		<div class="island">
 			<div class="island__header" translate="fed_add">Add trust via federation</div>
