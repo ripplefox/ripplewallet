@@ -21,8 +21,8 @@ myApp.controller("HeaderCtrl", ['$scope', '$rootScope', '$location', 'Authentica
   }
 ]);
 
-myApp.controller("FooterCtrl", [ '$scope', '$translate', 'SettingFactory', '$http',
-  function($scope, $translate, SettingFactory, $http) {
+myApp.controller("FooterCtrl", [ '$scope', '$rootScope', '$translate', 'SettingFactory', '$http',
+  function($scope, $rootScope, $translate, SettingFactory, $http) {
     $scope.changeLanguage = function (key) {
       $translate.use(key);
       SettingFactory.setLang(key);
@@ -39,6 +39,9 @@ myApp.controller("FooterCtrl", [ '$scope', '$translate', 'SettingFactory', '$htt
       console.log(res.data);
       $scope.new_version = res.data.version;
       $scope.diff = $scope.new_version != $scope.version;
+      if ($scope.diff) $rootScope.updateMessage = res.data.message[$translate.use()];
+    }).catch(err => {
+      console.log('ignore version check', err);
     });
   }]);
 
