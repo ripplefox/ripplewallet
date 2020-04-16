@@ -18,6 +18,15 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           ],
           logo : "img/gateway/ripplefox.png"
         },
+        "iripplechina.com" : {
+          name : 'iripplechina.com',
+          website : 'http://wg.iripplechina.com',
+          service : [],
+          assets : [
+            {code : 'CNY', issuer : 'razqQKzJRdB4UxFPWf5NEpEG3WMkmwgcXA'}
+          ],
+          logo : "img/gateway/ripplechina.png"
+        },
         "bitstamp.net" : {
           name : 'bitstamp.net',
           website : 'https://www.bitstamp.net/',

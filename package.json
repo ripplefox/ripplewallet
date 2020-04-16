@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dist": "build --tasks win-x86,win-x64,mac-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
+    "mac": "build --tasks mac-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
+    "win": "build --tasks win-x86,win-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
     "start": "run --x64 --mirror https://npm.taobao.org/mirrors/nwjs/ ."
   },
   "author": "ripplefox",
