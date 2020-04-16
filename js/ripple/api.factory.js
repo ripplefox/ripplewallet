@@ -219,6 +219,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.prepareTrustline(this.address, trustline);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
+            if ("tesSUCCESS" !== result.resultCode) {
+              console.warn(result);
+              return reject(new Error(result.resultMessage || result.resultCode));
+            }
             resolve(result);
           } catch (err) {
             console.info('changeTrust', err);
@@ -245,6 +249,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.preparePayment(this.address, payment);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
+            if ("tesSUCCESS" !== result.resultCode) {
+              console.warn(result);
+              return reject(new Error(result.resultMessage || result.resultCode));
+            }
             resolve(result);
           } catch (err) {
             err.data ? console.error(err.data) : console.error('payment', payment, err);
@@ -280,6 +288,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.preparePayment(this.address, payment);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
+            if ("tesSUCCESS" !== result.resultCode) {
+              console.warn(result);
+              return reject(new Error(result.resultMessage || result.resultCode));
+            }
             resolve(result);
           } catch (err) {
             err.data ? console.error(err.data) : console.error('pathPayment', payment, err);
@@ -317,6 +329,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.prepareOrder(this.address, order);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
+            if ("tesSUCCESS" !== result.resultCode) {
+              console.warn(result);
+              return reject(new Error(result.resultMessage || result.resultCode));
+            }
             resolve(result);
           } catch (err) {
             console.error('offer', err);
@@ -333,6 +349,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
             const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
+            if ("tesSUCCESS" !== result.resultCode) {
+              console.warn(result);
+              return reject(new Error(result.resultMessage || result.resultCode));
+            }
             resolve(result);
           } catch (err) {
             console.error('cancelOffer', err);
