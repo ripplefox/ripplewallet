@@ -1,7 +1,7 @@
 /* global myApp, ripple */
 
 myApp.controller('LoginCtrl', ['$scope', '$rootScope', '$window', '$location', 'FileDialog', 'AuthenticationFactory', 'Id', 
-  function($scope, $rootScope, $window, $location, FileDialog, AuthenticationFactory, id) {
+  function($scope, $rootScope, $window, $location, FileDialog, AuthenticationFactory, Id) {
     $scope.address="";
     $scope.showTemp = false;
     $scope.toggleTemp = function() {

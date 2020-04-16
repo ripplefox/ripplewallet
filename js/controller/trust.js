@@ -94,6 +94,7 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
         $scope.trust_done = true;
       }).catch(err=>{
         $scope.trust_error = err;
+        $rootScope.$apply();
       });
     };
     
