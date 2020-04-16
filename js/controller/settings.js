@@ -45,6 +45,10 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
       $scope.network_servers.splice(index, 1);
       SettingFactory.setServers($scope.network_servers, $scope.network_type);
     }
+    $scope.resetServer = function() {
+      SettingFactory.resetServers($scope.network_type);
+      $scope.network_servers = SettingFactory.getServers($scope.network_type);
+    }
     
     $scope.save = function(mode) {
       $scope.network_error = "";

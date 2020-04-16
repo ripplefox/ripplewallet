@@ -58,7 +58,11 @@
 					</div>
 					
 					<div class="col-xs-12 col-md-5" style="margin-bottom: 10px;">
-						<a class="btn btn-info btn-block btn-big" ng-disabled="!server_url" ng-click="addServer()" translate="add">Add</a>
+						<button class="btn btn-info btn-block btn-big" ng-disabled="!server_url" ng-click="addServer()" translate="add">Add</button>
+					</div>
+					
+					<div class="col-xs-12 col-md-5" style="margin-bottom: 10px;">
+						<button class="btn btn-info btn-block btn-big" ng-disabled="network_servers.length" ng-click="resetServer()" translate="reset">Reset</button>
 					</div>
 				
 					<div class="col-xs-12 col-md-10">

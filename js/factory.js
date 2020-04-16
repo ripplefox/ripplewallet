@@ -11,7 +11,10 @@ myApp.factory('SettingFactory', function($window) {
         networkType: 'xrp',
         servers: [
           {server: 's1.ripple.com', port: 443},
+          {server: 's2.ripple.com', port: 443},
           {server: 's-west.ripple.com', port: 443},
+          {server: 's-east.ripple.com', port: 443},
+          {server: 'xrpl.ws', port: 443},
           {server: 'ws.foxcny.com', port: 443}
         ],
         coin: {
@@ -116,8 +119,14 @@ myApp.factory('SettingFactory', function($window) {
       if ($window.localStorage[`network_servers/${type}`]) {
         return JSON.parse($window.localStorage[`network_servers/${type}`]);
       } else {
-        return this.NETWORKS[type].servers;
+        return JSON.parse(JSON.stringify(this.NETWORKS[type].servers));
       }
+    },
+    resetServers : function(type) {
+      type = type || this.getNetworkType();
+      console.log($window.localStorage[`network_servers/${type}`]);
+      delete $window.localStorage[`network_servers/${type}`];
+      console.log($window.localStorage[`network_servers/${type}`]);
     },
     setCoin : function(val) {
       return this.getNetworkType() === 'other' ? $window.localStorage[`network_coin/${this.getNetworkType()}`] = val : this.NETWORKS[this.getNetworkType()].coin.code;
