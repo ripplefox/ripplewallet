@@ -155,6 +155,10 @@ code {
 	padding: 15px;
 }
 
+.pdtop {
+	padding-top: 10px;
+}
+
 .nopadding {
 	padding: 0 !important;
 }

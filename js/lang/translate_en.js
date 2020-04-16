@@ -47,7 +47,7 @@ var translate_en = {
   total : 'Total',
   trust : 'Trust',
   asset : 'Asset',
-  no_balance  : 'Account not found. (Unfunded or network error)',
+  no_balance  : 'Account not found. (Network error)',
   trust_limit : 'Trust Limit',
   add_trust : 'Add trust from known gateways',
   trust_src : 'This is a list of gateways from the Ripple community.',
@@ -62,7 +62,6 @@ var translate_en = {
   fed_unable : 'Unable to find currencies for',
   fed_loading: 'Loading currencies for',
   manual_add : 'Manually add trust',
-  manual_desc: 'You can add trust manually if you know the account ID and asset code',
   issuer_invalid : 'Asset issuer account ID must be a valid account ID',
   trust_granted  : 'Trust is granted!',
 

@@ -47,7 +47,7 @@ var translate_cn = {
   total : '总量',
   trust : '授信',
   asset : '资产',
-  no_balance  : '账户不存在（未激活或网络错误）',
+  no_balance  : '账户未找到，请检查到瑞波网络的连接。',
   trust_limit : '授信额度',
   add_trust : '对网关进行授信',
   trust_src : '授信后才能充值或接收他人的转账。',
@@ -62,7 +62,6 @@ var translate_cn = {
   fed_unable : '无法找到资产',
   fed_loading: '正在解析资产',
   manual_add : '手动授信',
-  manual_desc: '在了解发行方账号和资产代码的情况下，你可以手动进行授信操作。',
   issuer_invalid : '发行方账号必须是有效的瑞波地址编码。',
   trust_granted  : '设置信任额度成功！',
 

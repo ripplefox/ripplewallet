@@ -2,7 +2,7 @@
 
 myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'Federation',
   function($scope, $rootScope, XrpApi, Gateways, Federation) {
-  
+    $scope.mode = 'community';
     $scope.gatewaylist = Gateways.gateways;
     console.log($scope.gatewaylist);
     
@@ -10,6 +10,7 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
     $scope.manual_issuer;
     $scope.manual_logo = Gateways.getGateway('', $scope.manual_issuer).logo;
     $scope.manual_name;
+    
     $scope.fed_url;
     $scope.fed_currencies = [];
     $scope.fed_error;

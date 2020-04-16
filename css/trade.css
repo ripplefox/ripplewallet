@@ -127,7 +127,6 @@ a.AssetPairRow:hover .AssetPair__separator {
 
 .notice_pad {
 	margin: 0 auto;
-	margin-bottom: 18px;
 	padding: 15px 15px 10px 15px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
 	background: #f4f4f5;
@@ -172,9 +171,6 @@ a.AssetPairRow:hover .AssetPair__separator {
 .offers_pad .bidoffer .row,
 .offers_pad .askoffer .row {
   margin: 0 0 20px;
-}
-
-.showall {
 }
 
 .showall input {

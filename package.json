@@ -34,14 +34,14 @@
     "win": {
       "productName": "Foxlet Ripple",
       "companyName": "RippleFox",
-      "icon": "./assets/foxripple.ico"
+      "icon": "./assets/ripplefox.ico"
     },
     "mac": {
       "displayName": "Foxlet Ripple",
-      "icon": "./assets/foxripple.icns"
+      "icon": "./assets/ripplefox.icns"
     }
   },
   "window": {
-    "icon": "./assets/foxripple.png"
+    "icon": "./assets/ripplefox.png"
   }
 }

@@ -1,33 +1,94 @@
 <section class="col-xs-12 content">
-	<group>
 	<div class="so-back islandBack islandBack--t" ng-show="isPublicNetwork()">
 		<div class="island">
-			<div class="island__header" translate="add_trust">Add trust from known anchors</div>
-			<div class="island__paddedContent">
-				<p>
-					{{'trust_src' | translate}}<br>{{'trust_note' | translate}}
-				</p>
-			</div>
-			
-			<div ng-repeat="(name, gateway) in gatewaylist">
-				<div class="row" ng-repeat="asset in gateway.assets" ng-show="asset.list || show_all">
-					<div class="row__fixedAsset">
-						<gateway name="{{asset.name || gateway.name}}" logo="{{asset.logo || gateway.logo}}" website=""
-							code="{{asset.code}}" address="{{asset.issuer}}"></gateway>
-					</div>
-					<div class="row__shareOption">
-						<button class="btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
-						<button class="btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
-					</div>
+			<div class="island__header">
+				<span translate="add_trust">Add trust from known anchors</span>
+				<div style="float:right;">
+					<button ng-click="mode = 'manual'" class="btn btn-success" ng-disabled="mode=='manual'">{{'manual_add' | translate}}</button>
 				</div>
 			</div>
 			
-			<a href="" ng-click="showHide()">
-				<div class="txfoot">
-					<span ng-show="!show_all"><i class="fa fa-angle-double-down fa-2x"></i></span>
-					<span ng-show="show_all"><i class="fa fa-angle-double-up fa-2x"></i></span>
+			<group ng-show="mode == 'community'">
+					<div class="island__paddedContent">
+						<p>
+							{{'trust_src' | translate}}<br>{{'trust_note' | translate}}
+						</p>
+					</div>
+					
+					<div ng-repeat="(name, gateway) in gatewaylist">
+						<div class="row" ng-repeat="asset in gateway.assets" ng-show="asset.list || show_all">
+							<div class="row__fixedAsset">
+								<gateway name="{{asset.name || gateway.name}}" logo="{{asset.logo || gateway.logo}}" website=""
+									code="{{asset.code}}" address="{{asset.issuer}}"></gateway>
+							</div>
+							<div class="row__shareOption">
+								<button class="btn btn-danger" ng-show="hasLine(asset.code, asset.issuer)" ng-click="delTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_remove' | translate}}</button>
+								<button class="btn btn-success" ng-hide="hasLine(asset.code, asset.issuer)" ng-click="addTrust(asset.code, asset.issuer)" ng-disabled="isChanging(asset.code, asset.issuer)">{{'trust_add' | translate}} {{asset.code}}</button>
+							</div>
+						</div>
+					</div>
+					
+					<a href="" ng-click="showHide()">
+						<div class="txfoot">
+							<span ng-show="!show_all"><i class="fa fa-angle-double-down fa-2x"></i></span>
+							<span ng-show="show_all"><i class="fa fa-angle-double-up fa-2x"></i></span>
+						</div>
+					</a>
+			</group>
+			
+			<group ng-show="mode == 'manual'">
+				<div class="row noborder">
+					<div class="col-xs-12 col-md-6 col-sm-6">
+			      <form id="addForm" name="addForm" ng-submit="create()">
+			        <div class="form-group">
+			          <label translate="issuer_id">Issuer Account ID</label>
+			          <input type="text" class="form-control" maxlength="70" placeholder="rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y"
+			          	ng-model="manual_issuer" required ng-change="issuerChange()">
+			          <div class="errorGroup">
+			          	<div class="error" ng-show="manual_issuer && !isValidAddress(manual_issuer)" translate="issuer_invalid">Asset issuer account ID must be a valid account ID</div>
+			          </div>
+			        </div>
+			        
+		          <div class="col-xs-8 nopadding-left form-group">
+		            <label translate="amount">Amount</label>
+		            <input type="text" class="form-control" autocomplete="off" ng-model="manual_amount" placeholder="1000000000">
+		          </div>
+		          <div class="col-xs-4 nopadding-right form-group">
+		            <label translate="asset_code">Asset Code</label>
+		            <input type="text" class="form-control" ng-model="manual_code" placeholder="ULT">
+		          </div>
+		          
+		          <div class="col-xs-4 nopadding-left pdtop form-group">
+		            <button type="button" ng-click="mode = 'community'" class="btn btn-default btn-block">{{'cancel' | translate}}</button>
+		          </div>
+		          <div class="col-xs-8 nopadding-right pdtop form-group">
+		            <button class="btn btn-success btn-block" 
+		            	ng-disabled="!manual_code || !isValidAddress(manual_issuer) || isChanging(manual_code, manual_issuer)"
+		            	ng-click="addTrust(manual_code, manual_issuer, manual_amount)">{{'trust_add' | translate}} {{manual_code}}</button>
+		          </div>
+		          
+		          <div class="col-xs-12 nopadding-left pdtop form-group" ng-show="manual_code && isValidAddress(manual_issuer)">
+			          <div class="AddTrust__confirmation__assetCard">
+									<div class="AssetCard AssetCard--fixed">
+										<div class="AssetCard__main">
+											<div class="AssetCard__logo">
+												<img class="AssetCard__logo__image" data-ng-src="{{manual_logo}}">
+											</div>
+											<div class="AssetCard__content">
+												<div class="AssetCard__header">
+													<span class="AssetCard__code">{{manual_code}}</span>{{manual_name}}
+												</div>
+												<p class="AssetCard__issuerAccountId">{{manual_issuer}}</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+		      	</form>
+		    	</div>
 				</div>
-			</a>
+			</group>
 		</div>
 	</div>
 	
@@ -74,62 +135,4 @@
 		</div>
 	</div>
 
-	<div class="so-back islandBack">
-		<div class="island">
-			<div class="island__header" translate="manual_add">Manually add trust</div>
-			<div class="island__paddedContent">
-				<p translate="manual_desc">You can add trust manually if you know the account ID and asset code</p>
-				<label class="s-inputGroup AddTrust__inputGroup">
-					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="asset_code">Asset Code</span>
-					<input type="text" class="s-inputGroup__item S-flexItem-share" ng-model="manual_code" 
-					placeholder="{{'example' | translate}}: CNY">
-				</label>
-				<label class="s-inputGroup AddTrust__inputGroup">
-					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="issuer_id">Issuer Account ID</span>
-					<input type="text" class="s-inputGroup__item S-flexItem-share" ng-model="manual_issuer" ng-change="issuerChange()"
-					placeholder="{{'example' | translate}}: rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y">
-				</label>
-				<label class="s-inputGroup AddTrust__inputGroup">
-					<span class="s-inputGroup__item s-inputGroup__item--tag S-flexItem-1of4" translate="amount">Amount</span>
-					<input type="text" autocomplete="off"
-						class="s-inputGroup__item S-flexItem-share" 
-						ng-model="manual_amount"
-						placeholder="{{'example' | translate}}: 1000000000">
-				</label>
-			</div>
-
-			<div>
-				<div class="island__separator"></div>
-				<div class="AddTrust__confirmation">
-					<div class="s-alert s-alert--alert" ng-hide="!manual_issuer || isValidAddress(manual_issuer)">
-						<ul class="AddTrust__errorList">
-							<li translate="issuer_invalid">Asset issuer account ID must be a valid account ID</li>
-						</ul>
-					</div>
-					<div class="AddTrust__confirmation__assetCard" ng-show="manual_code && isValidAddress(manual_issuer)">
-						<div class="AssetCard AssetCard--fixed">
-							<div class="AssetCard__main">
-								<div class="AssetCard__logo">
-									<img class="AssetCard__logo__image" data-ng-src="{{manual_logo}}">
-								</div>
-								<div class="AssetCard__content">
-									<div class="AssetCard__header">
-										<span class="AssetCard__code">{{manual_code}}</span>{{manual_name}}
-									</div>
-									<p class="AssetCard__issuerAccountId">{{manual_issuer}}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<button class="btn btn-success" 
-							ng-show="manual_code && isValidAddress(manual_issuer)" 
-							ng-click="addTrust(manual_code, manual_issuer, manual_amount)" 
-							ng-disabled="isChanging(manual_code, manual_issuer)">{{'trust_add' | translate}} {{manual_code}}</button>
-				</div>
-			</div>
-
-		</div>
-	</div>
-
-	</group>
 </section>
