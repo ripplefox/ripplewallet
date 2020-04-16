@@ -23,8 +23,12 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     };
     
     function convertAmount(amount) {
-      amount.value = new BigNumber(new BigNumber(amount.value).toPrecision(16)).toString();
-      return amount;
+      if ("object" === typeof amount) {
+        amount.value = new BigNumber(new BigNumber(amount.value).toPrecision(16)).toString();
+        return amount;
+      } else {
+        return new BigNumber(new BigNumber(amount).toPrecision(16)).toString()
+      }
     };
 
     return {
@@ -292,8 +296,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         let totalPriceValue = new BigNumber(options.amount).multipliedBy(options.price).toString();
         const order = {
           'direction': options.type,
-          'quantity'  : {value: options.amount.toString()},
-          'totalPrice': {value: totalPriceValue}
+          'quantity'  : {value: convertAmount(options.amount)},
+          'totalPrice': {value: convertAmount(totalPriceValue)}
         };
         if (options.base_issuer) {
           order.quantity.currency = options.base;
@@ -504,7 +508,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           // Show status notification
           if (processedTxn.tx_result === "tesSUCCESS" && transaction && !is_historic) {
             console.log('tx success', tx);
-            //$scope.$broadcast('$appTxNotification', { hash:tx.hash, tx: transaction });
+            $scope.$rootScope('txChange', { hash:tx.hash, tx: transaction });
           }
 
           // Add to recent notifications

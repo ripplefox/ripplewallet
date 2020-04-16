@@ -257,6 +257,11 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.refreshOffer();
       $scope.refreshBook();
     });
+    $scope.$on("txChange", function() {
+      console.debug('offerChange event got');
+      $scope.refreshOffer();
+      $scope.refreshBook();
+    });
 
     $scope.buying = false;
     $scope.buy_ok;
