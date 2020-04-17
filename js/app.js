@@ -7,6 +7,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'monos
 
 myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compileProvider) {
   $translateProvider.translations('cn', translate_cn);
+  $translateProvider.translations('jp', translate_jp);
   $translateProvider.translations('en', translate_en);
   $translateProvider.preferredLanguage('cn');
   $translateProvider.useSanitizeValueStrategy('escape');

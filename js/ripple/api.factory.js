@@ -528,7 +528,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           // Show status notification
           if (processedTxn.tx_result === "tesSUCCESS" && transaction && !is_historic) {
             console.log('tx success', tx);
-            $scope.$rootScope('txChange', { hash:tx.hash, tx: transaction });
+            $rootScope.$broadcast('txChange', { hash:tx.hash, tx: transaction });
           }
 
           // Add to recent notifications

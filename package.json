@@ -1,6 +1,6 @@
 {
-  "name": "ripplewallet",
-  "version": "1.0.0",
+  "name": "FoxletRipple",
+  "version": "1.0",
   "description": "RippleFox Client",
   "main": "main.js",
   "scripts": {
@@ -34,12 +34,12 @@
   "build": {
     "nwVersion": "0.45.2",
     "win": {
-      "productName": "Foxlet Ripple",
+      "productName": "FoxletRipple",
       "companyName": "RippleFox",
       "icon": "./assets/ripplefox.ico"
     },
     "mac": {
-      "displayName": "Foxlet Ripple",
+      "displayName": "FoxletRipple",
       "icon": "./assets/ripplefox.icns"
     }
   },
