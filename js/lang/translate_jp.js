@@ -86,7 +86,7 @@ var translate_jp = {
   you_sending : 'あなたは{{code}}を以下のアドレスへ発送します',
 
   contacts : '連絡帳',
-  contact  : '連絡帳',
+  contact  : '連絡者',
   address  : 'アドレス',
   add_contact : '連絡帳に登録する',
   edit        : '編集',
