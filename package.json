@@ -1,6 +1,6 @@
 {
   "name": "FoxletRipple",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "RippleFox Client",
   "main": "main.js",
   "scripts": {
