@@ -26,6 +26,7 @@ var translate_en = {
   enter_secret : 'Enter your secret key',
   invalid_account: 'Account is invalid',
   invalid_secret : 'Secret is invalid',
+  invalid_mnemonic: 'Mnemonic is invalid',
   important : 'Important:',
   security_notice : 'The secret key below gives access to your money in the unlikely case that you lose your password. With this secret key alone anyone can retrieve your money. So please store it somewhere PRIVATE AND SAFE.',
   show_password : 'Show password',

@@ -26,6 +26,7 @@ var translate_cn = {
   enter_secret : '请输入秘钥',
   invalid_account: '账号是无效的',
   invalid_secret : '秘钥是无效的',
+  invalid_mnemonic: '助记词是无效的',
   important : '重要信息：',
   security_notice : '下方的秘钥让你可以在丢失密码的小概率事件中拿回你的钱。任何拥有该秘钥的人都可以取出你的钱。所以务必将它保管在安全的地方。',
   show_password : '显示',

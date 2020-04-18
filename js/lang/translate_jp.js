@@ -26,6 +26,7 @@ var translate_jp = {
   enter_secret : 'プライベートキーを入力してください',
   invalid_account: 'アカウントは無効です',
   invalid_secret : 'プライベートキーは無効です',
+  invalid_mnemonic: '復元パスフレーズは無効です',
   important : '重要：',
   security_notice : '万一パスワードを紛失した場合に、以下のプライベートキーを使って資産を取り戻すことが可能です。プライベートキーを分かれば誰でも資産を引き出すことができます。必ず安全な場所に保管してください。',
   show_password : '表示',
