@@ -115,6 +115,28 @@ myApp.directive('masterKey', ['Id', function(Id) {
   };
 }]);
 
+myApp.directive('mnemonic', ['Id', function(Id) {
+  return {
+    restrict : 'A',
+    require : '?ngModel',
+    link : function(scope, elm, attr, ctrl) {
+      if (!ctrl) return;
+
+      var validator = function(value) {
+        ctrl.$setValidity('mnemonic', Id.isValidMnemonic(value));
+        return value;
+      };
+
+      ctrl.$formatters.push(validator);
+      ctrl.$parsers.unshift(validator);
+
+      attr.$observe('mnemonic', function() {
+        validator(ctrl.$viewValue);
+      });
+    }
+  };
+}]);
+
 /**
  * <input type="password" name="password1" ng-model="password1" > <input
  * type="password" name="password2" ng-model="password2"

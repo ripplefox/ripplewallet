@@ -1,7 +1,7 @@
 /* global myApp */
 
-myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory',
-  function($scope, $rootScope, AuthenticationFactory) {
+myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory', '$translate', 'Id',
+  function($scope, $rootScope, AuthenticationFactory, $translate, Id) {
     $scope.mode = 'security';
     $scope.isMode = function(mode) {
       return $scope.mode === mode;
@@ -17,8 +17,15 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       $scope.showSecret = flag;
       $scope.keyOpen = AuthenticationFactory.secrets[0];  
       $scope.keyQRCode = $scope.keyOpen;
+      
+      $scope.mnemonic = AuthenticationFactory.mnemonic;
+      $scope.lang = $translate.use();
+      if (['cn', 'jp'].indexOf($scope.lang) >= 0) {
+        $scope.mnemonic_lang = Id.getMnemonicLang($scope.mnemonic, $scope.lang);
+      }
     };
 
+    /*
     $scope.domain = '';
     $scope.domain_working = false;
     $scope.domain_error = '';
@@ -37,6 +44,6 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
         $scope.$apply();
       });
     };
-
+    */
   }
 ]);

@@ -1,14 +1,13 @@
 /* global myApp, nw */
 
-myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location', 'FileDialog', 'AuthenticationFactory', 'Id',
-  function($scope, $rootScope, $window, $location, FileDialog, AuthenticationFactory, Id) {
+myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$translate', '$window', '$location', 'FileDialog', 'AuthenticationFactory', 'Id',
+  function($scope, $rootScope, $translate, $window, $location, FileDialog, AuthenticationFactory, Id) {
     $scope.password = '';
     $scope.passwordSet = {};
     $scope.password1 = '';
     $scope.password2 = '';
     $scope.key = '';
     $scope.mode = 'register_new_account';
-    $scope.showMasterKeyInput = false;
     $scope.submitLoading = false;
 
     $scope.changeMode = function(mode) {
@@ -26,9 +25,9 @@ myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location'
       $scope.password1 = '';
       $scope.password2 = '';
       $scope.masterkey = '';
+      $scope.words = '';
       $scope.key = '';
       $scope.mode = 'register_new_account';
-      $scope.showMasterKeyInput = false;
       $scope.submitLoading = false;
 
       if ($scope.registerForm) $scope.registerForm.$setPristine(true);
@@ -46,12 +45,16 @@ myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location'
     };
 
     $scope.submitForm = function() {
-      const keypair = Id.generateAccount();
-      if(!$scope.masterkey) $scope.masterkey = keypair.secret;
+      if (!$scope.masterkey) {
+        $scope.mnemonic = $scope.mnemonic || Id.generateMnemonic();
+        const keypair = Id.generateAccount($scope.mnemonic);
+        $scope.masterkey = keypair.secret;
+      }
 
       const options = {
         address: Id.fromSecret($scope.masterkey).address,  
         secrets: [$scope.masterkey],
+        mnemonic: $scope.mnemonic,
         password: $scope.password1,
         path: $scope.walletfile
       };
@@ -66,6 +69,10 @@ myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location'
         $scope.password = new Array($scope.password1.length+1).join("*");
         $scope.key = `${new Array(56).join("*")}`;
         $scope.mode = 'welcome';
+        $scope.lang = $translate.use();
+        if (['cn', 'jp'].indexOf($scope.lang) >= 0) {
+          $scope.mnemonic_lang = Id.getMnemonicLang($scope.mnemonic, $scope.lang);
+        }
         $scope.$apply();
       });
     };
@@ -74,7 +81,13 @@ myApp.controller('RegisterCtrl', ['$scope', '$rootScope', '$window', '$location'
       $scope.masterkey = $scope.secretKey;
       $scope.fileInputClick();
     };
-
+    
+    $scope.submitWordsForm = function(){
+      $scope.mnemonic = Id.getMnemonicInEnglish($scope.words);
+      $scope.masterkey = Id.generateAccount($scope.mnemonic).secret;
+      $scope.fileInputClick();
+    };
+    
     $scope.gotoFund = function() {
       $scope.mode = 'register_empty_wallet';
       $scope.reset();

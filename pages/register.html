@@ -4,6 +4,7 @@
       <h2 translate="create_new_account">Create new account</h2>
       <div class="form-group"><a class="btn btn-block btn-default" ng-click="fileInputClick()" translate="create_blank">Create an empty account</a></div>
       <div class="form-group"><a class="btn btn-block btn-default" ng-click="changeMode('register_with_secret')" translate="create_by_secret">Create a new account with a secret key</a></div>
+      <div class="form-group"><a class="btn btn-block btn-default" ng-click="changeMode('register_with_mnemonic')" translate="create_by_mnemonic">Create a new account with mnemonic phrase</a></div>
       <div class="form-group"><a class="btn btn-block btn-link" ng-click="goTo('/login')" translate="back">back</a></div>
     </div>
   </div>
@@ -37,17 +38,35 @@
       </form>
     </div>
   </div>
+  
   <div class="row col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6" ng-show="mode=='register_with_secret'">
     <div class="auth-form-wrapper">
       <h2 translate="create_secret">Create account with secret key</h2>
       <form name="useSecretKey" ng-submit="submitSecretKeyForm()">
-        <div class="form-group" ng-class="{'field-error': registerForm.secret.$error.masterKey && registerForm.secret.$dirty}">
+        <div class="form-group" ng-class="{'field-error': useSecretKey.secretKey.$error.masterKey && useSecretKey.secretKey.$dirty}">
           <label for="masterkey" translate="enter_secret">Enter your secret key</label>
           <input class="form-control" id="secretKey" type="text" name="secretKey" ng-model="secretKey" master-key="master-key" required="required" autocomplete="off"/>
           <p ng-show="useSecretKey.secretKey.$error.masterKey && useSecretKey.secretKey.$dirty"><span class="field-error" translate="invalid_secret">Secret is invalid</span></p>
         </div>
         <div class="submit-btn-container">
           <button class="btn btn-block btn-success" type="submit" ng-disabled="useSecretKey.$invalid || submitLoading" translate="create_new_account">Create new account</button>
+          <a class="btn btn-block btn-link" ng-click="reset()" translate="cancel">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="row col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6" ng-show="mode=='register_with_mnemonic'">
+    <div class="auth-form-wrapper">
+      <h2 translate="create_by_mnemonic">Create account with mnemonic phrase</h2>
+      <form name="wordsFom" ng-submit="submitWordsForm()">
+        <div class="form-group" ng-class="{'field-error': wordsFom.words.$error.mnemonic && wordsFom.words.$dirty}">
+          <label for="words" translate="enter_mnemonic">Enter your mnemonic phrase</label>
+          <input class="form-control" id="words" type="text" name="words" ng-model="words" mnemonic="words" required="required" autocomplete="off"/>
+          <p ng-show="wordsFom.words.$error.mnemonic && wordsFom.words.$dirty"><span class="field-error" translate="invalid_mnemonic">Mnemonic is invalid</span></p>
+        </div>
+        <div class="submit-btn-container">
+          <button class="btn btn-block btn-success" type="submit" ng-disabled="words.$invalid || submitLoading" translate="create_new_account">Create new account</button>
           <a class="btn btn-block btn-link" ng-click="reset()" translate="cancel">Cancel</a>
         </div>
       </form>
@@ -73,11 +92,17 @@
         </p>
       </div>
       <div class="secret">
-        <p class="important" translate="public_address">Public address</p>
+        <label translate="public_address">Public address</label>
         <p class="key">{{address}}</p>
-        <p class="important" translate="secret_key">Secret key:</p>
+        <label translate="secret_key">Secret key:</label>
         <p class="key" ng-show="showSecret==true">{{masterkey}}</p>
         <p class="key" ng-hide="showSecret==true">{{key}}</p>
+        <group ng-show="showSecret">
+					<label translate="mnemonic" ng-show="mnemonic">Mnemonic</label>
+					<p class="key" ng-show="mnemonic">{{mnemonic}}</p>
+					<label translate="or" ng-show="mnemonic_lang">Or</label>
+					<p class="key" ng-show="mnemonic_lang">{{mnemonic_lang}}</p>
+				</group>
         <p ng-hide="showSecret==true">
             <button class="btn btn-info btn-sm" ng-really-message="{{'are_you_sure_secret' | translate}}" ng-really-click="showSec(true)" translate="show_secret">Show secret key</button>
         </p>

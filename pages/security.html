@@ -30,11 +30,17 @@
 			<p ng-hide="showSecret==true">
 				<button class="btn btn-info btn-sm" ng-really-message="{{'are_you_sure_secret' | translate}}" ng-really-click="showSec(true)" translate="show_secret">Show secret key</button>
 			</p>
+			<group ng-show="showSecret">
+				<label translate="mnemonic" ng-show="mnemonic">Mnemonic</label>
+				<p class="key" ng-show="mnemonic">{{mnemonic}}</p>
+				<label translate="or" ng-show="mnemonic_lang">Or</label>
+				<p class="key" ng-show="mnemonic_lang">{{mnemonic_lang}}</p>
+			</group>
 			<p ng-show="showSecret==true">
 			  <button class="btn btn-info btn-sm" ng-click="showSec(false)" translate="hide_secret">Hide secret key</button>
 			</p>
-			<label translate="save_safe">Have you saved your secret key somewhere safe?</label>
-			<div class="row">
+			<div class="row pd">
+				<label class="block" translate="save_safe">Have you saved your secret key somewhere safe?</label>
 				<div class="col-xs-12 col-sm-5 col-lg-4"><a class="btn btn-info btn-block btn-big" href="javascript:" ng-click="goTo('/balance')" translate="yes_save">Yes, I saved my secret key</a></div>
 			</div>
 		  </div>
