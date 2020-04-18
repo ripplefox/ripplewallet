@@ -28,6 +28,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.0",
     "qrcode-generator": "^1.4.4",
+    "ripple-keypairs": "^1.0.0",
     "ripple-lib": "^1.6.4",
     "ripplelib": "^1.2.5",
     "sjcl": "^1.0.8",
