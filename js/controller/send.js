@@ -188,7 +188,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
             type : 'federation',
             domain: domain,
             destination: prestr,
-            address: $rootScope.address
+            address: $rootScope.address,
+            client : 'foxlet-' + appinfo.version
           }
         });
       }).then(res => {
@@ -216,10 +217,6 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.act_loading = false;
         console.log(snapshot, err);
       });
-      /*
-       * https://ripplefox.com/bridge?type=federation&domain=ripplefox.com&destination=yh&address=rxx
-       * https://ripplefox.com/bridge?type=quote&amount=100%2FCNY&destination=yh&address=rPVH2HkQPJz5WSrcdWLq2shxvHXR4H18Po&bank=CMB&bankAccount=6226123488888888&bankUser=%E5%BD%93&email=123%40ripplefox.com
-      */
     };
 
     $scope.$watch('service_currency', function () { $scope.quote(); }, true);

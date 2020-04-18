@@ -28,7 +28,7 @@ myApp.controller("FooterCtrl", [ '$scope', '$rootScope', '$translate', 'SettingF
       SettingFactory.setLang(key);
     };
 
-    $scope.version = require('./package.json').version;
+    $scope.version = appinfo.version;
     $scope.new_version = false;
     $scope.diff = false;
     
