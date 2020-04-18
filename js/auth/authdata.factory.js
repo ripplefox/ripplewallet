@@ -90,13 +90,14 @@ myApp.factory('AuthData', ['$rootScope', '$window', function ($scope, $window){
    * Handles persistence of data for Auth. Various subclasses handles various long-term storages.
    */
   return class AuthData {
-    constructor(address, secrets, contacts){
+    constructor(address, secrets, contacts, mnemonic){
       if(!address) throw new Error('No address provided.');
       if(!Array.isArray(secrets)) throw new Error('Secrets is not array.');
       if(!Array.isArray(contacts)) throw new Error('Contacts is not array.');
       this._address = address;
       this._secrets = secrets || [];
       this._contacts = contacts || [];
+      this._mnemonic = mnemonic || "";
     }
 
     static get SESSION_KEY() { return 'authdata'; }
@@ -139,6 +140,10 @@ myApp.factory('AuthData', ['$rootScope', '$window', function ($scope, $window){
     // Array<Contact> -- array of Contacts.
     get contacts() {
       return this._contacts.slice();
+    }
+    
+    get mnemonic() {
+      return this._mnemonic;
     }
 
     //

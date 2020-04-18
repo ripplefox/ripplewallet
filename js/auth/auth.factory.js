@@ -124,6 +124,15 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
       console.warn(`Your ${this.secretAmount} secret(s) were revealed!`)
       return _data ? _data.secrets : undefined;
     }
+    
+    get mnemonic() {
+      if (_data && _data.mnemonic) {
+        console.warn(`Your mnemonic was revealed!`)
+        return _data.mnemonic;
+      } else {
+        return "";
+      }
+    }
 
     get availablePKs() {
       return _data.secrets.reduce((map, secret)=>{

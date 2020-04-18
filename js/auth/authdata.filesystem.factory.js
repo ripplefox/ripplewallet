@@ -56,9 +56,10 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
     // _contacts
     // _created
     // _secrets
+    // _mnemonic
 
     constructor(data){
-      super(data.address, data.secrets, data.contacts);
+      super(data.address, data.secrets, data.contacts, data.mnemonic);
       this._password = data.password;
       this._path = data.path;
       this._created = data.created;
@@ -69,6 +70,7 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
       const authData = new AuthDataFilesystem({
         address: opts.address,
         secrets: opts.secrets,
+        mnemonic: opts.mnemonic,
         password: opts.password,
         path: opts.path,
 
@@ -157,6 +159,7 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
       const authDataFileSystem = new AuthDataFilesystem({
         address: decrypted.account_id,
         secrets: decrypted.masterkey,
+        mnemonic: decrypted.mnemonic,
         contacts: decrypted.contacts,
         created: decrypted.created,
         password,
@@ -177,6 +180,7 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
         contacts: cleanContacts,
         created: data.created,
         masterkey: data.secrets[0],
+        mnemonic: data.mnemonic
       })
       const blob = btoa(sjcl.encrypt(`${password.length}|${password}`, plaintext_v1, {
           ks: CRYPT_CONFIG.ks,
@@ -188,12 +192,13 @@ myApp.factory('AuthDataFilesystem', ['$window', 'AuthData', function ($window, A
     static _decrypt(password, blob) {
       try {
         const plaintext_v1 = sjcl.decrypt(`${password.length}|${password}`, atob(blob));
-        const object = JSON.parse(plaintext_v1); // {"account_id":"address","contacts":[],"masterkey":"secret"}
+        const object = JSON.parse(plaintext_v1); // {"account_id":"address","contacts":[],"masterkey":"secret", "mnemonic":"12words}
         return {
           account_id: object.account_id,
           contacts: object.contacts,
           created: object.created,
           masterkey: [object.masterkey],
+          mnemonic: object.mnemonic
         }
       } catch(e) {
         console.error('_decrypt', e);

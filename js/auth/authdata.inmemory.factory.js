@@ -10,12 +10,12 @@ myApp.factory('AuthDataInmemory', ['$window', 'AuthData', function ($window, Aut
    */
   return class AuthDataInmemory extends AuthData {
     constructor(data){
-      super(data.address, data.secrets, data.contacts);
+      super(data.address, data.secrets, data.contacts, data.mnemonic);
     }
 
     // create(opts:Map<string, any>) => Promise<AuthDataInmemory> -- create and return Promise of instance.
     static create(opts) {
-      const authData = new AuthDataInmemory({address: opts.address, secrets: [], contacts: []});
+      const authData = new AuthDataInmemory({address: opts.address, secrets: [], contacts: [], mnemonic: ""});
 
       return authData.save();
     }
@@ -44,6 +44,7 @@ myApp.factory('AuthDataInmemory', ['$window', 'AuthData', function ($window, Aut
         address: this.address,
         contacts: this.contacts,
         secrets: this.secrets,
+        mnemonic: this.mnemonic
       });
       return this;
     }
