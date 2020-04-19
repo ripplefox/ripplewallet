@@ -18,7 +18,7 @@ You should have Node.js installed. If not, install it ([Node version manager](ht
 
 - Run `npm install` to prepare.
 - Run `npm start` to develop.
-- Run `npm run dist` to build. You can use `npm run mac` or `npm run win` to build application just on mac/win.
+- Run `npm run dist` to build. You can use `npm run mac`, `npm run win` or `npm run linux` to build application according your system.
 
 You may notice that the packages also include [ripplelib](https://github.com/ripplerm/ripplelib) (a fork from ripple-lib-0.12, written by ripplerm). We just use ripplelib to parse the transactions. The ripplelib.Amount class is quite powerful.
 
@@ -42,6 +42,6 @@ You may notice that the packages also include [ripplelib](https://github.com/rip
 
 - 安装各种依赖包 `npm install`。
 - 开发运行 `nw start`。在nwjs控制台运行 `nw.Window.get().reload()` 即可刷新改动。
-- 编译运行 `npm run dist`。也可单独运行 `npm run mac` 或 `npm run win` 来编译对应系统的可执行文件。
+- 编译运行 `npm run dist`。也可单独运行 `npm run mac`，`npm run win` 或`npm run linux`来编译对应系统的可执行文件。
 
 注意，我们也引用了[ripplelib](https://github.com/ripplerm/ripplelib)开发包。ripplelib本质上是ripple-lib 0.12版本，由ripplerm改进。我们主要使用这个包的Amount类来复用历史解析代码。与瑞波网络的交互依然使用最新的ripple-lib。
