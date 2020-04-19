@@ -197,16 +197,21 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
           return;
         }
         console.log(res.data);
-        var data = res.data.federation_json;
-        if (data.extra_fields) {
-          $scope.service_currency = (data.currencies || data.assets)[0].currency;
-          $scope.extra_fields = data.extra_fields;
-          $scope.quote_destination = data.destination;
-          $scope.quote_url = data.quote_url;
+        if (res.data.result === 'error') {
+          $scope.service_error = res.data.error_message || res.data.error;
         } else {
-          $scope.extra_fields = null;
-          $scope.real_address = data.destination_address;
-          $scope.resolveAccountInfo();
+          var data = res.data.federation_json;
+          if (data.extra_fields) {
+            $scope.service_currency = (data.currencies || data.assets)[0].currency;
+            $scope.extra_fields = data.extra_fields;
+            $scope.quote_destination = data.destination;
+            $scope.quote_domain = data.domain;
+            $scope.quote_url = data.quote_url;
+          } else {
+            $scope.extra_fields = null;
+            $scope.real_address = data.destination_address;
+            $scope.resolveAccountInfo();
+          }
         }
         $scope.act_loading = false;
       }).catch(err => {
@@ -232,7 +237,9 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         type: "quote",
         amount       : $scope.service_amount + "/" + $scope.service_currency,
         destination  : $scope.quote_destination,
+        domain       : $scope.quote_domain,
         address      : $rootScope.address,
+        client       : 'foxlet-' + appinfo.version
       };
       $scope.extra_fields.forEach(function(field){
         if (field.name) {
