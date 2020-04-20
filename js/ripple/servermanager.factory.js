@@ -52,7 +52,7 @@ myApp.factory('ServerManager', ['$rootScope',
               reject(err);
             });
           } else {
-            resolve(remote, name);
+            resolve({server: remote, name: name});
           }
         });
       },
