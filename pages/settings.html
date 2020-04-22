@@ -2,16 +2,13 @@
 	<div class="row">
 		<div class="col-sm-3">
 			<div class="settingPage">
-				<a href="javascript:" ng-class="{active: isMode('network')}" ng-click="setMode('network')"
-					translate="network">Network</a>
-				<a ng-hide="true" href="javascript:" ng-class="{active: isMode('federation')}" ng-click="setMode('federation')"
-					translate="fed_protocol">Federation Protocol</a>
-				<a href="javascript:" ng-class="{active: isMode('proxy')}" ng-click="setMode('proxy')"
-					translate="proxy">Proxy</a>
+				<a href="javascript:" ng-class="{active: mode=='network'}" ng-click="mode='network'">{{'network' | translate}}</a>
+				<a ng-hide="true" href="javascript:" ng-class="{active: mode=='federation'}" ng-click="mode='federation'">{{'fed_protocol' | translate}}</a>
+				<a href="javascript:" ng-class="{active: mode=='proxy'}" ng-click="mode='proxy'">{{'proxy' | translate}}</a>
 			</div>
 		</div>
 
-		<div class="col-sm-9" ng-show="isMode('proxy')">
+		<div class="col-sm-9" ng-show="mode=='proxy'">
 			<div class="row" style="margin-bottom: 20px;">
 				<div class="col-xs-12 col-md-10">
 					<label translate="proxy">Proxy</label>
@@ -24,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-9" ng-show="isMode('network')">
+		<div class="col-sm-9" ng-show="mode=='network'">
 			<div class="row" style="margin-bottom: 20px;">
 				<div class="col-xs-12 col-md-10">
 					<label translate="selected_net">Selected Ripple Network</label>

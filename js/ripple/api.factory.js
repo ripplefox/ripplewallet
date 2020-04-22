@@ -212,6 +212,24 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
+      changeSettings(settings) {
+        return new Promise(async (resolve, reject)=> {
+          try {
+            let prepared = await _remote.prepareSettings(this.address, settings);
+            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            let result = await _remote.submit(signedTransaction);
+            if ("tesSUCCESS" !== result.resultCode) {
+              console.warn(result);
+              return reject(new Error(result.resultMessage || result.resultCode));
+            }
+            resolve(result);
+          } catch (err) {
+            console.info('changeSettings', err);
+            reject(err);
+          }
+        });
+      },
+      
       changeTrust(code, issuer, limit, ripplingDisabled = true) {
         const trustline = {
           currency: code,

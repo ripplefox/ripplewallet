@@ -1,14 +1,8 @@
 /* global myApp */
 
-myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory', '$translate', 'Id',
-  function($scope, $rootScope, AuthenticationFactory, $translate, Id) {
+myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory', '$translate', 'Id', 'XrpApi',
+  function($scope, $rootScope, AuthenticationFactory, $translate, Id, XrpApi) {
     $scope.mode = 'security';
-    $scope.isMode = function(mode) {
-      return $scope.mode === mode;
-    }
-    $scope.setMode = function(mode) {
-      return $scope.mode = mode;
-    }
 
     $scope.keyAmount = AuthenticationFactory.secretAmount;
     $scope.key = `${new Array(56).join("*")}`;
@@ -25,25 +19,40 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       }
     };
 
-    /*
-    $scope.domain = '';
-    $scope.domain_working = false;
-    $scope.domain_error = '';
-    $scope.domain_done = false;
-    $scope.setDomain = function() {
-      $scope.domain_error = '';
-      $scope.domain_done = false;
-      $scope.domain_working = true;
-      StellarApi.setOption('homeDomain', $scope.domain, function(err, hash){
-        $scope.domain_working = false;
-        if (err) {
-          $scope.domain_error = StellarApi.getErrMsg(err);
+    $scope.refresh = function() {
+      $scope.error = '';
+      XrpApi.checkSettings().then(data => {
+        console.log(data);
+        $scope.domain = data.domain;
+        $scope.$apply();
+      }).catch(err => {
+        if (err.unfunded) {
+          $scope.error = 'NotFoundError';
         } else {
-          $scope.domain_done = true;
+          $scope.error = err.message;
         }
         $scope.$apply();
       });
     };
-    */
-  }
-]);
+    $scope.refresh();
+    
+    $scope.domain = '';
+    $scope.domain_working = false;
+    $scope.domain_done = false;
+    $scope.setDomain = function() {
+      $scope.error = '';
+      $scope.domain_done = false;
+      $scope.domain_working = true;
+      XrpApi.changeSettings({'domain': $scope.domain}).then(result => {
+        $scope.domain_working = false;
+        $scope.domain_done = true;
+        $rootScope.$apply();
+      }).catch(err => {
+        $scope.domain_working = false;
+        console.error(err);
+        $scope.error = err.message;
+        $rootScope.$apply();
+      });
+    };
+    
+  } ]);
