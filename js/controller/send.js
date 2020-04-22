@@ -40,6 +40,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.send = [];
       $scope.extra_fields = [];
       $scope.invoice = "";
+      $scope.memos = [];
 
       $scope.service_error = "";
       $scope.service_amount = 0;
@@ -267,6 +268,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
           $scope.asset = {code: $scope.send[0].currency, amount: $scope.send[0].value};
           $scope.tag = res.data.quote.destination_tag;
           $scope.invoice = res.data.quote.invoice_id;
+          $scope.memos = res.data.quote.memos;
           $scope.real_address = res.data.quote.destination_address || res.data.quote.address;
           $scope.updatePath();
         }
@@ -390,8 +392,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         }
       }
       
-      var payment = !alt ? XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag, $scope.invoice) :
-                       XrpApi.pathPayment($scope.real_address, srcAmount, dstAmount, alt.paths_computed, $scope.tag, $scope.invoice);
+      var payment = !alt ? XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag, $scope.invoice, $scope.memos) :
+                       XrpApi.pathPayment($scope.real_address, srcAmount, dstAmount, alt.paths_computed, $scope.tag, $scope.invoice, $scope.memos);
       payment.then(result => {
         $scope.sending = false;
         $scope.send_done = true;

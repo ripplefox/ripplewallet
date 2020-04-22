@@ -237,7 +237,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      payment(destinationAddress, srcAmount, destAmount, tag, invoice) {
+      payment(destinationAddress, srcAmount, destAmount, tag, invoice, memos) {
         const payment = {
             "source": {
               "address": this.address,
@@ -250,7 +250,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
         if (tag) payment.destination.tag = Number(tag);
         if (invoice) payment.invoiceID = invoice;
-        payment.memos = [{data: _client, type: 'client', format: 'text'}];
+        payment.memos = [{data: _client, type: 'client', format: 'text'}].concat(memos || []);
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
@@ -268,7 +268,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      pathPayment(destinationAddress, srcAmount, destAmount, paths, tag, invoice, partial) {
+      pathPayment(destinationAddress, srcAmount, destAmount, paths, tag, invoice, memos, partial) {
         //remove the type, type_hex to pass checkTxSerialization in sign function
         paths.forEach(path => {
           path.forEach(asset => {
@@ -290,7 +290,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
         if (tag) payment.destination.tag = Number(tag);
         if (invoice) payment.invoiceID = invoice;
-        payment.memos = [{data: _client, type: 'client', format: 'text'}];
+        payment.memos = [{data: _client, type: 'client', format: 'text'}].concat(memos || []);
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
@@ -309,7 +309,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
       
       convert(srcAmount, destAmount, paths) {
-        return this.pathPayment(this.address, srcAmount, destAmount, paths, null, null, true);
+        return this.pathPayment(this.address, srcAmount, destAmount, paths, null, null, null, true);
       },
       
       offer(options) {
