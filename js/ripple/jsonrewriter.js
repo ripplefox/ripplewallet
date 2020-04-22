@@ -604,6 +604,7 @@ var JsonRewriter = module.exports = {
 
     obj.tag = tx.DestinationTag;
     obj.invoice = tx.InvoiceID;
+    obj.memos = parseMemos(tx);
     obj.tx_type = tx.TransactionType;
     obj.tx_result = meta.TransactionResult;
     obj.fee = tx.Fee;
@@ -620,4 +621,21 @@ var JsonRewriter = module.exports = {
 
 function isEmptyObject(obj) {
   return !Object.keys(obj).length;
+}
+
+function hexToString(hex) {
+  return hex ? Buffer.from(hex, 'hex').toString('utf-8') : undefined
+}
+
+function parseMemos(tx) {
+  if (!Array.isArray(tx.Memos) || tx.Memos.length === 0) {
+    return undefined
+  }
+  return tx.Memos.map(m => {
+    return {
+      type: m.Memo.parsed_memo_type || hexToString(m.Memo.MemoType),
+      format: m.Memo.parsed_memo_format || hexToString(m.Memo.MemoFormat),
+      data: m.Memo.parsed_memo_data || hexToString(m.Memo.MemoData)
+    };
+  });
 }

@@ -323,7 +323,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         } else {
           order.totalPrice.currency = 'XRP';
         }
-        order.memos = [{data: 'foxlet', type: 'client', format: 'plain/text'}];
+        order.memos = [{data: 'foxlet', type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareOrder(this.address, order);
@@ -343,7 +343,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       cancelOffer (offer_id) {
         const orderCancellation = {orderSequence: offer_id};
-        orderCancellation.memos = [{data: 'foxlet', type: 'client', format: 'plain/text'}];
+        orderCancellation.memos = [{data: 'foxlet', type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
