@@ -13,6 +13,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     let _history = [];
     let _myHandleAccountEvent = undefined;
     let _remote;
+    let _client = ""; // foxlet version
     
     function key(code, issuer) {
       return code == 'XRP' ? code : code + '.' + issuer;
@@ -41,6 +42,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           this.queryAccount();
           this.listenStream();
         }
+      },
+      
+      set client(info) {
+        _client = info;
       },
       
       connect() {
@@ -214,6 +219,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           limit: limit,
           ripplingDisabled: ripplingDisabled
         };
+        trustline.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject)=> {
           try {
             let prepared = await _remote.prepareTrustline(this.address, trustline);
@@ -244,6 +250,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
         if (tag) payment.destination.tag = Number(tag);
         if (invoice) payment.invoiceID = invoice;
+        payment.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
@@ -283,6 +290,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
         if (tag) payment.destination.tag = Number(tag);
         if (invoice) payment.invoiceID = invoice;
+        payment.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
@@ -323,7 +331,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         } else {
           order.totalPrice.currency = 'XRP';
         }
-        order.memos = [{data: 'foxlet', type: 'client', format: 'text'}];
+        order.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareOrder(this.address, order);
@@ -343,7 +351,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       cancelOffer (offer_id) {
         const orderCancellation = {orderSequence: offer_id};
-        orderCancellation.memos = [{data: 'foxlet', type: 'client', format: 'text'}];
+        orderCancellation.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);

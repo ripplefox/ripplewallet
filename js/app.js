@@ -142,6 +142,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       $location.path(url);
     };
 
+    XrpApi.client = "foxlet-" + appinfo.version;
     $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
     $rootScope.native = $rootScope.currentNetwork.coin;
     
