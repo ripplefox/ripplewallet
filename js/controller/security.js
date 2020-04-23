@@ -24,6 +24,9 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       XrpApi.checkSettings().then(data => {
         console.log(data);
         $scope.domain = data.domain;
+        $scope.disallowxrp = !!data.disallowIncomingXRP;
+        $scope.requiretag = !!data.requireDestinationTag;
+        $scope.defaultrippling = !!data.defaultRipple;
         $scope.$apply();
       }).catch(err => {
         if (err.unfunded) {
@@ -54,5 +57,26 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
         $rootScope.$apply();
       });
     };
+    
+    $scope.flags_working = false;
+    $scope.flags_done = false;
+    $scope.setFlags = function(field, value) {
+      $scope.error = '';
+      $scope.flags_done = false;
+      $scope.flags_working = true;
+      var settings = {};
+      settings[field] = value;
+      XrpApi.changeSettings(settings).then(result => {
+        $scope.flags_working = false;
+        $scope.flags_done = true;
+        $rootScope.$apply();
+      }).catch(err => {
+        $scope.flags_working = false;
+        console.error(err);
+        $scope.error = err.message;
+        $rootScope.$apply();
+      });
+    };
+    
     
   } ]);

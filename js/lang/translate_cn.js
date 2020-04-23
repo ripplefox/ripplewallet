@@ -257,8 +257,13 @@ var translate_cn = {
   home_domain : '域名',
   domain_desc : '账号可设置一个域名。在某些场景下，可通过域名取得更多的帮助信息。',
   domain_done : '域名设置成功',
+  payment_flag: '支付标志',
+  disallowxrp : '对方转账时提示，该账号不接受XRP。注意：非强制性，对方仍可强行发送。',
+  requiretag  : '对方转账时提示，支付需要提供标签号。',
+  setrippling : '允许资产置换（Rippling）。此为危险操作，不要打开，除非你是发行方。',
+  flags_done  : '设置成功',
   manage_data : '数据',
-  back           : '返回',
+  back        : '返回',
 
   /** Deposit & withdrawl **/
   service : '服务',

@@ -4,6 +4,7 @@
 			<div class="settingPage">
 				<a href="javascript:" ng-class="{active: mode=='security'}" ng-click="mode='security'">{{'security' | translate}}</a>
 				<a href="javascript:" ng-class="{active: mode=='domain'}" ng-click="mode='domain'">{{'home_domain' | translate}}</a>
+				<a href="javascript:" ng-class="{active: mode=='payment'}" ng-click="mode='payment'">{{'payment_flag' | translate}}</a>
 			</div>
 		</div>
 
@@ -62,6 +63,50 @@
 					<a class="btn btn-info btn-block btn-big" href="javascript:" ng-disabled="domain_working"
 						ng-click="setDomain()" translate="save">Save</a>
 				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-9 pd" ng-show="mode=='payment'">
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-xs-2 col-md-2">
+					<label class="switch marginleft">
+						<input type="checkbox" ng-change="setFlags('disallowIncomingXRP', disallowxrp)" ng-model="disallowxrp" ng-disabled="flags_working">
+						<span class="slider round"></span>
+					</label>
+				</div>
+				<div class="col-xs-8 col-md-8">
+					<p>{{"disallowxrp" | translate}}</p>
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-xs-2 col-md-2">
+					<label class="switch marginleft">
+						<input type="checkbox" ng-change="setFlags('requireDestinationTag', requiretag)" ng-model="requiretag" ng-disabled="flags_working">
+						<span class="slider round"></span>
+					</label>
+				</div>
+				<div class="col-xs-8 col-md-8">
+					{{"requiretag" | translate}}
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-xs-2 col-md-2">
+					<label class="switch marginleft">
+						<input type="checkbox" ng-change="setFlags('defaultRipple', defaultrippling)" ng-model="defaultrippling" ng-disabled="flags_working">
+						<span class="slider round"></span>
+					</label>
+				</div>
+				<div class="col-xs-8 col-md-8">
+					{{"setrippling" | translate}}
+				</div>
+			</div>
+			<div class="row form-group" ng-show="flags_working">
+					<div class="message">
+						<i class="fa fa-spinner fa-pulse"></i> {{ 'submitting' | translate}}
+				  </div>
+		  </div>
+		  <div class="s-alert s-alert--success row__message" ng-show="flags_done" translate="flags_done">
+				Settings updated.
 			</div>
 		</div>
 

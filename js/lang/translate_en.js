@@ -257,6 +257,11 @@ var translate_en = {
   home_domain : 'Home Domain',
   domain_desc : 'A domain name that can optionally be added to the account. Clients can look up more details from this domain.',
   domain_done : 'Home Domain was set.',
+  payment_flag: 'Payment Flags',
+  disallowxrp : 'Indicates that client applications should not send XRP to this account. Not enforced by rippled.',
+  requiretag  : 'Requires incoming payments to specify a destination tag.',
+  setrippling : 'Enable rippling on this account’s trust lines by default. Do NOT enable it unless you are a issuer.',
+  flags_done  : 'Settings updated',
   manage_data : 'Manage Data',
   back           : 'Back',
 

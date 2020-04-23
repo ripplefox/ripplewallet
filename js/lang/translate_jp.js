@@ -257,6 +257,11 @@ var translate_jp = {
   home_domain : 'ドメイン',
   domain_desc : 'アカウントに一つのドメインを追加できます。ドメイン名を介して詳細なヘルプ情報を取得できます。',
   domain_done : 'ドメイン設定成功',
+  payment_flag: '支払標識',
+  disallowxrp : '当アカウントはXRPを受け取りしないことを相手に通知します。重要:相手は強制的に発送できます。',
+  requiretag  : '宛先タグが必要であることを相手に通知します。',
+  setrippling : '資産のスワップ（Rippling）を許可します。危険な操作です。発行者以外の場合にはつけないでください。',
+  flags_done  : '設定成功',
   manage_data : 'データ',
   back           : '戻る',
 
