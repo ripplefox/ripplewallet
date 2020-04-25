@@ -187,6 +187,7 @@ var translate_jp = {
   action: '操作',
   buy   : '買い',
   sell  : '売り',
+  fatfinger : '警告:あなたの注文は市場価格から大幅に外れています！',
   orderbook : 'オーダーブック',
   buy_offers : '買い注文',
   sell_offers: '売り注文',

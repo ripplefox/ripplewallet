@@ -187,6 +187,7 @@ var translate_en = {
   action: 'Action',
   buy   : 'Buy',
   sell  : 'Sell',
+  fatfinger : 'CAUTION: Your order is far off from the current market price.',
   orderbook : 'Orderbook',
   buy_offers : 'Buy Offers',
   sell_offers: 'Sell offers',

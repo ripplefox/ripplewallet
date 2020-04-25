@@ -176,6 +176,10 @@ code {
 	margin-left: 15px;
 }
 
+.marginright {
+	margin-right: 15px;
+}
+
 .block {
 	display: block !important;
 }

@@ -134,15 +134,19 @@
 								</div>
 							</div>
 					</div>
-					<div class="row submit-field">
+					<div class="row submit-field" ng-hide="fatfingerbuy">
 							<div class="overview">
 								{{'you_have' | translate}} {{getBalance(counter_code, counter_issuer)}} {{counter_code}}
 							</div>
 							<div class="s-alert s-alert--success" ng-show="buy_ok" translate="offer_success">Offer successfully created</div>
 							<div class="s-alert s-alert--error" ng-show="buy_fail">{{buy_fail}}</div>
-							<button class="btn btn-success" ng-click="offer('buy')" ng-disabled="buying">{{'buy' | translate}} {{base_code}}</button>
+							<button class="btn btn-success" ng-click="offerWithCheck('buy')" ng-disabled="buying">{{'buy' | translate}} {{base_code}}</button>
 					</div>
-						
+					<div class="row submit-field" ng-show="fatfingerbuy">
+							<div class="s-alert s-alert--warning" translate="fatfinger">CAUTION: Your order is far off from the current market price.</div>
+							<button class="btn btn-warning" ng-click="offer('buy')">{{'buy' | translate}} {{base_code}}</button>
+							<button class="btn btn-default marginleft" ng-click="fatfingerbuy=false">{{'cancel' | translate}}</button>
+					</div>
 				</div>
 			</div>
 			<div class="askoffer col-xs-12 col-sm-6">
@@ -169,15 +173,19 @@
 								<div class="input-group-addon addon-font">{{counter_code}}</div>
 							</div>
 					</div>
-					<div class="row submit-field">
+					<div class="row submit-field" ng-hide="fatfingersell">
 							<div class="overview">
 								{{'you_have' | translate}} {{getBalance(base_code, base_issuer)}} {{base_code}}
 							</div>
 							<div class="s-alert s-alert--success" ng-show="sell_ok" translate="offer_success">Offer successfully created</div>
 							<div class="s-alert s-alert--error" ng-show="sell_fail">{{sell_fail}}</div>
-							<button class="btn btn-success" ng-click="offer('sell')" ng-disabled="selling">{{'sell' | translate}} {{base_code}}</button>
+							<button class="btn btn-success" ng-click="offerWithCheck('sell')" ng-disabled="selling">{{'sell' | translate}} {{base_code}}</button>
 					</div>
-					
+					<div class="row submit-field" ng-show="fatfingersell">
+							<div class="s-alert s-alert--warning" translate="fatfinger">CAUTION: Your order is far off from the current market price.</div>
+							<button class="btn btn-warning" ng-click="offer('sell')">{{'sell' | translate}} {{base_code}}</button>
+							<button class="btn btn-default marginleft" ng-click="fatfingersell=false">{{'cancel' | translate}}</button>
+					</div>
 				</div>
 			</div>
 			

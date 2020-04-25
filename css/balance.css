@@ -168,6 +168,11 @@
     background: #f8cfd3;
 }
 
+.s-alert--warning {
+	border: 1px solid #d12;
+	background: #FCF8E3;
+}
+
 .s-alert {
     display: block;
     padding: 8px 16px;

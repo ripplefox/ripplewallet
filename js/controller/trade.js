@@ -156,6 +156,13 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         this.bids = JSON.parse(JSON.stringify(data.bids));
         this.process();
       },
+      price :function(type) {
+        if (type == 'ask') {
+          return this.asks.length ? this.asks[0].price : null;
+        } else {
+          return this.bids.length ? this.bids[0].price : null;
+        }
+      },
       process : function() {
         var depth = 0;
         this.asks = this.asks.map((item)=>{
@@ -305,8 +312,28 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         $scope.buy_price = price;
       }
     }
+    
+    $scope.offerWithCheck = function(type) {
+      var price;
+      if (type == 'buy') {
+        price = $scope.book.price('ask');
+        if (price && $scope.buy_price > price * 1.2) {
+          $scope.fatfingerbuy = true;
+        } else {
+          $scope.offer(type);
+        }
+      } else {
+        price = $scope.book.price('bid');
+        if (price && $scope.sell_price < price * 0.8) {
+          $scope.fatfingersell = true;
+        } else {
+          $scope.offer(type);
+        }
+      }
+    }
 
     $scope.offer = function(type) {
+      $scope['fatfinger' + type] = false; // hide the fatfinger warning
       $scope[type + 'ing'] = true;
       $scope[type + '_ok'] = false;
       $scope[type + '_fail'] = "";

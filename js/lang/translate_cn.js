@@ -187,6 +187,7 @@ var translate_cn = {
   action: '动作',
   buy   : '买',
   sell  : '卖',
+  fatfinger : '警告：你的委托单偏离市场价过大，请再次确认价格！',
   orderbook : '委托单',
   buy_offers : '买单',
   sell_offers: '卖单',
