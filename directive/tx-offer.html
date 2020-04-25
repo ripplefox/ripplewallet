@@ -6,15 +6,15 @@
 		<div class="transaction">
 				<span ng-show="tx.transaction.sell">
 					{{ 'you_sell' | translate }}
-					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency}}</strong>
+					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency:native.code}}</strong>
 					{{ 'you_sell_for' | translate }}
-					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency}}</strong>
+					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency:native.code}}</strong>
 				</span>
 				<span ng-hide="tx.transaction.sell">
 					{{ 'you_buy' | translate }}
-					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency}}</strong>
+					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency:native.code}}</strong>
 					{{ 'you_buy_for' | translate }}
-					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency}}</strong>
+					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency:native.code}}</strong>
 				</span>
 				
 				<effects></effects>

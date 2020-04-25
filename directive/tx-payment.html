@@ -6,14 +6,14 @@
 		<div class="transaction">
 				<span ng-show="tx.transaction.type == 'sent'">
 					{{'you_sent' | translate}}
-					<strong>{{tx.transaction.amountSent || tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency}}</strong>
+					<strong>{{tx.transaction.amountSent || tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency:native.code}}</strong>
 					{{'you_sent_to' | translate}}
 					<strong>{{tx.transaction.counterparty}}</strong>
 				</span>
 				<span ng-show="tx.transaction.type == 'received'">
 					<strong>{{tx.transaction.counterparty}}</strong>
 					{{'sent_you' | translate}}
-					<strong>{{tx.transaction.amountSent || tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency}}</strong>
+					<strong>{{tx.transaction.amountSent || tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency:native.code}}</strong>
 				</span>
 				<span ng-show="tx.tag">{{'tx_tag' | translate}} <strong>{{tx.tag}}</strong>)</span>
 

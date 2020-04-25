@@ -6,9 +6,9 @@
 		<div class="transaction">
 				<span>
 					{{ 'you_cancel' | translate }}
-					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency}}</strong>
+					<strong>{{tx.transaction.pays | rpamount}} {{tx.transaction.pays | rpcurrency:native.code}}</strong>
 					{{ 'you_cancel_for' | translate }}
-					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency}}</strong>
+					<strong>{{tx.transaction.gets | rpamount}} {{tx.transaction.gets | rpcurrency:native.code}}</strong>
 				</span>
 				<effects></effects>
 		</div>
