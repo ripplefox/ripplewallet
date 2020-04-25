@@ -56,15 +56,11 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
         try {
           SettingFactory.setNetworkType($scope.network_type);
           SettingFactory.setCoin($scope.network_coin);
-          SettingFactory.setTimeout($scope.network_timeout);
-          SettingFactory.setMaxfee($scope.network_maxfee);
 
           $scope.active_network = SettingFactory.getNetworkType();
           $scope.active_servers = SettingFactory.getServers();
           $scope.active_coin = SettingFactory.getCoin();
 
-          SM.setMaxfee(SettingFactory.getMaxfee());
-          SM.setTimeout(SettingFactory.getTimeout());
           SM.setServers(SettingFactory.getServers());
           XrpApi.logout();
           SM.connect().then((name)=>{
@@ -73,6 +69,26 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
           });
           $rootScope.reset();
           $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
+          location.reload();
+        } catch (e) {
+          console.error(e);
+          $scope.network_error = e.message;
+        }
+      }
+      
+      if (mode == 'settings') {
+        try {
+          SettingFactory.setTimeout($scope.network_timeout);
+          SettingFactory.setMaxfee($scope.network_maxfee);
+
+          SM.setMaxfee(SettingFactory.getMaxfee());
+          SM.setTimeout(SettingFactory.getTimeout());
+          XrpApi.logout();
+          SM.connect().then((name)=>{
+            console.log(`ServerManager connect to ${name}`);
+            XrpApi.remote = SM.remote;
+          });
+          $rootScope.reset();
           location.reload();
         } catch (e) {
           console.error(e);

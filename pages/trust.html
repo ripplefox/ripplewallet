@@ -1,5 +1,5 @@
 <section class="col-xs-12 content">
-	<div class="so-back islandBack islandBack--t" ng-show="isPublicNetwork()">
+	<div class="so-back islandBack islandBack--t">
 		<div class="island">
 			<div class="island__header">
 				<span translate="add_trust">Add trust from known anchors</span>
@@ -8,7 +8,7 @@
 				</div>
 			</div>
 			
-			<group ng-show="mode == 'community'">
+			<group ng-show="mode == 'community' && isPublicNetwork()">
 					<div class="island__paddedContent">
 						<p>
 							{{'trust_src' | translate}}<br>{{'trust_note' | translate}}

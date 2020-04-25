@@ -3,6 +3,7 @@
 		<div class="col-sm-3">
 			<div class="settingPage">
 				<a href="javascript:" ng-class="{active: mode=='network'}" ng-click="mode='network'">{{'network' | translate}}</a>
+				<a href="javascript:" ng-class="{active: mode=='settings'}" ng-click="mode='settings'">{{'settings' | translate}}</a>
 				<a ng-hide="true" href="javascript:" ng-class="{active: mode=='federation'}" ng-click="mode='federation'">{{'fed_protocol' | translate}}</a>
 				<a href="javascript:" ng-class="{active: mode=='proxy'}" ng-click="mode='proxy'">{{'proxy' | translate}}</a>
 			</div>
@@ -27,8 +28,8 @@
 					<label translate="selected_net">Selected Ripple Network</label>
 					<ul>
 						<!-- <li><strong>Type: </strong><tt>{{active_network | translate}}</tt></li> -->
-						<li><strong>Network: </strong><tt>{{all_networks[active_network].name}}</tt></li>
-						<li><strong>Coin: </strong><tt>{{active_coin}}</tt></li>
+						<li><strong>Network: </strong>{{all_networks[active_network].name}}</li>
+						<li><strong>Coin: </strong>{{active_coin}}</li>
 					</ul>
 				</div>
 			</div>
@@ -79,30 +80,42 @@
 					  <input class="form-control" type="text" ng-model="network_coin" placeholder="XLM"/>
 				  </div>
 			</div>
-			<div class="row" style="margin-bottom: 20px;">
-                <div class="col-xs-12 col-md-10">
-                    <label translate="max_fee">Max Fee</label>
-                    <p>{{ 'max_fee_desc' | translate }} ({{network_coin}})</p>
-                    <input class="form-control" type="number" ng-model="network_maxfee" placeholder="0.2" />
-                </div>
-            </div>
-			<div class="row" style="margin-bottom: 20px;">
-                <div class="col-xs-12 col-md-10">
-                    <label translate="timeout">Connection Timeout</label>
-                    <p translate="timeout_desc">It is possible that the status of your transaction will be determined after a long time if the network is highly congested. The timeout number can not be negative. If the value is 0, the transaction is good indefinitely.</p>
-                    <input class="form-control" type="number" ng-model="network_timeout" placeholder="30" list="timeoutlist"/>
-                    <datalist id="timeoutlist">
-                        <option value="0">
-                        <option value="10">
-                        <option value="30">
-                        <option value="60">
-                    </datalist>
-                </div>
-            </div>
 
 			<div class="row" style="margin-bottom: 20px;">
 				<div class="col-xs-12 col-sm-5">
 					<a class="btn btn-info btn-block btn-big" href="javascript:" ng-click="save('network')" translate="save">Save</a>
+				</div>
+			</div>
+			<div class="s-alert s-alert--alert row__message" ng-show="network_error">
+				{{network_error}}
+			</div>
+		</div>
+		
+		<div class="col-sm-9" ng-show="mode=='settings'">
+			<div class="row" style="margin-bottom: 20px;">
+          <div class="col-xs-12 col-md-10">
+              <label translate="max_fee">Max Fee</label>
+              <p>{{ 'max_fee_desc' | translate }} ({{network_coin}})</p>
+              <input class="form-control" type="number" ng-model="network_maxfee" placeholder="0.2" />
+          </div>
+      </div>
+			<div class="row" style="margin-bottom: 20px;">
+          <div class="col-xs-12 col-md-10">
+              <label translate="timeout">Connection Timeout</label>
+              <p translate="timeout_desc">It is possible that the status of your transaction will be determined after a long time if the network is highly congested. The timeout number can not be negative. If the value is 0, the transaction is good indefinitely.</p>
+              <input class="form-control" type="number" ng-model="network_timeout" placeholder="30" list="timeoutlist"/>
+              <datalist id="timeoutlist">
+                  <option value="0">
+                  <option value="10">
+                  <option value="30">
+                  <option value="60">
+              </datalist>
+          </div>
+      </div>
+
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-xs-12 col-sm-5">
+					<a class="btn btn-info btn-block btn-big" href="javascript:" ng-click="save('settings')" translate="save">Save</a>
 				</div>
 			</div>
 			<div class="s-alert s-alert--alert row__message" ng-show="network_error">
