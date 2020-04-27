@@ -29,7 +29,7 @@ myApp.controller("FooterCtrl", [ '$scope', '$rootScope', '$translate', 'SettingF
     };
 
     $scope.version = appinfo.version;
-    $scope.new_version = false;
+    $scope.new_version = "";
     $scope.diff = false;
     
     $http({
@@ -38,7 +38,7 @@ myApp.controller("FooterCtrl", [ '$scope', '$rootScope', '$translate', 'SettingF
     }).then(function(res) {
       console.log(res.data);
       $scope.new_version = res.data.version;
-      $scope.diff = $scope.new_version != $scope.version;
+      $scope.diff = $scope.version != $scope.new_version && $scope.version != res.data.beta;
       if ($scope.diff) $rootScope.updateMessage = res.data.message[$translate.use()];
     }).catch(err => {
       console.log('ignore version check', err);
