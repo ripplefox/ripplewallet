@@ -13,7 +13,7 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
     
     $scope.fed_url;
     $scope.fed_currencies = [];
-    $scope.fed_error;
+    $scope.fed_error = "";
     $scope.fed_loading;
 
     $scope.show_all = false;
@@ -23,21 +23,26 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
 
     $scope.resolve = function() {
       var snapshot = $scope.fed_url;
-      $scope.fed_error = false;
+      $scope.fed_error = "";
+      $scope.fed_currencies = [];
       $scope.fed_loading = true;
       Federation.get($scope.fed_url).then(txt => {
         console.log('resolve', txt);
-        $scope.fed_error = false;
         $scope.fed_loading = false;
-        $scope.fed_currencies = (txt.currencies || []).map(code => {
-          return {code: code, issuer: txt.accounts[0]};
+        $scope.fed_currencies = (txt.currencies || []).map(line => {
+          var arr = line.split(" ");
+          var issuer = arr.length > 1 ? arr[1] : txt.accounts[0];
+          return {code: arr[0], issuer: issuer};
         });
+        if ($scope.fed_currencies.length == 0) {
+          $scope.fed_error = "fed_unable";
+        }
       }).catch(err => {
         if (snapshot !== $scope.fed_url) {
           return;
         }
         $scope.fed_currencies = [];
-        $scope.fed_error = true;
+        $scope.fed_error = err.message;
         $scope.fed_loading = false;
         console.log(snapshot, err);
       });

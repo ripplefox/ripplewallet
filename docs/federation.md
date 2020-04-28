@@ -12,7 +12,8 @@ The ripple.txt should include a [federation_url] field. For example:
 
 ```````````
 [currencies]
-CNY
+CNY rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y
+ULT rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y
 
 [domain]
 ripplefox.com
