@@ -22,6 +22,28 @@ body {
 .header nav {
 	margin-bottom: 0;
 }
+
+.topmenu {
+	background-color: #4169a4;
+  border-color: #4169a4;
+}
+
+.topmenu a {
+  color: #f0f0f0;
+  text-decoration: none;
+}
+
+.topmenu .navbar-nav > li > a:hover,
+.topmenu .navbar-nav > li > a:focus {
+  background-color: #3d73bc;
+}
+
+.topmenu .navbar-nav > .active > a,
+.topmenu .navbar-nav > .active > a:hover,
+.topmenu .navbar-nav > .active > a:focus {
+  background-color: #3d73bc;
+}
+
 .header .subnav {
   background-color: #f3f3f3;
   border-bottom: 1px solid #ccccca;
