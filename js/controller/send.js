@@ -203,11 +203,15 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         } else {
           var data = res.data.federation_json;
           if (data.extra_fields) {
-            $scope.service_currency = (data.currencies || data.assets)[0].currency;
-            $scope.extra_fields = data.extra_fields;
-            $scope.quote_destination = data.destination;
-            $scope.quote_domain = data.domain;
-            $scope.quote_url = data.quote_url;
+            if (data.domain == domain) {
+              $scope.service_currency = (data.currencies || data.assets)[0].currency;
+              $scope.extra_fields = data.extra_fields;
+              $scope.quote_destination = data.destination;
+              $scope.quote_domain = data.domain;
+              $scope.quote_url = data.quote_url;
+            } else {
+              $scope.service_error = "The domain field in response must be " + domain;
+            }
           } else {
             $scope.extra_fields = null;
             $scope.real_address = data.destination_address;
