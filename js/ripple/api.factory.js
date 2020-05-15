@@ -74,6 +74,15 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return AuthenticationFactory.address;
       },
       
+      // used by auth factory only
+      sign(txtJson, secret, maxFee) {
+        if (maxFee) {
+          return new RippleAPI({maxFeeXRP: maxFee}).sign(txtJson, secret);
+        } else {
+          return _remote.sign(txtJson, secret);
+        }
+      },
+      
       checkFunded(address) {
         return new Promise(async (resolve, reject)=>{
           await this.connect();
@@ -94,6 +103,21 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           try {
             await this.connect();
             let info = await _remote.getAccountInfo(address || this.address);
+            resolve(info);
+          } catch(e){
+            if (e.data && e.data.error === 'actNotFound') {
+              e.unfunded = true;
+            }
+            reject(e);
+          };
+        });
+      },
+      
+      checkObjects(address) {
+        return new Promise(async (resolve, reject)=>{
+          try {
+            await this.connect();
+            let info = await _remote.getAccountObjects(address || this.address);
             resolve(info);
           } catch(e){
             if (e.data && e.data.error === 'actNotFound') {
@@ -216,7 +240,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return new Promise(async (resolve, reject)=> {
           try {
             let prepared = await _remote.prepareSettings(this.address, settings);
-            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
             if ("tesSUCCESS" !== result.resultCode) {
               console.warn(result);
@@ -241,7 +265,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return new Promise(async (resolve, reject)=> {
           try {
             let prepared = await _remote.prepareTrustline(this.address, trustline);
-            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
             if ("tesSUCCESS" !== result.resultCode) {
               console.warn(result);
@@ -272,7 +296,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
-            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
             if ("tesSUCCESS" !== result.resultCode) {
               console.warn(result);
@@ -312,7 +336,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return new Promise(async (resolve, reject)=>{
           try {
             let prepared = await _remote.preparePayment(this.address, payment);
-            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
             if ("tesSUCCESS" !== result.resultCode) {
               console.warn(result);
@@ -353,7 +377,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareOrder(this.address, order);
-            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
             if ("tesSUCCESS" !== result.resultCode) {
               console.warn(result);
@@ -373,7 +397,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
-            const {signedTransaction} = AuthenticationFactory.sign(this.address, prepared.txJSON);
+            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
             if ("tesSUCCESS" !== result.resultCode) {
               console.warn(result);
@@ -382,6 +406,32 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             resolve(result);
           } catch (err) {
             console.error('cancelOffer', err);
+            reject(err);
+          }
+        });
+      },
+      
+      deleteAccount(dest_account) {
+        const localInstructions = { maxFee: '5.0'};
+        return new Promise(async (resolve, reject) => {
+          try {
+            let prepared = await _remote.prepareTransaction({
+              TransactionType: 'AccountDelete',
+              Account: this.address,
+              Destination: dest_account
+            }, localInstructions);
+            console.log(prepared);
+            var obj = JSON.parse(prepared.txJSON);
+            obj.Fee = "5000000";
+            const {signedTransaction} = AuthenticationFactory.sign(this, JSON.stringify(obj), "5");
+            let result = await _remote.submit(signedTransaction);
+            if ("tesSUCCESS" !== result.resultCode) {
+              console.warn(result);
+              return reject(new Error(result.resultMessage || result.resultCode));
+            }
+            resolve(result);
+          } catch (err) {
+            console.error('deleteAccount', err);
             reject(err);
           }
         });

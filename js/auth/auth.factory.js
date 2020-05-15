@@ -144,10 +144,11 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
     }
 
     // Sign with all available and useful secrets we can automatically.
-    sign(address, txtJson) {
+    sign(api, txtJson, maxfee) {
+      var address = api.address;
       const kp = this.availablePKs[address];
       if (!kp) throw new Error(`No keypair found for ${address}`);
-      var signedTransaction = Id.sign(txtJson, kp.secret);
+      var signedTransaction = api.sign(txtJson, kp.secret, maxfee);
       return signedTransaction;
     }
 
