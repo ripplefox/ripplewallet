@@ -4,8 +4,11 @@
 	</div>
 	<div class="col-xs-9">
 		<div class="transaction">
+			<span ng-show="tx.transaction.type">{{tx.transaction.type}} 此类型暂未解析.</span>
+			<span ng-show="!tx.transaction.type && tx.tx_type">{{tx.tx_type | translate}}</span>
+			<span ng-show="!tx.transaction.type && !tx.tx_type">此类型暂未解析</span>
+			
 			<effects></effects>
-			<div ng-show="tx.transaction">{{tx.transaction.type}} 此类型暂未解析.</div>
 		</div>
 		<div class="hash"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
 	</div>

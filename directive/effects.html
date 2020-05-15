@@ -88,7 +88,7 @@
 			</span>
 			<!-- ngSwitchWhen: balance_change -->
 			<span ng-switch-when="balance_change">
-				Your balance has been changed by {{effect.amount | rpamount}} {{effect.amount | rpcurrency:native.code}}.
+				{{'bal_change' | translate}} {{effect.amount | rpamount}} {{effect.amount | rpcurrency:native.code}}
 			</span>
 			<!-- ngSwitchWhen: exception -->
 			<span ng-switch-default>{{effect.type}} 未解析</span>

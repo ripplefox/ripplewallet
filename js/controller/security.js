@@ -79,4 +79,26 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
     };
     
     
+    $scope.delete_warning = true;
+    $scope.toggleWarning = function() {
+      $scope.delete_warning = !$scope.delete_warning;
+    }
+    $scope.deleteAccount = function() {
+      $scope.error = '';
+      $scope.merge_done = false;
+      $scope.merge_working = true;
+      XrpApi.deleteAccount($scope.dest_account).then(result => {
+        $scope.merge_working = false;
+        $scope.merge_done = true;
+        $rootScope.balance = 0;
+        $rootScope.reserve = 0;
+        $rootScope.$apply();
+      }).catch(err => {
+        $scope.merge_working = false;
+        $scope.error = err.message;
+        $rootScope.$apply();
+      });
+    };
+    
+    
   } ]);

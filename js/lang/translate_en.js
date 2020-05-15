@@ -155,6 +155,7 @@ var translate_en = {
   you_sent: 'You sent',
   you_sent_to: 'to',
   sent_you: 'sent you',
+  bal_change : 'Your balance has been changed by',
   order_cancel: 'Order (',
   order_cancel_for: 'for',
   order_cancel_due: ') has been cancelled due to lack of funds.',
@@ -266,6 +267,13 @@ var translate_en = {
   manage_data : 'Manage Data',
   back           : 'Back',
 
+  AccountDelete : 'Delete account',
+  merge_desc     : 'Danger operation! It transfers your {{code}} to destination account and cost you 5 {{code}}.',
+  account_noclean: 'Your account should have no obligations.',
+  dest_account   : 'Destination Account',
+  delete_warning : 'I KNOW EVERYTHING >>',
+  merge_done     : 'Your account was merged to destination.',
+  
   /** Deposit & withdrawl **/
   service : 'Service',
   deposit_withdraw : 'Deposit/Withdraw',

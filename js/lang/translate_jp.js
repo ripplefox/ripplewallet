@@ -155,6 +155,7 @@ var translate_jp = {
   you_sent: 'あなたは以下の資産を発送します',
   you_sent_to: 'あなたは以下の受取者へ送金しました',
   sent_you: 'あなたへ以下の金額を送金しました',
+  bal_change : 'あなたの所有資産が変動しました',
   order_cancel: '注文：以下の金額を払います',
   order_cancel_for: '以下の資産を購入します',
   order_cancel_due: '資金不足のため、キャンセルされました。',
@@ -266,6 +267,13 @@ var translate_jp = {
   manage_data : 'データ',
   back           : '戻る',
 
+  AccountDelete : 'アカウントを削除する',
+  merge_desc     : '危険!該当操作はあなたが所有する{{code}}を相手側へ発送します。手数料は5 {{code}}です！',
+  account_noclean: 'アカウントはクレジットライン等債務関係を持たないこと。',
+  dest_account   : '宛先アカウント',
+  delete_warning : 'すべてのリスクを了解しました >>',
+  merge_done     : 'あなたのアカウントは宛先アカウントと合併されました。',
+  
   /** Deposit & withdrawl **/
   service : 'サービス',
   deposit_withdraw : '入出金',

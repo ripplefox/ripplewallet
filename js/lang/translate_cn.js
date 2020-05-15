@@ -155,6 +155,7 @@ var translate_cn = {
   you_sent: '你发送了',
   you_sent_to: '给',
   sent_you: '给你发送了',
+  bal_change : '你的资产变动了',
   order_cancel: '委托单（用',
   order_cancel_for: '购入',
   order_cancel_due: '）因为资金不足被取消。',
@@ -265,6 +266,13 @@ var translate_cn = {
   flags_done  : '设置成功',
   manage_data : '数据',
   back        : '返回',
+  
+  AccountDelete : '删除账号',
+  merge_desc     : '危险！此操作将你持有的{{code}}转移到目标账户，手续费5 {{code}}！',
+  account_noclean: '账户必须不含任何依赖，如信任线等。',
+  dest_account   : '目标账户',
+  delete_warning : '我明白所有风险 >>',
+  merge_done     : '你的账户已经被合并到了目标账户。',
 
   /** Deposit & withdrawl **/
   service : '服务',

@@ -56,6 +56,8 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
               return
             }
             effects.push(effect);
+          } else if (effect.type == 'balance_change' & tx.tx_type == 'AccountDelete') {
+            effects.push(effect);
           }
         });
         event.showEffects = effects;
