@@ -30,6 +30,9 @@
 							<div class="row" ng-show="getError(asset.code, asset.issuer)">
 									<div class="s-alert s-alert--alert row__message">{{getError(asset.code, asset.issuer)}}</div>
 							</div>
+							<div class="row" ng-show="isSubmitted(asset.code, asset.issuer)">
+									<div class="s-alert s-alert--info row__message" translate="submitted">Request submitted</div>
+							</div>
 							<div class="row" ng-show="isDone(asset.code, asset.issuer)">
 									<div class="s-alert s-alert--success row__message" translate="trust_granted">Trust is granted!</div>
 							</div>
@@ -98,6 +101,9 @@
 				<div class="row" ng-show="getError(manual_code, manual_issuer)">
 						<div class="s-alert s-alert--alert row__message">{{getError(manual_code, manual_issuer)}}</div>
 				</div>
+				<div class="row" ng-show="isSubmitted(manual_code, manual_issuer)">
+						<div class="s-alert s-alert--info row__message" translate="submitted">Request submitted</div>
+				</div>
 				<div class="row" ng-show="isDone(manual_code, manual_issuer)">
 						<div class="s-alert s-alert--success row__message" translate="trust_granted">Trust is granted!</div>
 				</div>
@@ -121,25 +127,6 @@
 			          </div>
 			          <div ng-show="fed_loading" class="success"><i class="fa fa-spinner fa-pulse"></i> {{'fed_loading' | translate}} {{fed_url}}</div>
 			        </div>
-			        
-		          
-		          <div class="col-xs-12 nopadding-left pdtop form-group" ng-show="manual_code && isValidAddress(manual_issuer)">
-			          <div class="AddTrust__confirmation__assetCard">
-									<div class="AssetCard AssetCard--fixed">
-										<div class="AssetCard__main">
-											<div class="AssetCard__logo">
-												<img class="AssetCard__logo__image" data-ng-src="{{manual_logo}}">
-											</div>
-											<div class="AssetCard__content">
-												<div class="AssetCard__header">
-													<span class="AssetCard__code">{{manual_code}}</span>{{manual_name}}
-												</div>
-												<p class="AssetCard__issuerAccountId">{{manual_issuer}}</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
 		    	</div>
 				</div>
 				<group ng-repeat="asset in fed_currencies">
@@ -155,6 +142,9 @@
 					</div>
 					<div class="row" ng-show="getError(asset.code, asset.issuer)">
 							<div class="s-alert s-alert--alert row__message">{{getError(asset.code, asset.issuer)}}</div>
+					</div>
+					<div class="row" ng-show="isSubmitted(asset.code, asset.issuer)">
+							<div class="s-alert s-alert--info row__message" translate="submitted">Request submitted</div>
 					</div>
 					<div class="row" ng-show="isDone(asset.code, asset.issuer)">
 							<div class="s-alert s-alert--success row__message" translate="trust_granted">Trust is granted!</div>

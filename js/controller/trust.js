@@ -63,14 +63,27 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
     var errors = {};
     var states = {};
     
+    function updateState(hash, state) {
+      for (var keystr in states) {
+        if (states[keystr].hash == hash) {
+          return states[keystr].state = state;
+        }
+      }
+    }
+    
     $scope.isChanging = function(code, issuer) {
       return !!changing[key(code, issuer)];
     }
     $scope.getError = function(code, issuer) {
       return errors[key(code, issuer)] || "";
     }
+    $scope.isSubmitted = function(code, issuer) {
+      var value = states[key(code, issuer)];
+      return value && value.state == 'submitted';
+    }
     $scope.isDone = function(code, issuer) {
-      return !!states[key(code, issuer)];
+      var value = states[key(code, issuer)];
+      return value && value.state == 'success';
     }
     
     $scope.addTrust = function(code, issuer, amount) {
@@ -80,9 +93,9 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
       errors[keystr] = "";
       states[keystr] = "";
       changing[keystr] = true;
-      XrpApi.changeTrust(code, issuer, amount).then(result => {
+      XrpApi.changeTrust(code, issuer, amount).then(hash => {
         changing[keystr] = false;
-        states[keystr] = "done";
+        states[keystr] = {hash : hash, state: 'submitted'};
         $rootScope.$apply();
       }).catch(err => {
         changing[keystr] = false;
@@ -99,9 +112,9 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
       errors[keystr] = "";
       states[keystr] = "";
       changing[keystr] = true;
-      XrpApi.changeTrust(code, issuer, "0").then(result => {
+      XrpApi.changeTrust(code, issuer, "0").then(hash => {
         changing[keystr] = false;
-        states[keystr] = "done";
+        states[keystr] = {hash : hash, state: 'submitted'};
         $rootScope.$apply();
       }).catch(err=>{
         changing[keystr] = false;
@@ -109,6 +122,18 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
         $rootScope.$apply();
       });
     };
+    
+    $scope.$on("txSuccess", function(e, tx) {
+      console.debug('txSuccess event', tx);
+      updateState(tx.hash, 'success');
+      console.log(states);
+      $rootScope.$apply();
+    });
+    $scope.$on("txFail", function(e, tx) {
+      console.debug('txFail event', tx);
+      updateState(tx.hash, 'fail');
+      $rootScope.$apply();
+    });
     
     function key(code, issuer) {
       return code == $rootScope.currentNetwork.coin.code ? code : code + '.' + issuer;

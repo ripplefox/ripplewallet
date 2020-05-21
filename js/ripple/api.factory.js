@@ -83,6 +83,32 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
+      verifyTx(hash, minLedger, maxLedger) {
+        const options = {
+          minLedgerVersion: minLedger,
+          maxLedgerVersion: maxLedger
+        };
+        _remote.getTransaction(hash, options).then(data => {
+          console.log(data);
+          console.log('Final Result: ', data.outcome.result);
+          console.log('Validated in Ledger: ', data.outcome.ledgerVersion);
+          console.log('Sequence: ', data.sequence);
+          if (data.outcome.result === 'tesSUCCESS') {
+            $rootScope.$broadcast('txSuccess', { hash: hash, options: options});
+          } else {
+            $rootScope.$broadcast('txFail', { hash: hash});
+          }
+        }).catch(err => {
+          console.warn('verify fail', err);
+          /* If transaction not in latest validated ledger, try again until max ledger hit */
+          if (err instanceof _remote.errors.PendingLedgerVersionError) {
+             setTimeout(() => this.verifyTx(hash, minLedger, maxLedger), 1000);
+          } else {
+            console.error("Transaction may have failed.");
+          }
+        });
+      },
+      
       checkFunded(address) {
         return new Promise(async (resolve, reject)=>{
           await this.connect();
@@ -264,14 +290,16 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         trustline.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject)=> {
           try {
+            let ledger = await _remote.getLedger();
             let prepared = await _remote.prepareTrustline(this.address, trustline);
-            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
+            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.resultCode) {
+            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            if ("tesSUCCESS" !== result.resultCode && "terQUEUED" !== result.resultCode) {
               console.warn(result);
               return reject(new Error(result.resultMessage || result.resultCode));
             }
-            resolve(result);
+            resolve(id);
           } catch (err) {
             console.info('changeTrust', err);
             reject(err);
@@ -604,7 +632,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           // Show status notification
           if (processedTxn.tx_result === "tesSUCCESS" && transaction && !is_historic) {
             console.log('tx success', tx);
-            $rootScope.$broadcast('txChange', { hash:tx.hash, tx: transaction });
+            $rootScope.$broadcast('txSuccess', { hash:tx.hash, tx: transaction });
           }
 
           // Add to recent notifications

@@ -237,8 +237,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.refreshOffer();
       $scope.refreshBook();
     });
-    $scope.$on("txChange", function(e, tx) {
-      console.debug('txChange event got', e, tx);
+    $scope.$on("txSuccess", function(e, tx) {
+      console.debug('txSuccess event', tx);
       $scope.refreshOffer();
       $scope.refreshBook();
     });
