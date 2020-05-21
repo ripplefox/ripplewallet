@@ -182,7 +182,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
               lines[keystr].balance = item.state.balance;
             });
             _trustlines = lines;
-            console.log(ret);
+            console.log('lines:', ret);
             resolve(lines);
           }).catch(e => {
             console.error('getTrustlines', e);

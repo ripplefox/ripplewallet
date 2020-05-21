@@ -97,14 +97,21 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.counter = $rootScope.getGateway($scope.counter_code, $scope.counter_issuer);
 
     $scope.tradeAssets = {};
-    for (var code in $rootScope.lines) {
-      for (var issuer in $rootScope.lines[code]) {
-        $scope.tradeAssets[key(code, issuer)] = {code: code, issuer: issuer};
+    function addLinesToTradePairs() {
+      for (var code in $rootScope.lines) {
+        for (var issuer in $rootScope.lines[code]) {
+          $scope.tradeAssets[key(code, issuer)] = {code: code, issuer: issuer};
+        }
       }
-    }
+    };
+    addLinesToTradePairs();
+    $scope.$on("balanceChange", function() {
+      addLinesToTradePairs();
+    });
     Gateways.defaultTradeAssets.forEach(asset =>{
       $scope.tradeAssets[key(asset.code, asset.issuer)] = asset;
     });
+    
     
     $scope.precise = 2;
     $scope.price_precise = 4;
@@ -135,23 +142,15 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
 
     $scope.book = {
       origin : null,
-      stream : null,
       asks : [],
       bids : [],
       clean : function() {
         this.origin = null;
-        this.stream = null;
         this.asks = [];
         this.bids = [];
       },
       update : function(data) {
         this.origin = data;
-        this.asks = JSON.parse(JSON.stringify(data.asks));
-        this.bids = JSON.parse(JSON.stringify(data.bids));
-        this.process();
-      },
-      streamUpdate : function(data) {
-        this.stream = data;
         this.asks = JSON.parse(JSON.stringify(data.asks));
         this.bids = JSON.parse(JSON.stringify(data.bids));
         this.process();
@@ -166,42 +165,16 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       process : function() {
         var depth = 0;
         this.asks = this.asks.map((item)=>{
-          var order = {};
-          order.account = item.properties.maker;
-          order.gets_currency = item.specification.quantity.currency;
-          order.gets_value = item.state ? item.state.fundedAmount.value : item.specification.quantity.value;
-          order.pays_currency = item.specification.totalPrice.currency
-          order.pays_value = item.state ? item.state.priceOfFundedAmount.value : item.specification.totalPrice.value;
-          order.volume = order.pays_value;
-          order.amount = order.gets_value;
-          depth = depth + parseFloat(order.amount);
-          order.depth = depth;
-          if (item.specification.direction == 'sell') {
-            order.price = new BigNumber(order.pays_value).dividedBy(order.gets_value).toString();
-          } else {
-            order.price = new BigNumber(order.gets_value).dividedBy(order.pays_value).toString();
-          }
-          return order;
+          depth = depth + item.amount;
+          item.depth = depth;
+          return item;
         });
         
         depth = 0;
         this.bids = this.bids.map((item)=>{
-          var order = {};
-          order.account = item.properties.maker;
-          order.gets_currency = item.specification.totalPrice.currency;
-          order.gets_value = item.state ? item.state.fundedAmount.value : item.specification.totalPrice.value;
-          order.pays_currency = item.specification.quantity.currency
-          order.pays_value = item.state ? item.state.priceOfFundedAmount.value : item.specification.quantity.value;
-          order.volume = order.gets_value;
-          order.amount = order.pays_value;
-          depth = depth + parseFloat(order.amount);
-          order.depth = depth;
-          if (item.specification.direction == 'sell') {
-            order.price = new BigNumber(order.pays_value).dividedBy(order.gets_value).toString();
-          } else {
-            order.price = new BigNumber(order.gets_value).dividedBy(order.pays_value).toString();
-          }
-          return order;
+          depth = depth + item.amount;
+          item.depth = depth;
+          return item;
         });
         
         this.asks = this.asks.filter(item => {
@@ -235,10 +208,11 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         }
         $scope.book.update(data);
         $scope.refreshingBook = false;
-        $scope.$apply();
+        //$scope.$apply();
       }).catch(err => {
+        console.error('Should not reach here.', err);
         $scope.refreshingBook = false;
-        $scope.$apply();
+        //$scope.$apply();
       });
     }
     $scope.refreshBook();
@@ -247,7 +221,6 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.refreshOffer = function() {
       $scope.refreshingOffer = true;
       XrpApi.checkOffers().then(data => {
-        console.log(data);
         $scope.offers.update(data);
         console.log($scope.offers);
         $scope.refreshingOffer = false;
