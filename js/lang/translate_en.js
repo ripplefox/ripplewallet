@@ -293,7 +293,7 @@ var translate_en = {
   can_send  : 'You can send',
 
   ripple : 'Ripple',
-  ripple_desktop_client : 'Foxlet Wallet',
+  ripple_desktop_client : 'Foxlet Client for Ripple',
   wallet_notice1 : 'Your money and wallet are protected digitally through encryption algorithms that can be unlocked only with your personal keys.',
   wallet_notice2 : 'No one else has them, so don\'t lose them! Please backup your secret carefully.',
   wallet_notice3 : 'Never share them!',
