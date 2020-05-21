@@ -18,7 +18,7 @@ myApp.controller("BalanceCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways',
       $scope.setRemoving(code, issuer, true);
       XrpApi.changeTrust(code, issuer, "0").then(result => {
         console.log(code + '.' + issuer + " remove submitted.")
-        //$scope.setRemoving(code, issuer, false);
+        $scope.setRemoving(code, issuer, false);
         //$scope.$apply();
       }).catch(err => {
         console.error(err);

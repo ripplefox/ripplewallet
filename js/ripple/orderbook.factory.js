@@ -79,7 +79,7 @@ myApp.factory('XrpOrderbook', ['$rootScope', 'AuthenticationFactory', '$q', func
           const response = await _remote.getOrderbook(this.address, info, {limit: 40});
           resolve(response);
         } catch (err) {
-          console.error(err);
+          console.error(info.base.currency + '/' + info.counter.currency, err);
           resolve({asks:[], bids:[]});
         }
       });

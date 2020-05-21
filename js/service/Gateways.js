@@ -46,6 +46,15 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
             {code : 'BTC', issuer : 'rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL', list: true}
           ],
           logo : "img/gateway/gatehub.png"
+        },
+        "dxperts.org" : {
+          name : 'dxperts.org',
+          website : 'https://dxperts.org/',
+          service : [],
+          assets : [
+            {code : 'DXP', issuer : 'rM8AhEC5Zz46ecWC8KwkoMugY1KwFQqhZT', list: true}
+          ],
+          logo : "img/gateway/dxperts.png"
         }
     };
     
