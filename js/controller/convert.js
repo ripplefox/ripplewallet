@@ -44,7 +44,8 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
       $scope.found = false;
       $scope.asset = {};
       $scope.finding = true;
-      $scope.send_done = false;
+      $scope.hash = "";
+      $scope.tx_state = "";
       $scope.send_error = '';
       $scope.lastUpdate = 0;
       
@@ -94,13 +95,26 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
     }
 
     $scope.sending;
-    $scope.send_done = false;
     $scope.send_error = '';
+    
+    $scope.hash = "";
+    $scope.tx_state = "";
+    $scope.$on("txSuccess", function(e, tx) {
+      console.debug('txSuccess event', tx);
+      if (tx.hash == $scope.hash) $scope.tx_state = "success";
+      $scope.$apply();
+    });
+    $scope.$on("txFail", function(e, tx) {
+      console.debug('txFail event', tx);
+      if (tx.hash == $scope.hash) $scope.tx_state = "fail";
+      $scope.$apply();
+    });
 
     $scope.convert_confirmed = function() {
       $scope.mode = 'submit';
       $scope.sending = true;
-      $scope.send_done = false;
+      $scope.hash = "";
+      $scope.tx_state = "";
       $scope.send_error = '';
       
       var alt = $scope.asset.origin;
@@ -129,9 +143,10 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
             value : $scope.dst_amount.toString()
         }
       }
-      XrpApi.convert(srcAmount, dstAmount, alt.paths_computed).then(result => {
+      XrpApi.convert(srcAmount, dstAmount, alt.paths_computed).then(hash => {
         $scope.sending = false;
-        $scope.send_done = true;
+        $scope.hash = hash;
+        $scope.tx_state = "submitted";
         $rootScope.$apply();
       }).catch(err => {
         $scope.sending = false;

@@ -89,13 +89,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           maxLedgerVersion: maxLedger
         };
         _remote.getTransaction(hash, options).then(data => {
-          console.log(data);
-          console.log('Final Result: ', data.outcome.result);
-          console.log('Validated in Ledger: ', data.outcome.ledgerVersion);
-          console.log('Sequence: ', data.sequence);
           if (data.outcome.result === 'tesSUCCESS') {
             $rootScope.$broadcast('txSuccess', { hash: hash, options: options});
           } else {
+            console.error(data);
             $rootScope.$broadcast('txFail', { hash: hash});
           }
         }).catch(err => {
