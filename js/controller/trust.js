@@ -127,12 +127,12 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
       console.debug('txSuccess event', tx);
       updateState(tx.hash, 'success');
       console.log(states);
-      $rootScope.$apply();
+      $scope.$apply();
     });
     $scope.$on("txFail", function(e, tx) {
       console.debug('txFail event', tx);
       updateState(tx.hash, 'fail');
-      $rootScope.$apply();
+      $scope.$apply();
     });
     
     function key(code, issuer) {

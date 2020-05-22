@@ -120,6 +120,7 @@ var translate_en = {
   pay_most      : 'You will pay at most',
   submitting    : 'Sending transaction to Ripple network',
   submitted     : 'Your transaction has been submitted.',
+  cleared       : 'Transaction cleared!',
   act_will_upd  : 'Your account will update once the transaction has cleared.',
   back_convert  : 'Do another conversion',
   go_balance    : 'Back to balance',

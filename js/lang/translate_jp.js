@@ -120,6 +120,7 @@ var translate_jp = {
   pay_most      : '最大限のコストは以下です',
   submitting    : '取引情報をリップルネットワークへ発送しています',
   submitted     : '取引情報を発送しました。',
+  cleared       : '取引はキャンセルされました！',
   act_will_upd  : '取引完了後、アカウントの情報は更新されます。',
   back_convert  : '次の兌換をする',
   go_balance    : 'バランス画面に戻る',

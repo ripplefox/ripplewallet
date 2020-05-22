@@ -120,6 +120,7 @@ var translate_cn = {
   pay_most      : '你将最多花费',
   submitting    : '正在把交易提交到 Ripple 网络',
   submitted     : '交易信息已经提交。',
+  cleared       : '交易完成！',
   act_will_upd  : '您的账户会在交易完成后即时更新。',
   back_convert  : '进行另一个兑换',
   go_balance    : '返回到余额界面',

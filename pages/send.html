@@ -169,10 +169,13 @@
 								<i class="fa fa-spinner fa-pulse"></i> {{ 'submitting' | translate}}
 						  </div>
 				  </div>
-				  <div class="row form-group block" ng-show="send_done">
-							<div class="message">
-								<h2 class="result-success" translate="submitted">Your transaction has been submitted.</h2>
+				  <div class="row form-group block" ng-show="tx_state">
+							<div class="message" ng-show="tx_state == 'submitted'">
+								<h2 translate="submitted">Your transaction has been submitted.</h2>
 						  	<p translate="act_will_upd">Your account will update once the transaction has cleared.</p>
+						  </div>
+						  <div class="message" ng-show="tx_state == 'success'">
+								<h2 class="result-success" translate="cleared">Transaction cleared!</h2>
 						  </div>
 							<hr>
 					  	<div class="actionLink"><a href="" ng-click="init()" translate="another_payment">Do another conversion</a></div>

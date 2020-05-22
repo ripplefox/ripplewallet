@@ -19,7 +19,19 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.disallow_xrp = false;
     $scope.tag_provided;
     $scope.sending;
-    $scope.send_done = false;
+    
+    $scope.hash = "";
+    $scope.tx_state = "";
+    $scope.$on("txSuccess", function(e, tx) {
+      console.debug('txSuccess event', tx);
+      if (tx.hash == $scope.hash) $scope.tx_state = "success";
+      $scope.$apply();
+    });
+    $scope.$on("txFail", function(e, tx) {
+      console.debug('txFail event', tx);
+      if (tx.hash == $scope.hash) $scope.tx_state = "fail";
+      $scope.$apply();
+    });
 
     $scope.runOnceWhenOpen = function(){
       if (AuthenticationFactory.getContact($routeParams.name)) {
@@ -31,9 +43,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.act_loading;
     $scope.is_federation;
     $scope.resetService = function(){
+      $scope.hash = "";
+      $scope.tx_state = "";
       $scope.send_error = '';
       $scope.tag_require = false;
-      $scope.send_done = false;
 
       $scope.real_address = '';
       $scope.real_not_fund = false;
@@ -358,8 +371,9 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.send_confirmed = function() {
       $scope.mode = 'submit';
       $scope.sending = true;
-      $scope.send_done = false;
       $scope.send_error = '';
+      $scope.hash = "";
+      $scope.tx_state = "";
       console.log('sending', $scope.asset, $scope.tag);
       
       var alt = $scope.path.origin;
@@ -398,9 +412,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       
       var payment = !alt ? XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag, $scope.invoice, $scope.memos) :
                        XrpApi.pathPayment($scope.real_address, srcAmount, dstAmount, alt.paths_computed, $scope.tag, $scope.invoice, $scope.memos);
-      payment.then(result => {
+      payment.then(hash => {
+        $scope.hash = hash;
+        $scope.tx_state = "submitted";
         $scope.sending = false;
-        $scope.send_done = true;
         $scope.service_amount = 0;
         $scope.asset.amount = 0;
         $rootScope.$apply();

@@ -268,9 +268,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.prepareSettings(this.address, settings);
             const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.resultCode) {
+            if ("tesSUCCESS" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.resultMessage || result.resultCode));
+              return reject(new Error(result.engine_result_message || result.engine_result));
             }
             resolve(result);
           } catch (err) {
@@ -295,9 +295,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
             this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
-            if ("tesSUCCESS" !== result.resultCode && "terQUEUED" !== result.resultCode) {
+            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.resultMessage || result.resultCode));
+              return reject(new Error(result.engine_result_message || result.engine_result));
             }
             resolve(id);
           } catch (err) {
@@ -323,16 +323,22 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         payment.memos = [{data: _client, type: 'client', format: 'text'}].concat(memos || []);
         return new Promise(async (resolve, reject)=>{
           try {
+            let ledger = await _remote.getLedger();
             let prepared = await _remote.preparePayment(this.address, payment);
-            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
+            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.resultCode) {
+            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.resultMessage || result.resultCode));
+              return reject(new Error(result.engine_result_message || result.engine_result));
             }
-            resolve(result);
+            resolve(id);
           } catch (err) {
-            err.data ? console.error(err.data) : console.error('payment', payment, err);
+            if (err.data) {
+              console.error(err.data);
+              return reject(new Error(err.data.engine_result_message || err.data.engine_result));
+            } 
+            console.error('payment', payment, err);
             reject(err);
           }
         });
@@ -363,16 +369,22 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         payment.memos = [{data: _client, type: 'client', format: 'text'}].concat(memos || []);
         return new Promise(async (resolve, reject)=>{
           try {
+            let ledger = await _remote.getLedger();
             let prepared = await _remote.preparePayment(this.address, payment);
-            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
+            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.resultCode) {
+            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.resultMessage || result.resultCode));
+              return reject(new Error(result.engine_result_message || result.engine_result));
             }
-            resolve(result);
+            resolve(id);
           } catch (err) {
-            err.data ? console.error(err.data) : console.error('pathPayment', payment, err);
+            if (err.data) {
+              console.error(err.data);
+              return reject(new Error(err.data.engine_result_message || err.data.engine_result));
+            } 
+            console.error('pathPayment', payment, err);
             reject(err);
           }
         });
@@ -407,9 +419,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.prepareOrder(this.address, order);
             const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.resultCode) {
+            if ("tesSUCCESS" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.resultMessage || result.resultCode));
+              return reject(new Error(result.engine_result_message || result.engine_result));
             }
             resolve(result);
           } catch (err) {
@@ -427,9 +439,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
             const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.resultCode) {
+            if ("tesSUCCESS" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.resultMessage || result.resultCode));
+              return reject(new Error(result.engine_result_message || result.engine_result));
             }
             resolve(result);
           } catch (err) {
@@ -453,9 +465,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             obj.Fee = "5000000";
             const {signedTransaction} = AuthenticationFactory.sign(this, JSON.stringify(obj), "5");
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.resultCode) {
+            if ("tesSUCCESS" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.resultMessage || result.resultCode));
+              return reject(new Error(result.engine_result_message || result.engine_result));
             }
             resolve(result);
           } catch (err) {
