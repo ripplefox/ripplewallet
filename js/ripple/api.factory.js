@@ -435,14 +435,16 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         orderCancellation.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {
           try {
+            let ledger = await _remote.getLedger();
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
-            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
+            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction);
-            if ("tesSUCCESS" !== result.engine_result) {
+            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
               return reject(new Error(result.engine_result_message || result.engine_result));
             }
-            resolve(result);
+            resolve(id);
           } catch (err) {
             console.error('cancelOffer', err);
             reject(err);
