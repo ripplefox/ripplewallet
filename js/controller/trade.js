@@ -237,18 +237,32 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       $scope.refreshOffer();
       $scope.refreshBook();
     });
-    $scope.$on("txSuccess", function(e, tx) {
-      console.debug('txSuccess event', tx);
-      $scope.refreshOffer();
-      $scope.refreshBook();
-    });
 
     $scope.buying = false;
-    $scope.buy_ok;
     $scope.buy_fail;
     $scope.selling = false;
-    $scope.sell_ok;
     $scope.sell_fail;
+    
+    $scope.buy_hash = "";
+    $scope.buy_state = "";
+    $scope.sell_hash = "";
+    $scope.sell_state = "";
+    $scope.$on("txSuccess", function(e, tx) {
+      console.debug('txSuccess event', tx);
+      if (tx.hash == $scope.buy_hash) $scope.buy_state = "success";
+      if (tx.hash == $scope.sell_hash) $scope.sell_state = "success";
+      $scope.refreshOffer();
+      $scope.refreshBook();
+      $scope.$apply();
+    });
+    $scope.$on("txFail", function(e, tx) {
+      console.debug('txFail event', tx);
+      if (tx.hash == $scope.buy_hash) $scope.buy_state = "fail";
+      if (tx.hash == $scope.sell_hash) $scope.sell_state = "fail";
+      $scope.refreshOffer();
+      $scope.refreshBook();
+      $scope.$apply();
+    });
 
     $scope.buy_price;
     $scope.buy_amount;
@@ -308,7 +322,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.offer = function(type) {
       $scope['fatfinger' + type] = false; // hide the fatfinger warning
       $scope[type + 'ing'] = true;
-      $scope[type + '_ok'] = false;
+      $scope[type + '_hash'] = "";
+      $scope[type + '_state'] = "";
       $scope[type + '_fail'] = "";
       var option = {
         type : type,
@@ -324,9 +339,10 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         option.amount = $scope.sell_amount;
         option.price  = $scope.sell_price;
       }
-      XrpApi.offer(option).then(result => {
+      XrpApi.offer(option).then(hash => {
         $scope[type + 'ing'] = false;
-        $scope[type + '_ok'] = true;
+        $scope[type + '_hash'] = hash;
+        $scope[type + '_state'] = "submitted";
         $scope[type + '_amount'] = "";
         $scope[type + '_price'] = "";
         $scope[type + '_volume'] = "";

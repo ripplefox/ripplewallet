@@ -137,7 +137,8 @@
 							<div class="overview">
 								{{'you_have' | translate}} {{getBalance(counter_code, counter_issuer)}} {{counter_code}}
 							</div>
-							<div class="s-alert s-alert--success" ng-show="buy_ok" translate="offer_success">Offer successfully created</div>
+							<div class="s-alert s-alert--info" ng-show="buy_state=='submitted'" translate="submitted">Transaction submitted.</div>
+							<div class="s-alert s-alert--success" ng-show="buy_state=='success'" translate="offer_success">Offer successfully created</div>
 							<div class="s-alert s-alert--error" ng-show="buy_fail">{{buy_fail}}</div>
 							<button class="btn btn-success" ng-click="offerWithCheck('buy')" ng-disabled="buying">{{'buy' | translate}} {{base_code}}</button>
 					</div>
@@ -176,7 +177,8 @@
 							<div class="overview">
 								{{'you_have' | translate}} {{getBalance(base_code, base_issuer)}} {{base_code}}
 							</div>
-							<div class="s-alert s-alert--success" ng-show="sell_ok" translate="offer_success">Offer successfully created</div>
+							<div class="s-alert s-alert--info" ng-show="sell_state=='submitted'" translate="submitted">Transaction submitted</div>
+							<div class="s-alert s-alert--success" ng-show="sell_state=='success'" translate="offer_success">Offer successfully created</div>
 							<div class="s-alert s-alert--error" ng-show="sell_fail">{{sell_fail}}</div>
 							<button class="btn btn-success" ng-click="offerWithCheck('sell')" ng-disabled="selling">{{'sell' | translate}} {{base_code}}</button>
 					</div>
