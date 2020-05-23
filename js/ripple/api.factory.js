@@ -333,7 +333,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           } catch (err) {
             if (err.data) {
               console.error(err.data);
-              return reject(new Error(err.data.engine_result_message || err.data.engine_result));
+              return reject(new Error(err.data.engine_result_message || err.data.engine_result || err.data.error_exception || 'UNKNOWN'));
             } 
             console.error('payment', payment, err);
             reject(err);
@@ -358,9 +358,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
               "address": destinationAddress,
               "amount": convertAmount(destAmount)
             },
-            "paths" : JSON.stringify(paths),
+            //"paths" : JSON.stringify(paths),
             "allowPartialPayment": !!partial
         }
+        if (paths.length) payment.paths = JSON.stringify(paths);
         if (tag) payment.destination.tag = Number(tag);
         if (invoice) payment.invoiceID = invoice;
         payment.memos = [{data: _client, type: 'client', format: 'text'}].concat(memos || []);
@@ -379,7 +380,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           } catch (err) {
             if (err.data) {
               console.error(err.data);
-              return reject(new Error(err.data.engine_result_message || err.data.engine_result));
+              return reject(new Error(err.data.engine_result_message || err.data.engine_result || err.data.error_exception || 'UNKNOWN'));
             } 
             console.error('pathPayment', payment, err);
             reject(err);
@@ -442,7 +443,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
             if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result));
+              return reject(new Error(result.engine_result_message || result.engine_result || error.error_exception || 'UNKNOWN'));
             }
             resolve(id);
           } catch (err) {
