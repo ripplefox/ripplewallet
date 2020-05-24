@@ -59,7 +59,7 @@
 								</div>
 								<div class="row noborder">
 									<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
-										<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="invalid_address || invalid_amount || invalid_tag">发送 {{asset.code}}</button>
+										<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="invalid_address || invalid_amount || invalid_tag">{{'send' | translate}} {{asset.code}}</button>
 									</div>
 								</div>
 					</group>
