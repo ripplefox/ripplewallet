@@ -22,7 +22,7 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
     $scope.network_timeout = parseFloat(SettingFactory.getTimeout());
     $scope.network_maxfee = parseFloat(SettingFactory.getMaxfee());
 
-    if ($scope.network_servers.length ==0) {
+    if ($scope.network_servers.length == 0 && $scope.all_networks[$scope.network_type].servers[0]) {
       $scope.server_url = $scope.all_networks[$scope.network_type].servers[0].server;
       $scope.server_port = $scope.all_networks[$scope.network_type].servers[0].port;;
     }
