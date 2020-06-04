@@ -158,9 +158,10 @@ var JsonRewriter = module.exports = {
     var amtSent;
 
     if (tx.TransactionType === "Payment") {
-      if (meta.DeliveredAmount) {
-        return meta.DeliveredAmount;
+      if (meta.delivered_amount) {
+        return meta.delivered_amount;
       }
+      console.warn("****************");
 
       if (meta.AffectedNodes) {
         // Find the metadata node with entry type == "RippleState"
