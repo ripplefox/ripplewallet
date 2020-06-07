@@ -38,6 +38,24 @@ myApp.factory('SettingFactory', function($window) {
         },
         tabs: ["history", "trade", "balance", "send", "trust"]
       },
+      xag: {
+        name: "XAG Fork",
+        translationKey: 'xag_url',
+        networkType: 'xag',
+        servers: [
+          {server: 'g1.xrpgen.com', port: 443},
+          {server: 'g2.xrpgen.com', port: 443},
+          {server: 'g3.xrpgen.com', port: 443},
+          {server: 'g4.xrpgen.com', port: 443}
+        ],
+        coin: {
+          name: "xrpgen",
+          atom: "drop",
+          code: "XAG",
+          logo: "img/coin/xag.png"
+        },
+        tabs: ["history", "trade", "balance", "send", "trust"]
+      },
       other: {
         name: "User defined",
         translationKey: 'other_url',

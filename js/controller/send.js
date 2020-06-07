@@ -203,7 +203,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
             domain: domain,
             destination: prestr,
             address: $rootScope.address,
-            client : 'foxlet-' + appinfo.version
+            client : 'foxlet-' + appinfo.version,
+            network: $rootScope.currentNetwork.networkType == 'other' ? native.code : $rootScope.currentNetwork.networkType
           }
         });
       }).then(res => {
@@ -257,7 +258,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         destination  : $scope.quote_destination,
         domain       : $scope.quote_domain,
         address      : $rootScope.address,
-        client       : 'foxlet-' + appinfo.version
+        client       : 'foxlet-' + appinfo.version,
+        network      : $rootScope.currentNetwork.networkType == 'other' ? native.code : $rootScope.currentNetwork.networkType
       };
       $scope.extra_fields.forEach(function(field){
         if (field.name) {
