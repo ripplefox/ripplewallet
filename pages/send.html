@@ -44,7 +44,7 @@
 												</div>
 											</div>
 											<div ng-show="disallow_xrp && asset.code==native.code" class="error" translate="disallow_xrp" translate-values="native">Recipient does not allow XRP payments. Are you sure you want to send XRP anyway?</div>
-											<div ng-show="invalid_amount" class="error" translate="invalid_amount">Invalid amount.</div>
+											<div ng-show="invalid_amount && asset.amount" class="error" translate="invalid_amount">Invalid amount.</div>
 										</div>
 								</div>
 								<div class="row noborder">
@@ -102,7 +102,17 @@
 					</form>
 					
 					<div class="row form-group alternatives" ng-show="found">
-							<div class="message" ng-show="!paths.length">{{ 'no_send_path' | translate}}</div>
+							<div ng-show="asset.code == native.code && is_federation && extra_fields" class="col-xs-12 col-sm-6 col-md-4">
+								<div class="am">
+									<span class="amnt">{{asset.amount}}</span>
+									<span class="currency">{{asset.code}}</span>
+									<div class="ex">(<span class="rate">1</span><span class="pair">{{asset.code}}/{{asset.code}}</span>)</div>
+								</div>
+								<button type="submit" ng-click="pickPath(asset.code)" class="btn btn-block btn-success">{{'send' | translate}} {{asset.code}}</button>
+							</div>
+							
+							<div class="message" ng-show="!paths.length && asset.code != native.code">{{ 'no_send_path' | translate}}</div>
+
 							<div ng-repeat="alt in paths" class="col-xs-12 col-sm-6 col-md-4">
 								<div class="am">
 									<span class="amnt">{{alt.value}}</span>
