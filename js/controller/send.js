@@ -282,6 +282,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         console.log(res.data);
         if (res.data.result === 'error') {
           $scope.quote_error = res.data.error_message || res.data.error;
+          $scope.send = [];
+          $scope.stopPath(true);
         } else {
           $scope.send = res.data.quote.send;
           $scope.asset = {code: $scope.send[0].currency, amount: $scope.send[0].value};
@@ -296,6 +298,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         if (snapshot !== $scope.quote_data) {
           return;
         }
+        $scope.send = [];
+        $scope.stopPath(true);
         console.error('quote', err);
         $scope.quote_error = err.message;
         $scope.quote_loading = false;
