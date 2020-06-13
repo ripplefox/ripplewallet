@@ -51,7 +51,7 @@
 										<div class="col-xs-12 col-sm-6 col-md-6">
 											<label translate="dest_tag">Destination tag</label>
 											<input name="tag" type="text" class="form-control" autocomplete="off"
-												ng-model="tag" ng-change="checkTag()" ng-required="tag_require">
+												ng-model="tag" ng-change="checkTag()" ng-required="tag_require" ng-disabled="tag_provided">
 											<div ng-show="tag_require" translate="tag_need">Recipient requires a destination tag to be
 												specified for the transaction. If you don't know the destination tag, please contact them before doing a transaction.</div>
 											<div ng-show="invalid_tag" class="error" translate="error_invalid_tag">invalid tag</div>

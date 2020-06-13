@@ -1,4 +1,5 @@
 /* global myApp */
+const {isValidXAddress, xAddressToClassicAddress} = require('ripple-address-codec')
 
 myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 'XrpPath', 'Id', 'SettingFactory', 'AuthenticationFactory', 'Federation', '$http',
   function($scope, $rootScope, $routeParams, XrpApi, XrpPath, Id, SettingFactory, AuthenticationFactory, Federation, $http) {
@@ -47,6 +48,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.tx_state = "";
       $scope.send_error = '';
       $scope.tag_require = false;
+      $scope.tag_provided = false;
 
       $scope.real_address = '';
       $scope.real_not_fund = false;
@@ -83,9 +85,15 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       if ($scope.full_address.indexOf("@") < 0) {
         $scope.act_loading = false;
         $scope.is_federation = false;
-        $scope.tag_provided = false;
-        $scope.real_address = $scope.full_address;
-        $scope.invalid_address = !Id.isValidAddress($scope.real_address);
+        if (isValidXAddress($scope.full_address)) {
+          var decoded = xAddressToClassicAddress($scope.full_address);
+          $scope.real_address = decoded.classicAddress;
+          $scope.tag = decoded.tag;
+          $scope.tag_provided = true;
+        } else {
+          $scope.real_address = $scope.full_address;
+          $scope.tag_provided = false;
+        }
         $scope.resolveAccountInfo();
       } else {
         $scope.is_federation = true;
