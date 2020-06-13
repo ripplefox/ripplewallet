@@ -1,6 +1,6 @@
 {
   "name": "FoxletRipple",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "RippleFox Client",
   "main": "main.js",
   "scripts": {
@@ -29,8 +29,9 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.0",
     "qrcode-generator": "^1.4.4",
+    "ripple-address-codec": "^4.1.1",
     "ripple-keypairs": "^1.0.0",
-    "ripple-lib": "^1.6.4",
+    "ripple-lib": "^1.7.1",
     "ripplelib": "^1.2.5",
     "sjcl": "^1.0.8",
     "underscore": "^1.9.2"
