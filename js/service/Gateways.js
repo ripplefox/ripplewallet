@@ -47,6 +47,15 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           ],
           logo : "img/gateway/gatehub.png"
         },
+        "xagfans.com" : {
+          name : 'xagfans.com',
+          website : 'https://xagfans.com/',
+          service : [],
+          assets : [
+            {code : 'XAG', issuer : 'rpG9E7B3ocgaKqG7vmrsu3jmGwex8W4xAG', list: true}
+          ],
+          logo : "img/coin/xag.png"
+        },
         "dxperts.org" : {
           name : 'dxperts.org',
           website : 'https://dxperts.org/',
