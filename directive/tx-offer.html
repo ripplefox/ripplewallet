@@ -19,6 +19,7 @@
 				
 				<effects></effects>
 		</div>
-		<div class="hash"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
+		<div class="hash" ng-show="currentNetwork.networkType != 'xag'"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
+		<div class="hash" ng-show="currentNetwork.networkType == 'xag'"> <a href="https://scan.xrpgen.com/#!/tx?data={{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>
 	</div>
 </div>
