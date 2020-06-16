@@ -126,9 +126,11 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
       get gateways() {
         if ($rootScope.currentNetwork.networkType == 'xrpTest') {
           return _testingnet;
-        } else {
-          return _gateways;
+        } 
+        if ($rootScope.currentNetwork.networkType == 'xag') {
+          return {};
         }
+        return _gateways;
       },
       
       get defaultTradeAssets() {
