@@ -47,6 +47,24 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           ],
           logo : "img/gateway/gatehub.png"
         },
+        "sologenic.com" : {
+          name : 'sologenic.com',
+          website : 'https://www.sologenic.com/',
+          service : [],
+          assets : [
+            {code : '534F4C4F00000000000000000000000000000000', issuer : 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz', list: true}
+          ],
+          logo : "img/gateway/sologenic.png"
+        },
+        "xrptoolkit.com" : {
+          name : 'xrptoolkit.com',
+          website : 'https://www.xrptoolkit.com/',
+          service : [],
+          assets : [
+            {code : 'XTK', issuer : 'rXTKdHWuppSjkbiKoEv53bfxHAn1MxmTb', list: true}
+          ],
+          logo : "img/gateway/xrptoolkit.png"
+        },
         "xagfans.com" : {
           name : 'xagfans.com',
           website : 'https://xagfans.com/',
