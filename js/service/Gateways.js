@@ -52,7 +52,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           website : 'https://www.sologenic.com/',
           service : [],
           assets : [
-            {code : '534F4C4F00000000000000000000000000000000', issuer : 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz', list: true}
+            {code : '534F4C4F00000000000000000000000000000000', issuer : 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz', list: true, name: "SOLO", logo: "img/coin/solo.png"}
           ],
           logo : "img/gateway/sologenic.png"
         },
@@ -61,7 +61,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           website : 'https://www.xrptoolkit.com/',
           service : [],
           assets : [
-            {code : 'XTK', issuer : 'rXTKdHWuppSjkbiKoEv53bfxHAn1MxmTb', list: true}
+            {code : 'XTK', issuer : 'rXTKdHWuppSjkbiKoEv53bfxHAn1MxmTb', list: true, name: "Kudos", logo: "img/coin/xtk.png"}
           ],
           logo : "img/gateway/xrptoolkit.png"
         },
