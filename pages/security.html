@@ -5,6 +5,7 @@
 				<a href="javascript:" ng-class="{active: mode=='security'}" ng-click="mode='security'">{{'security' | translate}}</a>
 				<a href="javascript:" ng-class="{active: mode=='domain'}" ng-click="mode='domain'">{{'home_domain' | translate}}</a>
 				<a href="javascript:" ng-class="{active: mode=='payment'}" ng-click="mode='payment'">{{'payment_flag' | translate}}</a>
+				<a href="javascript:" ng-class="{active: mode=='messagekey'}" ng-click="mode='messagekey'">Message Key</a>
 				<a href="javascript:" ng-class="{active: mode=='delete'}" ng-click="mode='delete'">{{'AccountDelete' | translate}}</a>
 			</div>
 		</div>
@@ -111,6 +112,38 @@
 		  </div>
 		  <div class="s-alert s-alert--success row__message" ng-show="flags_done" translate="flags_done">
 				Settings updated.
+			</div>
+		</div>
+		
+		<div class="col-sm-9" ng-show="mode=='messagekey'">
+			<label translate="important">Important:</label>
+			<p class="hint" translate="messagekey_desc">Public key for sending encrypted messages to this account. </p>
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-xs-12 col-md-10">
+					<label>Message Key</label>
+					<input class="form-control" type="text" ng-model="messagekey" />
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-xs-2 col-md-2">
+					<label class="switch marginleft">
+						<input type="checkbox" ng-model="isEthAddress" ng-disabled="messagekey_working">
+						<span class="slider round"></span>
+					</label>
+				</div>
+				<div class="col-xs-8 col-md-8">
+					<label>Ethereum address</label>
+					<p>Append 02 + 24 zeros to the uppercased character set to produce.</p>
+				</div>
+			</div>
+			<div class="s-alert s-alert--success row__message" ng-show="messagekey_done" translate="flags_done">
+				Settings updated.
+			</div>
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-xs-12 col-sm-5">
+					<a class="btn btn-info btn-block btn-big" href="javascript:" ng-disabled="messagekey_working"
+						ng-click="setMessagekey()" translate="save">Save</a>
+				</div>
 			</div>
 		</div>
 		

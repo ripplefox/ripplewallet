@@ -271,7 +271,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             }
             resolve(result);
           } catch (err) {
-            console.info('changeSettings', err);
+            console.info('changeSettings', err.data || err);
             reject(err);
           }
         });
@@ -404,12 +404,14 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           order.quantity.counterparty = options.base_issuer;
         } else {
           order.quantity.currency = 'XRP';
+          order.quantity.value = round(order.quantity.value, 6).toString();
         }
         if (options.counter_issuer) {
           order.totalPrice.currency = options.counter;
           order.totalPrice.counterparty = options.counter_issuer;
         } else {
           order.totalPrice.currency = 'XRP';
+          order.totalPrice.value = round(order.totalPrice.value, 6).toString();
         }
         order.memos = [{data: _client, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {

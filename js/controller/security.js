@@ -24,6 +24,7 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       XrpApi.checkSettings().then(data => {
         console.log(data);
         $scope.domain = data.domain;
+        $scope.messagekey = data.messageKey;
         $scope.disallowxrp = !!data.disallowIncomingXRP;
         $scope.requiretag = !!data.requireDestinationTag;
         $scope.defaultrippling = !!data.defaultRipple;
@@ -78,6 +79,27 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       });
     };
     
+    $scope.messagekey = '';
+    $scope.messagekey_working = false;
+    $scope.messagekey_done = false;
+    $scope.setMessagekey = function() {
+      $scope.error = '';
+      $scope.messagekey_done = false;
+      $scope.messagekey_working = true;
+      if ($scope.isEthAddress) {
+        $scope.messagekey = '02' + '0'.repeat(24) + $scope.messagekey.slice(2).toUpperCase();
+      }
+      XrpApi.changeSettings({'messageKey': $scope.messagekey}).then(result => {
+        $scope.messagekey_working = false;
+        $scope.messagekey_done = true;
+        $rootScope.$apply();
+      }).catch(err => {
+        $scope.messagekey_working = false;
+        console.error(err);
+        $scope.error = err.message;
+        $rootScope.$apply();
+      });
+    };
     
     $scope.delete_warning = true;
     $scope.toggleWarning = function() {
@@ -99,6 +121,5 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
         $rootScope.$apply();
       });
     };
-    
     
   } ]);

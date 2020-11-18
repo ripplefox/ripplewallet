@@ -266,6 +266,7 @@ var translate_jp = {
   setrippling : '資産のスワップ（Rippling）を許可します。危険な操作です。発行者以外の場合にはつけないでください。',
   flags_done  : '設定成功',
   manage_data : 'データ',
+  messagekey_desc : 'このアカウントに暗号化されたメッセージを送信するための公開鍵。',
   back           : '戻る',
 
   AccountDelete : 'アカウントを削除する',

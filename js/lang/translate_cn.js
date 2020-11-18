@@ -237,7 +237,7 @@ var translate_cn = {
   public_net : '公共网络',
   test_net   : '测试网络',
   other_net  : '自定义',
-  'Ripple Public Network' : '公共网络',
+  'Ripple Public Network' : '瑞波公网',
   'Ripple Test Network' : '测试网络',
   'User defined' : '自定义',
   public_url : '瑞波公网节点',
@@ -265,6 +265,7 @@ var translate_cn = {
   requiretag  : '对方转账时提示，支付需要提供标签号。',
   setrippling : '允许资产置换（Rippling）。此为危险操作，不要打开，除非你是发行方。',
   flags_done  : '设置成功',
+  messagekey_desc : '用于向该帐户发送加密消息的公钥。',
   manage_data : '数据',
   back        : '返回',
   

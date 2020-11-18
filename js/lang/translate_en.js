@@ -265,6 +265,7 @@ var translate_en = {
   requiretag  : 'Requires incoming payments to specify a destination tag.',
   setrippling : 'Enable rippling on this account’s trust lines by default. Do NOT enable it unless you are a issuer.',
   flags_done  : 'Settings updated',
+  messagekey_desc : 'Public key for sending encrypted messages to this account. ',
   manage_data : 'Manage Data',
   back           : 'Back',
 
