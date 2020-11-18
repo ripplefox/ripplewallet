@@ -1,7 +1,7 @@
 {
   "name": "ReleaseVersion",
-  "version": "2.4.0",
-  "beta": "2.5.0",
+  "version": "2.5.0",
+  "beta": "2.6.0",
   "message": {
   	"en" : "New version detected, you can download from https://github.com/ripplefox/ripplewallet/releases",
   	"cn" : "发现钱包新版本，请从github网站或QQ群文件里下载最新版本。",
