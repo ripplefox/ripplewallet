@@ -1,4 +1,4 @@
-# Warning
+# Warning (RippleFox was hacked!!!)
 
 Ripplefox's godaddy account was hacked. The control of the ripplefox.com domain name was lost. The control of the mailbox was lost too! We have lost the ripplefox account on github (this may be the last commit we can do).  Please do not trust the email sent by ripplefox.com or the code of ripplefox until we get our domain back.
 
