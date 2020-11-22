@@ -18,7 +18,7 @@
     "nwjs-builder-phoenix": "^1.15.0"
   },
   "dependencies": {
-    "angular": "^1.7.9",
+    "angular": "^1.8.0",
     "angular-qrcode": "^7.2.0",
     "angular-route": "^1.7.9",
     "angular-translate": "^2.18.2",
