@@ -1,14 +1,3 @@
-# Warning (RippleFox was hacked!!!)
-
-Ripplefox's godaddy account was hacked. The control of the ripplefox.com domain name was lost. The control of the mailbox was lost too! We have lost the ripplefox account on github (this may be the last commit we can do).  Please do not trust the email sent by ripplefox.com or the code of ripplefox until we get our domain back.
-
-We are currently communicating with the godaddy team to restore service.
-
-目前我们已经失去了对ripplefox.com域名的控制。域名邮箱已经被更改，并导致我们失去了github上ripplefox的账号。这可能是我们可以做的最后一个commit。
-
-请大家不要理会ripplefox.com发出的邮件和ripplefox的相关代码，以防诈骗。我们正在努力重获godaddy账号的控制权。
-
-
 # RippleFox Wallet (A Desktop Client for Ripple)
 
 Foxlet allows you to encrypt your mnemonic/secret key and store it as a file locally on your computer. You can use it on Windows, Linux and Mac.
