@@ -367,6 +367,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       XrpApi.cancelOffer(offer_id).then(result => {
         $scope.refreshOffer();
       }).catch(err => {
+        $scope.offerDelete[offer_id] = false;
         $scope.cancel_error = err.message;
       });
     }
