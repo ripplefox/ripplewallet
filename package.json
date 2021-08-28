@@ -1,6 +1,6 @@
 {
   "name": "FoxletRipple",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "RippleFox Client",
   "main": "main.js",
   "chromium-args": "--disable-gpu",
@@ -38,7 +38,7 @@
     "underscore": "^1.9.2"
   },
   "build": {
-    "nwVersion": "0.45.2",
+    "nwVersion": "0.52.0",
     "win": {
       "productName": "FoxletRipple",
       "companyName": "RippleFox",

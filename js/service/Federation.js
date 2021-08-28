@@ -3,7 +3,7 @@ myApp.factory('Federation', ['$rootScope', '$q', '$http',  function($rootScope, 
   var promises = {};
 
   function get(domain) {
-    if (promises[domain]) {
+    if (promises[domain] && promises[domain].$$state.status != 2) {
       return promises[domain];
     }
 
