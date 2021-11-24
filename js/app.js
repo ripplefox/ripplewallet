@@ -227,7 +227,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
   }]);
 
 
-/* exported round */
+/* exported common functions */
 var round = function(dight, howMany) {
   if(howMany) {
     dight = Math.round(dight * Math.pow(10, howMany)) / Math.pow(10, howMany);
@@ -236,3 +236,52 @@ var round = function(dight, howMany) {
   }
   return dight;
 }
+
+/** Check if string is HEX, requires a 0x in front */
+var isHexStrict = function (hex) {
+    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-)?0x[0-9a-f]*$/i.test(hex));
+};
+
+/** Check if string is HEX */
+var isHex = function (hex) {
+    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
+};
+
+/** Remove 0x prefix from string */
+var stripHexPrefix = function (str) {
+    if (str !== 0 && isHex(str))
+        return str.replace(/^(-)?0x/i, '$1')
+    return str;
+};
+
+var hexToAscii = function(hex) {
+    if (!isHex(hex))
+        throw new Error('The parameter must be a valid HEX string.');
+
+    var str = "";
+    var i = 0, l = hex.length;
+    if (hex.substring(0, 2) === '0x') {
+        i = 2;
+    }
+    for (; i < l; i+=2) {
+        var code = parseInt(hex.substr(i, 2), 16);
+        if (code > 0) {
+          str += String.fromCharCode(code);
+        }
+    }
+
+    return str;
+};
+
+var asciiToHex = function(str) {
+    if(!str)
+        return "0x00";
+    var hex = "";
+    for(var i = 0; i < str.length; i++) {
+        var code = str.charCodeAt(i);
+        var n = code.toString(16);
+        hex += n.length < 2 ? '0' + n : n;
+    }
+
+    return "0x" + hex;
+};

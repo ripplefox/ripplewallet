@@ -278,6 +278,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
       
       changeTrust(code, issuer, limit, ripplingDisabled = true) {
+        if (code.length > 3 && code.length <= 20) {
+          code = stripHexPrefix(asciiToHex(code));
+          code = (code + "0000000000000000000000000000000000000000").substring(0, 40).toUpperCase();
+        }
         const trustline = {
           currency: code,
           counterparty: issuer,

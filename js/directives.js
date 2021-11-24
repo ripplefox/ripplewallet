@@ -8,7 +8,7 @@ myApp.directive('gateway', [ function() {
     scope : true,
     link : function(scope, element, attrs) {
       scope.__name = attrs.name;
-      scope.__code = attrs.code;
+      scope.__code = attrs.code.length == 40 ? hexToAscii(attrs.code) : attrs.code;
       scope.__address = attrs.address;
       scope.__website = attrs.website;
       scope.__logo = attrs.logo;
