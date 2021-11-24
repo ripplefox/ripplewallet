@@ -456,7 +456,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
       
       deleteAccount(dest_account) {
-        const localInstructions = { maxFee: '5.0'};
+        const localInstructions = { maxFee: SM.reserveIncrementXRP.toString()};
         return new Promise(async (resolve, reject) => {
           try {
             let prepared = await _remote.prepareTransaction({
@@ -466,8 +466,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             }, localInstructions);
             console.log(prepared);
             var obj = JSON.parse(prepared.txJSON);
-            obj.Fee = "5000000";
-            const {signedTransaction} = AuthenticationFactory.sign(this, JSON.stringify(obj), "5");
+            obj.Fee = "" + SM.reserveIncrementXRP + "000000";
+            const {signedTransaction} = AuthenticationFactory.sign(this, JSON.stringify(obj), SM.reserveIncrementXRP.toString());
             let result = await _remote.submit(signedTransaction, true);
             if ("tesSUCCESS" !== result.engine_result) {
               console.warn(result);
