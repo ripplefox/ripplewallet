@@ -270,7 +270,7 @@ var translate_en = {
   back           : 'Back',
 
   AccountDelete : 'Delete account',
-  merge_desc     : 'Danger operation! It transfers your {{code}} to destination account and cost you 5 {{code}}.',
+  merge_desc     : 'Danger operation! It transfers your {{code}} to destination account. Fee: ',
   account_noclean: 'Your account should have no obligations.',
   dest_account   : 'Destination Account',
   delete_warning : 'I KNOW EVERYTHING >>',

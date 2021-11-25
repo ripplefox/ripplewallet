@@ -270,7 +270,7 @@ var translate_jp = {
   back           : '戻る',
 
   AccountDelete : 'アカウントを削除する',
-  merge_desc     : '危険!該当操作はあなたが所有する{{code}}を相手側へ発送します。手数料は5 {{code}}です！',
+  merge_desc     : '危険!該当操作はあなたが所有する{{code}}を相手側へ発送します。手数料: ',
   account_noclean: 'アカウントはクレジットライン等債務関係を持たないこと。',
   dest_account   : '宛先アカウント',
   delete_warning : 'すべてのリスクを了解しました >>',

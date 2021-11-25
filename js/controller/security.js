@@ -1,7 +1,7 @@
 /* global myApp */
 
-myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory', '$translate', 'Id', 'XrpApi',
-  function($scope, $rootScope, AuthenticationFactory, $translate, Id, XrpApi) {
+myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory', '$translate', 'Id', 'XrpApi', 'ServerManager',
+  function($scope, $rootScope, AuthenticationFactory, $translate, Id, XrpApi, SM) {
     $scope.mode = 'security';
 
     $scope.keyAmount = AuthenticationFactory.secretAmount;
@@ -101,6 +101,7 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       });
     };
     
+    $scope.cost = SM.reserveIncrementXRP;
     $scope.delete_warning = true;
     $scope.toggleWarning = function() {
       $scope.delete_warning = !$scope.delete_warning;

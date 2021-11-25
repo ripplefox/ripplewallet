@@ -149,7 +149,7 @@
 		
 		<div class="col-sm-9" ng-show="mode=='delete'">
 			<label translate="important">Important:</label>
-			<p class="hint" translate="merge_desc" translate-values="currentNetwork.coin">Danger operation! It transfers the native balance (the amount of XRP an account holds) to another account and removes the source account from the ledger.</p>
+			<p class="hint"><span translate="merge_desc" translate-values="currentNetwork.coin"></span><span>{{cost}} {{currentNetwork.coin.code}}</span></p>
 
 			<div class="row" style="margin-bottom: 20px;">
 				<div class="col-xs-12 col-md-10">
