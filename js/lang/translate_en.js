@@ -309,7 +309,7 @@ var translate_en = {
   new_version_available: 'New version available',
 
   /** Error **/
-  NotFoundError : 'The resource was not found. You must have at least 20 {{name}} in your account for it to be activated! Each trust line or offer requires a 5 {{name}}  reserve in addition. To make things easy, send at least 31 {{name}}s to the account.',
+  NotFoundError : 'The resource was not found. You must have some {{code}} in your account for it to be activated!',
   NotConnectedError : 'Not connected, please retry later.',
   NoRippleTXT: 'Ripple.txt was not found.',
   NoFederationUrl: 'Federation service url was not provided.',

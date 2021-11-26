@@ -56,12 +56,21 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           ],
           logo : "img/coin/xag.png"
         },
+        "sologenic.com" : {
+          name : 'sologenic.com',
+          website : 'https://www.sologenic.com/',
+          service : [],
+          assets : [
+            {code : '534F4C4F00000000000000000000000000000000', issuer : 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz', list: true}
+          ],
+          logo : "img/gateway/sologenic.jpg"
+        },
         "dxperts.org" : {
           name : 'dxperts.org',
           website : 'https://dxperts.org/',
           service : [],
           assets : [
-            {code : 'DXP', issuer : 'rM8AhEC5Zz46ecWC8KwkoMugY1KwFQqhZT', list: true}
+            {code : 'DXP', issuer : 'rM8AhEC5Zz46ecWC8KwkoMugY1KwFQqhZT'}
           ],
           logo : "img/gateway/dxperts.png"
         }

@@ -309,7 +309,7 @@ var translate_cn = {
   new_version_available: '发现新版本',
 
   /** Error **/
-  NotFoundError : '瑞波网络未找到该账号，请先激活此账号。激活需要至少20 {{code}}。每个授信和委托单需要额外冻结5 {{code}}，建议至少用31 {{code}}完成激活。',
+  NotFoundError : '瑞波网络未找到该账号，请先激活此账号。',
   NotConnectedError : '未连接到服务器，请过一会儿再试。',
   NoRippleTXT: '网站未提供ripple.txt文件',
   NoFederationUrl: '网站未提供联邦协议服务',

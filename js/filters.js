@@ -67,3 +67,9 @@ myApp.filter('rpcurrency', function($filter) {
     return amount.issuer().to_json() ? amount.currency().to_human() : nativecode;
   }
 });
+
+myApp.filter('fmtcode', function($filter) {
+  return function(input) {
+    return input.length == 40 ? hexToAscii(input) : input;
+  }
+});

@@ -309,7 +309,7 @@ var translate_jp = {
   new_version_available: '新しいバージョンが見つかりました',
 
   /** Error **/
-  NotFoundError : '該当アカウントが見つかりませんでした。アクティブ化してください。アクティブ化には20枚以上の{{code}}が必要です。与信する、注文するたびにはさらに5枚の{{code}}が必要です。31枚以上の {{code}}でアクティブ化することをお勧めします。',
+  NotFoundError : '該当アカウントが見つかりませんでした。アクティブ化してください。',
   NotConnectedError : 'サーバーに接続されていません。しばらくしてからもう一度お試しください。',
   NoRippleTXT: '該当サイトはripple.txtファイルを提供していません',
   NoFederationUrl: '該当サイトはFederation Protocolが適用されていません',
