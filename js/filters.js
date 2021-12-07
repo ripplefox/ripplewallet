@@ -64,7 +64,9 @@ myApp.filter('rpcurrency', function($filter) {
   return function(input, nativecode) {
     var amount = ripple.Amount.from_json(input);
     nativecode = nativecode || 'XRP';
-    return amount.issuer().to_json() ? amount.currency().to_human() : nativecode;
+    var code = amount.issuer().to_json() ? amount.currency().to_human() : nativecode;
+    return code.length == 40 ? hexToAscii(code) : code;
+
   }
 });
 

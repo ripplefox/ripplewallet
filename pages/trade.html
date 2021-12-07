@@ -21,7 +21,7 @@
 									</div>
 									<div class="AssetCard__content">
 										<div class="AssetCard__header">
-											<span class="AssetCard__code">{{base_code}}</span> 
+											<span class="AssetCard__code">{{base_code | fmtcode}}</span> 
 											<span class="AssetCard__federation">{{base.name}}</span>
 										</div>
 										<p class="AssetCard__issuerAccountId" title="{{__address}}">{{base_issuer}}</p>
@@ -40,7 +40,7 @@
 									</div>
 									<div class="AssetCard__content">
 										<div class="AssetCard__header">
-											<span class="AssetCard__code">{{counter_code}}</span> 
+											<span class="AssetCard__code">{{counter_code | fmtcode}}</span> 
 											<span class="AssetCard__federation">{{counter.name}}</span>
 										</div>
 										<p class="AssetCard__issuerAccountId" title="{{__address}}">{{counter_issuer}}</p>
@@ -105,13 +105,13 @@
 		<div class="offers_pad row" ng-show="!show_pair">
 			<div class="bidoffer col-xs-12 col-sm-6">
 				<div class="listings">
-					<h3 class="manager_title">{{'buy' | translate}} {{base_code}}</h3>
+					<h3 class="manager_title">{{'buy' | translate}} {{base_code | fmtcode}}</h3>
 					<div class="row input-field">
 							<div class="col-xs-4 input-lable" translate="order_amount">Amount</div>
 							<div class="col-xs-8">
 								<div class="input-group">
 									<input type="text" class="form-control" ng-model="buy_amount" ng-change="calculate('buy_amount')">
-									<div class="input-group-addon addon-font">{{base_code}}</div>
+									<div class="input-group-addon addon-font">{{base_code | fmtcode}}</div>
 								</div>
 							</div>
 					</div>
@@ -120,7 +120,7 @@
 							<div class="col-xs-8">
 								<div class="input-group">
 									<input type="text" class="form-control" ng-model="buy_price" ng-change="calculate('buy_price')">
-									<div class="input-group-addon addon-font">{{counter_code}}</div>
+									<div class="input-group-addon addon-font">{{counter_code | fmtcode}}</div>
 								</div>
 							</div>
 					</div>
@@ -129,62 +129,62 @@
 							<div class="col-xs-8">
 								<div class="input-group">
 									<input type="text" class="form-control" ng-model="buy_volume" ng-change="calculate('buy_volume')">
-									<div class="input-group-addon addon-font">{{counter_code}}</div>
+									<div class="input-group-addon addon-font">{{counter_code | fmtcode}}</div>
 								</div>
 							</div>
 					</div>
 					<div class="row submit-field" ng-hide="fatfingerbuy">
 							<div class="overview">
-								{{'you_have' | translate}} {{getBalance(counter_code, counter_issuer)}} {{counter_code}}
+								{{'you_have' | translate}} {{getBalance(counter_code, counter_issuer)}} {{counter_code | fmtcode}}
 							</div>
 							<div class="s-alert s-alert--info" ng-show="buy_state=='submitted'" translate="submitted">Transaction submitted.</div>
 							<div class="s-alert s-alert--success" ng-show="buy_state=='success'" translate="offer_success">Offer successfully created</div>
 							<div class="s-alert s-alert--error" ng-show="buy_fail">{{buy_fail}}</div>
-							<button class="btn btn-success" ng-click="offerWithCheck('buy')" ng-disabled="buying">{{'buy' | translate}} {{base_code}}</button>
+							<button class="btn btn-success" ng-click="offerWithCheck('buy')" ng-disabled="buying">{{'buy' | translate}} {{base_code | fmtcode}}</button>
 					</div>
 					<div class="row submit-field" ng-show="fatfingerbuy">
 							<div class="s-alert s-alert--warning" translate="fatfinger">CAUTION: Your order is far off from the current market price.</div>
-							<button class="btn btn-warning" ng-click="offer('buy')">{{'buy' | translate}} {{base_code}}</button>
+							<button class="btn btn-warning" ng-click="offer('buy')">{{'buy' | translate}} {{base_code | fmtcode}}</button>
 							<button class="btn btn-default marginleft" ng-click="fatfingerbuy=false">{{'cancel' | translate}}</button>
 					</div>
 				</div>
 			</div>
 			<div class="askoffer col-xs-12 col-sm-6">
 				<div class="listings">
-					<h3 class="manager_title">{{'sell' | translate}} {{base_code}}</h3>
+					<h3 class="manager_title">{{'sell' | translate}} {{base_code | fmtcode}}</h3>
 					<div class="row input-field">
 							<div class="col-xs-4 input-lable" translate="order_amount">Amount</div>
 							<div class="col-xs-8 input-group">
 									<input type="text" class="form-control" ng-model="sell_amount" ng-change="calculate('sell_amount')">
-									<div class="input-group-addon addon-font">{{base_code}}</div>
+									<div class="input-group-addon addon-font">{{base_code | fmtcode}}</div>
 							</div>
 					</div>
 					<div class="row input-field">
 							<div class="col-xs-4 input-lable" translate="price_of_each">price_of_each</div>
 							<div class="col-xs-8 input-group">
 								<input type="text" class="form-control" ng-model="sell_price" ng-change="calculate('sell_price')">
-								<div class="input-group-addon addon-font">{{counter_code}}</div>
+								<div class="input-group-addon addon-font">{{counter_code | fmtcode}}</div>
 							</div>
 					</div>
 					<div class="row input-field">
 							<div class="col-xs-4 input-lable">{{'order_value' | translate}}</div>
 							<div class="col-xs-8 input-group">
 								<input type="text" class="form-control" ng-model="sell_volume" ng-change="calculate('sell_volume')">
-								<div class="input-group-addon addon-font">{{counter_code}}</div>
+								<div class="input-group-addon addon-font">{{counter_code | fmtcode}}</div>
 							</div>
 					</div>
 					<div class="row submit-field" ng-hide="fatfingersell">
 							<div class="overview">
-								{{'you_have' | translate}} {{getBalance(base_code, base_issuer)}} {{base_code}}
+								{{'you_have' | translate}} {{getBalance(base_code, base_issuer)}} {{base_code | fmtcode}}
 							</div>
 							<div class="s-alert s-alert--info" ng-show="sell_state=='submitted'" translate="submitted">Transaction submitted</div>
 							<div class="s-alert s-alert--success" ng-show="sell_state=='success'" translate="offer_success">Offer successfully created</div>
 							<div class="s-alert s-alert--error" ng-show="sell_fail">{{sell_fail}}</div>
-							<button class="btn btn-success" ng-click="offerWithCheck('sell')" ng-disabled="selling">{{'sell' | translate}} {{base_code}}</button>
+							<button class="btn btn-success" ng-click="offerWithCheck('sell')" ng-disabled="selling">{{'sell' | translate}} {{base_code | fmtcode}}</button>
 					</div>
 					<div class="row submit-field" ng-show="fatfingersell">
 							<div class="s-alert s-alert--warning" translate="fatfinger">CAUTION: Your order is far off from the current market price.</div>
-							<button class="btn btn-warning" ng-click="offer('sell')">{{'sell' | translate}} {{base_code}}</button>
+							<button class="btn btn-warning" ng-click="offer('sell')">{{'sell' | translate}} {{base_code | fmtcode}}</button>
 							<button class="btn btn-default marginleft" ng-click="fatfingersell=false">{{'cancel' | translate}}</button>
 					</div>
 				</div>
@@ -211,9 +211,9 @@
 							<div class="col-xs-2 right" translate="action">Action</div>
 						</div>
 						<div class="row" ng-repeat="item in offers.bid" ng-class="{cancelling: isCancelling(item.id)}">
-							<div class="col-xs-3 right">{{item.price | fmtnum}} {{item.total.currency}}</div>
-							<div class="col-xs-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency}}</div>
-							<div class="col-xs-4 right">{{item.total.value | fmtnum}} {{item.total.currency}}</div>
+							<div class="col-xs-3 right">{{item.price | fmtnum}} {{item.total.currency | fmtcode}}</div>
+							<div class="col-xs-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency | fmtcode}}</div>
+							<div class="col-xs-4 right">{{item.total.value | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-xs-2 action">
 								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(item.id)"></i>
 								<a href="javascript:" ng-click="cancel(item.id, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
@@ -233,9 +233,9 @@
 							<div class="col-xs-2 right" translate="action">Action</div>
 						</div>
 						<div class="row" ng-repeat="item in offers.ask" ng-class="{cancelling: isCancelling(item.id)}">
-							<div class="col-xs-3 right">{{item.price | fmtnum}} {{item.total.currency}}</div>
-							<div class="col-xs-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency}}</div>
-							<div class="col-xs-4 right">{{item.total.value | fmtnum}} {{item.total.currency}}</div>
+							<div class="col-xs-3 right">{{item.price | fmtnum}} {{item.total.currency | fmtcode}}</div>
+							<div class="col-xs-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency | fmtcode}}</div>
+							<div class="col-xs-4 right">{{item.total.value | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-xs-2 action">
 								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(item.id)"></i>
 								<a href="javascript:" ng-click="cancel(item.id, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
@@ -256,9 +256,9 @@
 						</div>
 						<div class="row" ng-repeat="(id, item) in offers.all" ng-class="{cancelling: isCancelling(id)}">
 							<div class="col-sm-1">{{item.direction | translate}}</div>
-							<div class="col-sm-3 right">{{item.price | fmtnum}} {{item.total.currency}}</div>
-							<div class="col-sm-3 right" title="{{item.quantity.counterparty}}">{{item.quantity.value | fmtnum}} {{item.quantity.currency}}</div>
-							<div class="col-sm-3 right" title="{{item.total.counterparty}}">{{item.total.value | fmtnum}} {{item.total.currency}}</div>
+							<div class="col-sm-3 right">{{item.price | fmtnum}} {{item.total.currency | fmtcode}}</div>
+							<div class="col-sm-3 right" title="{{item.quantity.counterparty}}">{{item.quantity.value | fmtnum}} {{item.quantity.currency | fmtcode}}</div>
+							<div class="col-sm-3 right" title="{{item.total.counterparty}}">{{item.total.value | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-sm-2 action">
 								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(id)"></i>
 								<a href="javascript:" ng-click="cancel(item.id, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
@@ -279,9 +279,9 @@
 					<div class="bids col-xs-12 col-sm-6">
 						<h3 class="title" translate="buy_offers">Buy offers</h3>
 						<div class="row head" ng-show="book.bids.length">
-							<div class="col-xs-4">{{'sum' | translate}} <div class="currency">{{base_code}}</div></div>
-							<div class="col-xs-4">{{'size' | translate}} <div class="currency">{{base_code}}</div></div>
-							<div class="col-xs-4">{{'bid_price' | translate}}<div class="currency">{{counter_code}}</div></div>
+							<div class="col-xs-4">{{'sum' | translate}} <div class="currency">{{base_code | fmtcode}}</div></div>
+							<div class="col-xs-4">{{'size' | translate}} <div class="currency">{{base_code | fmtcode}}</div></div>
+							<div class="col-xs-4">{{'bid_price' | translate}}<div class="currency">{{counter_code | fmtcode}}</div></div>
 						</div>
 						<div class="row" ng-class="{my: item.account == address}" title="{{item.account}}" ng-repeat="item in book.bids" ng-click="pickPrice('bid', item.price)">
 							<div class="col-xs-4">{{item.depth | number: value_precise}}</div>
@@ -294,9 +294,9 @@
 					<div class="asks col-xs-12 col-sm-6">
 						<h3 class="title" translate="sell_offers">Sell offers</h3>
 						<div class="row head" ng-show="book.asks.length">
-							<div class="col-xs-4">{{'ask_price' | translate}}<div class="currency">{{counter_code}}</div></div>
-							<div class="col-xs-4">{{'size' | translate}} <div class="currency">{{base_code}}</div></div>
-							<div class="col-xs-4">{{'sum' | translate}} <div class="currency">{{base_code}}</div></div>
+							<div class="col-xs-4">{{'ask_price' | translate}}<div class="currency">{{counter_code | fmtcode}}</div></div>
+							<div class="col-xs-4">{{'size' | translate}} <div class="currency">{{base_code | fmtcode}}</div></div>
+							<div class="col-xs-4">{{'sum' | translate}} <div class="currency">{{base_code | fmtcode}}</div></div>
 						</div>
 						<div class="row" ng-class="{my: item.account == address}" title="{{item.account}}" ng-repeat="item in book.asks" ng-click="pickPrice('ask', item.price)">
 							<div class="col-xs-4">{{item.price | number: price_precise}}</div>

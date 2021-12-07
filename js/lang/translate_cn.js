@@ -86,7 +86,7 @@ var translate_cn = {
   account_loading: '正在解析账号',
   sending_to   : '正在发送到',
   send_done    : '发送成功',
-  not_funded   : '未激活。请发送至少20个{{code}}创建该账号。建议发31个或更多。',
+  not_funded   : '未激活。建议发送至少20个{{code}}创建该账号。',
   no_send_path : '找不到你和目标账户之间的路径。',
   you_sending : '你将把{{code}}发送到',
 

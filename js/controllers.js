@@ -45,6 +45,8 @@ myApp.controller("FooterCtrl", [ '$scope', '$rootScope', '$translate', 'SettingF
     });
   }]);
 
+
+/* Not use anymore */
 myApp.controller("HomeCtrl", ['$scope', '$rootScope',
   function($scope, $rootScope) {
   

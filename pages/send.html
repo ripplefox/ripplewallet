@@ -30,14 +30,14 @@
 													<div class="dropdown">
 												    <button class="btn btn-default dropdown-toggle form-control nopadding" ng-disabled="!currencies.length" type="button" data-toggle="dropdown">
 												    	<div class="content" style="">
-												    		<div class="currency">{{asset.code}} </div>
+												    		<div class="currency">{{asset.code | fmtcode}} </div>
 												    		<div class="dropdown-addon" ng-show="currencies.length"><i class="fa fa-sort-desc" aria-hidden="true"></i></div>
 												    	</div>
 												    </button>
 												    <ul class="dropdown-menu" role="menu">
 												    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
 												      <li role="presentation" ng-repeat="code in currencies">
-												      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code}}</a>
+												      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code | fmtcode}}</a>
 												      </li>
 												    </ul>
 												  </div>
@@ -59,7 +59,7 @@
 								</div>
 								<div class="row noborder">
 									<div ng-show="asset.code == native.code" class="col-xs-12 col-sm-6 col-md-6">
-										<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="invalid_address || invalid_amount || invalid_tag">{{'send' | translate}} {{asset.code}}</button>
+										<button type="submit" class="btn btn-block btn-success" ng-click="pickPath(asset.code)" ng-disabled="invalid_address || invalid_amount || invalid_tag">{{'send' | translate}} {{asset.code | fmtcode}}</button>
 									</div>
 								</div>
 					</group>
@@ -105,10 +105,10 @@
 							<div ng-show="asset.code == native.code && is_federation && extra_fields" class="col-xs-12 col-sm-6 col-md-4">
 								<div class="am">
 									<span class="amnt">{{asset.amount}}</span>
-									<span class="currency">{{asset.code}}</span>
-									<div class="ex">(<span class="rate">1</span><span class="pair">{{asset.code}}/{{asset.code}}</span>)</div>
+									<span class="currency">{{asset.code | fmtcode}}</span>
+									<div class="ex">(<span class="rate">1</span><span class="pair">{{asset.code | fmtcode}}/{{asset.code | fmtcode}}</span>)</div>
 								</div>
-								<button type="submit" ng-click="pickPath(asset.code)" class="btn btn-block btn-success">{{'send' | translate}} {{asset.code}}</button>
+								<button type="submit" ng-click="pickPath(asset.code)" class="btn btn-block btn-success">{{'send' | translate}} {{asset.code | fmtcode}}</button>
 							</div>
 							
 							<div class="message" ng-show="!paths.length && asset.code != native.code">{{ 'no_send_path' | translate}}</div>
@@ -116,10 +116,10 @@
 							<div ng-repeat="alt in paths" class="col-xs-12 col-sm-6 col-md-4">
 								<div class="am">
 									<span class="amnt">{{alt.value}}</span>
-									<span class="currency">{{alt.code}}</span>
-									<div class="ex">(<span class="rate">{{alt.rate}}</span><span class="pair">{{asset.code}}/{{alt.code}}</span>)</div>
+									<span class="currency">{{alt.code | fmtcode}}</span>
+									<div class="ex">(<span class="rate">{{alt.rate}}</span><span class="pair">{{asset.code | fmtcode}}/{{alt.code | fmtcode}}</span>)</div>
 								</div>
-								<button type="submit" ng-click="pickPath(alt.code)" class="btn btn-block btn-success">{{'send' | translate}} {{alt.code}}</button>
+								<button type="submit" ng-click="pickPath(alt.code)" class="btn btn-block btn-success">{{'send' | translate}} {{alt.code | fmtcode}}</button>
 							</div>
 					</div>
 					<div class="row pathupdate" ng-show="found">
@@ -157,9 +157,9 @@
 							<div class="extra" ng-show="real_address && real_address != input_address">{{real_address}}</div>
 						</div>
 						<p translate="will_receive">Recipient will receive</p>
-						<p class="amount_feedback"><span class="value">{{asset.amount}} </span><span class="currency">{{asset.code}}</span></p>
+						<p class="amount_feedback"><span class="value">{{asset.amount}} </span><span class="currency">{{asset.code | fmtcode}}</span></p>
 						<p translate="pay_most">You will pay at most</p>
-						<p class="amount_feedback"><span class="value">{{path.value}} </span><span class="currency">{{path.code}}</span><span ng-show="path.origin">± 1%</span></p>
+						<p class="amount_feedback"><span class="value">{{path.value}} </span><span class="currency">{{path.code | fmtcode}}</span><span ng-show="path.origin">± 1%</span></p>
 						<p translate="are_you_sure">Are you sure?</p>
 					</div>
 					

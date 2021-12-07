@@ -37,8 +37,8 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
       requiredLogin : false
     }
   }).when('/', {
-    templateUrl : 'pages/home.html',
-    controller : 'HomeCtrl',
+    templateUrl : 'pages/balance.html',
+    controller : 'BalanceCtrl',
     access : {
       requiredLogin : true
     }
