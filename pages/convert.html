@@ -23,7 +23,7 @@
 										    <ul class="dropdown-menu" role="menu">
 										    	<li role="presentation"><a role="menuitem" href="" ng-click="pickCode(native.code)">{{native.code}}</a></li>
 										      <li role="presentation" ng-repeat="code in currencies">
-										      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code}}</a>
+										      	<a role="menuitem" href="" ng-click="pickCode(code)">{{code | fmtcode}}</a>
 										      </li>
 										    </ul>
 										  </div>

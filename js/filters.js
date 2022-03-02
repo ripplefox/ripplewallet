@@ -72,6 +72,6 @@ myApp.filter('rpcurrency', function($filter) {
 
 myApp.filter('fmtcode', function($filter) {
   return function(input) {
-    return input.length == 40 ? hexToAscii(input) : input;
+    return input && input.length == 40 ? hexToAscii(input) : input;
   }
 });
