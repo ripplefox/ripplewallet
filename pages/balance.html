@@ -35,12 +35,17 @@
 				</tbody>
 				<tbody ng-repeat="(code, sublines) in lines">
 					<tr class="BalancesTable__row" ng-repeat-start="(issuer, line) in sublines">
-						<td ng-init="gateway=getGateway(code, line.issuer)">
-							<gateway name="{{gateway.name}}" logo="{{gateway.logo}}" website="{{gateway.website}}"
-								code="{{code}}" address="{{line.issuer}}"></gateway>
+						<td ng-init="gateway=getGateway(code, line.issuer)">							
+							<gateway name="{{gateway.name}}" logo="{{gateway.logo}}" website="{{gateway.website}}" code="{{code}}" address="{{line.issuer}}"></gateway>
 						</td>
 						<td class="BalancesTable__row__amount">
-							<span> {{line.balance | number : 6}}</span></td>
+							<span> {{line.balance | number : 6}}</span>
+							<div>
+								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="resolveDeposit(code, line.issuer)" ng-show="hasService(code, line.issuer)">{{'deposit' | translate}}</a>
+								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="goSend(code, line.issuer)" ng-show="hasService(code, line.issuer)">{{'withdraw' | translate}}</a>
+								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="goTrade(code, line.issuer)">{{'trade' | translate}}</a>
+							</div>							
+						</td>
 						<td>
 							<span class="BalancesTable__row__limit">{{line.limit | number : 0}}</span><br/>
 							<span class="BalancesTable__row__removeLink" translate="trust_noremove_desc" ng-show="line.limit == 0 && line.ripplingDisabled">No need to remove the trustline.</span>
@@ -71,6 +76,44 @@
 					</tr>
 				</tobdy>
 			</table>
+
+			<div class="popubDialog" ng-show="show_deposit">
+				<div class="popubDialog__main">
+					<div class="popubDialog__body">
+						<div class="flexRow">
+							<div class="deposit_logo">
+								<div class="content__logo" ng-hide="deposit_working || deposit_error">
+									<img class="logo__image" data-ng-src="{{deposit_info.logo}}">
+								</div>
+								<div class="content__msg" ng-show="deposit_working">
+									<i class="fa fa-spinner fa-pulse"></i>
+								</div>
+								<div class="content__msg error" ng-show="deposit_error">{{ deposit_error | translate }}</div>
+							</div>
+							<div class="deposit" ng-show="deposit_info.address">
+								<div class="content">
+									<label>{{deposit_info.network}}</label>
+									<p>{{deposit_info.address}}</p>
+									<p ng-show="deposit_info.memo">{{deposit_info.memo}}</p>
+									<p class="qrcodebox">
+										<qrcode data="{{deposit_info.address}}" size=124></qrcode>
+									</p>									
+								</div>								
+							</div>
+							<div class="deposit" ng-show="deposit_msgs.length">
+								<div class="content">									
+									<label translate="attention">Attention</label>
+									<p ng-repeat="msg in deposit_msgs">{{msg}}</p>
+								</div>								
+							</div>
+						</div>
+					</div>
+					<div class="popubDialog__close">
+						<img src="img/closeIcon.png" ng-click="show_deposit=false" alt="">
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 	</group>

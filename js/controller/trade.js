@@ -452,8 +452,4 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       return obj;
     }
 
-    function key(code, issuer) {
-      return code == $rootScope.currentNetwork.coin.code ? code : code + '.' + issuer;
-    };
-
   } ]);

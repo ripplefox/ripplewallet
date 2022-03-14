@@ -293,6 +293,7 @@ var translate_jp = {
   analyzing : '解析中……',
   will_recv : '相手側は以下の資産を受け取ります',
   can_send  : 'あなたは以下の資産を発送できます',
+  attention : '注意点',
 
   ripple : 'リップル',
   ripple_desktop_client : 'Foxlet Wallet for Ripple',
@@ -313,5 +314,6 @@ var translate_jp = {
   NotConnectedError : 'サーバーに接続されていません。しばらくしてからもう一度お試しください。',
   NoRippleTXT: '該当サイトはripple.txtファイルを提供していません',
   NoFederationUrl: '該当サイトはFederation Protocolが適用されていません',
-  'Invalid Email' : 'メールアドレスが間違っています。'
+  'Invalid Email' : 'メールアドレスが間違っています。',
+  NetworkError: 'Network error.'
 }

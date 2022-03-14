@@ -15,10 +15,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     let _remote;
     let _client = ""; // foxlet version
     
-    function key(code, issuer) {
-      return code == 'XRP' ? code : code + '.' + issuer;
-    };
-    
     function toTimestamp(rpepoch) {
       return (rpepoch + 0x386D4380) * 1000;
     };

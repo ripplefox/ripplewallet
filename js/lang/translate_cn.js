@@ -293,6 +293,7 @@ var translate_cn = {
   analyzing : '正在解析……',
   will_recv : '对方将收到',
   can_send  : '你可以发送',
+  attention : '注意事项',
 
   ripple : '瑞波',
   ripple_desktop_client : '瑞波桌面钱包',
@@ -313,5 +314,6 @@ var translate_cn = {
   NotConnectedError : '未连接到服务器，请过一会儿再试。',
   NoRippleTXT: '网站未提供ripple.txt文件',
   NoFederationUrl: '网站未提供联邦协议服务',
-  'Invalid Email' : '电子邮箱地址不正确。'
+  'Invalid Email' : '电子邮箱地址不正确。',
+  NetworkError: '网络错误'
 }

@@ -135,8 +135,4 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
       $scope.$apply();
     });
     
-    function key(code, issuer) {
-      return code == $rootScope.currentNetwork.coin.code ? code : code + '.' + issuer;
-    };
-    
   } ]);

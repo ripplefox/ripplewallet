@@ -37,6 +37,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.runOnceWhenOpen = function(){
       if (AuthenticationFactory.getContact($routeParams.name)) {
         $scope.input_address = $routeParams.name;
+      } else {
+        $scope.input_address = $routeParams.address || "";
       }
       $scope.init();
     }
@@ -212,7 +214,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
             destination: prestr,
             address: $rootScope.address,
             client : 'foxlet-' + appinfo.version,
-            network: $rootScope.currentNetwork.networkType == 'other' ? native.code : $rootScope.currentNetwork.networkType
+            network: $rootScope.currentNetwork.networkType == 'other' ? native.code : $rootScope.currentNetwork.networkType,
+            lang   : SettingFactory.getLang()
           }
         });
       }).then(res => {
@@ -267,7 +270,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         domain       : $scope.quote_domain,
         address      : $rootScope.address,
         client       : 'foxlet-' + appinfo.version,
-        network      : $rootScope.currentNetwork.networkType == 'other' ? native.code : $rootScope.currentNetwork.networkType
+        network      : $rootScope.currentNetwork.networkType == 'other' ? native.code : $rootScope.currentNetwork.networkType,
+        lang         : SettingFactory.getLang()
       };
       $scope.extra_fields.forEach(function(field){
         if (field.name) {

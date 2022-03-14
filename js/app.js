@@ -237,27 +237,7 @@ var round = function(dight, howMany) {
   return dight;
 }
 
-/** Check if string is HEX, requires a 0x in front */
-var isHexStrict = function (hex) {
-    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-)?0x[0-9a-f]*$/i.test(hex));
-};
-
-/** Check if string is HEX */
-var isHex = function (hex) {
-    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
-};
-
-/** Remove 0x prefix from string */
-var stripHexPrefix = function (str) {
-    if (str !== 0 && isHex(str))
-        return str.replace(/^(-)?0x/i, '$1')
-    return str;
-};
-
 var hexToAscii = function(hex) {
-    if (!isHex(hex))
-        throw new Error('The parameter must be a valid HEX string.');
-
     var str = "";
     var i = 0, l = hex.length;
     if (hex.substring(0, 2) === '0x') {
@@ -274,14 +254,27 @@ var hexToAscii = function(hex) {
 };
 
 var asciiToHex = function(str) {
-    if(!str)
-        return "0x00";
-    var hex = "";
-    for(var i = 0; i < str.length; i++) {
-        var code = str.charCodeAt(i);
-        var n = code.toString(16);
-        hex += n.length < 2 ? '0' + n : n;
-    }
+  var hex = "";
+  for(var i = 0; i < str.length; i++) {
+    var code = str.charCodeAt(i);
+    var n = code.toString(16);
+    hex += n.length < 2 ? '0' + n : n;
+  }
+  return (hex + "0000000000000000000000000000000000000000").substring(0, 40).toUpperCase();;
+};
 
-    return "0x" + hex;
+var realCode = function(input) {
+  return input && input.length > 3 && input.length <= 20 && input != "drops" ? asciiToHex(input) : input;
+};
+
+var fmtCode = function(input) {
+  return input && input.length == 40 ? hexToAscii(input) : input;
+};
+
+function key(code, issuer) {
+  if (!code) {
+    return "NONE";
+  }
+  code = realCode(code);
+  return !issuer ? code : code + '.' + issuer;
 };

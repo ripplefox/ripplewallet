@@ -293,6 +293,7 @@ var translate_en = {
   analyzing : 'Analyzing ...',
   will_recv : 'Recipient will receive',
   can_send  : 'You can send',
+  attention : 'Attention',
 
   ripple : 'Ripple',
   ripple_desktop_client : 'Foxlet Client for Ripple',
@@ -313,5 +314,6 @@ var translate_en = {
   NotConnectedError : 'Not connected, please retry later.',
   NoRippleTXT: 'Ripple.txt was not found.',
   NoFederationUrl: 'Federation service url was not provided.',
-  'Invalid Email' : 'Invalid Email address.'
+  'Invalid Email' : 'Invalid Email address.',
+  NetworkError: 'Network error.'
 }
