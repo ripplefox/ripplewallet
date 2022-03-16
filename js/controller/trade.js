@@ -77,14 +77,14 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
 
     var tradepair = SettingFactory.getTradepair();
     if (tradepair.base_issuer) {
-      $scope.base_code   = tradepair.base_code;
+      $scope.base_code   = realCode(tradepair.base_code);
       $scope.base_issuer = tradepair.base_issuer;
     } else {
       $scope.base_code   = $rootScope.currentNetwork.coin.code;
       $scope.base_issuer = null;
     }
     if (tradepair.counter_issuer) {
-      $scope.counter_code   = tradepair.counter_code;
+      $scope.counter_code   = realCode(tradepair.counter_code);
       $scope.counter_issuer = tradepair.counter_issuer;
     } else {
       $scope.counter_code   = $rootScope.currentNetwork.coin.code;
@@ -109,7 +109,10 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       addLinesToTradePairs();
     });
     Gateways.defaultTradeAssets.forEach(asset =>{
-      $scope.tradeAssets[key(asset.code, asset.issuer)] = asset;
+      $scope.tradeAssets[key(asset.code, asset.issuer)] = {
+        code: realCode(asset.code),
+        issuer: asset.issuer
+      }
     });
     
     
