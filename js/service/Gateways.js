@@ -81,7 +81,6 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
         "xagfans.com" : {
           name : 'xagfans.com',
           website : 'https://xagfans.com',
-          service : [],
           assets : [
             {code : 'USDT', issuer : 'rnzcChVKabxh3JLvh7qGanzqTCDW6fUSDT', list: true, name: "Tether", logo: "img/coin/usdt.svg"},
             {code : 'Ripple', issuer : 'rMeL8gHJifANAfVchSDkTUmUWjHMvCeXrp', list: true, name: "Ripple XRP", logo: "img/coin/xrp.png"},
@@ -95,7 +94,6 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
         "xrptoolkit.com" : {
           name : 'xrptoolkit.com',
           website : 'https://xrptoolkit.com',
-          service : [],
           assets : [
             {code : 'USD', issuer : 'rD9W7ULveavz8qBGM1R5jMgK2QKsEDPQVi', list: true, name: "USD (Testing)"},
             {code : 'BTC', issuer : 'rD9W7ULveavz8qBGM1R5jMgK2QKsEDPQVi', list: true, name: "BTC (Testing)"},
