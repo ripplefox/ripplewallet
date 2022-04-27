@@ -8,6 +8,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           deposit : 'https://ripplefox.com/deposit',
           assets : [
             {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "USDT", logo: "img/coin/usdt.svg", deposit: true, withdraw: "usdt@ripplefox.com"},
+            {code : 'ETH', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Ethereum", logo: "img/coin/eth.svg", deposit: true, withdraw: "eth@ripplefox.com"},
             {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Stellar Lumens", logo: "img/coin/xlm.png", deposit: true},
             {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Ultiledger", logo: "img/coin/ult.png"}
           ],
@@ -84,7 +85,8 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           assets : [
             {code : 'USDT', issuer : 'rnzcChVKabxh3JLvh7qGanzqTCDW6fUSDT', list: true, name: "Tether", logo: "img/coin/usdt.svg"},
             {code : 'Ripple', issuer : 'rMeL8gHJifANAfVchSDkTUmUWjHMvCeXrp', list: true, name: "Ripple XRP", logo: "img/coin/xrp.png"},
-            {code : 'XLM', issuer : 'rUWABeB63z3pq2L6Ke4BTQAPS6hbBtFXLM', list: true, name: "Stellar Lumens", logo: "img/coin/xlm.png"}
+            {code : 'XLM', issuer : 'rUWABeB63z3pq2L6Ke4BTQAPS6hbBtFXLM', list: true, name: "Stellar Lumens", logo: "img/coin/xlm.png"},
+            {code : 'ETH', issuer : 'rHJ6a42xxExCxyUJWQAKHdwarxVf6L9ETH', list: true, name: "Ethereum", logo: "img/coin/eth.svg"}
           ],
           logo : "img/coin/xag.png"
         }
@@ -173,14 +175,16 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           return [
             {code : 'USDT', issuer : 'rnzcChVKabxh3JLvh7qGanzqTCDW6fUSDT'},
             {code : 'Ripple', issuer : 'rMeL8gHJifANAfVchSDkTUmUWjHMvCeXrp'},
-            {code : 'XLM', issuer : 'rUWABeB63z3pq2L6Ke4BTQAPS6hbBtFXLM'}
+            {code : 'XLM', issuer : 'rUWABeB63z3pq2L6Ke4BTQAPS6hbBtFXLM'},
+            {code : 'ETH', issuer : 'rHJ6a42xxExCxyUJWQAKHdwarxVf6L9ETH'}
           ];
         }
         return [
           {code : 'CNY', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
           {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
           {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
-          {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'}
+          {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
+          {code : 'ETH', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'}
         ]
       }
     };

@@ -1,6 +1,6 @@
 {
   "name": "FoxletRipple",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "RippleFox Client",
   "main": "main.js",
   "chromium-args": "--disable-gpu",

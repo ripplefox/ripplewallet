@@ -118,27 +118,22 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     
     $scope.precise = 2;
     $scope.price_precise = 4;
-    $scope.value_precise = 2;
     $scope.precise_jutify = function() {
-      if ($scope.base_code == 'BTC') {
+      if (['BTC', 'ETH'].indexOf($scope.base_code) >= 0) {
         $scope.precise = 4;
       } else {
         $scope.precise = 2;
       }
 
-      if ($scope.counter_code == 'XLM') {
-        $scope.price_precise = 3;
-        $scope.value_precise = 3;
-      } else if (['BTC', 'ETH'].indexOf($scope.counter_code) >= 0) {
-        $scope.price_precise = 7;
-        $scope.value_precise = 4;
-      } else {
-        if ($scope.base_code == 'BTC') {
-          $scope.price_precise = 2;
-        } else {
-          $scope.price_precise = 4;
+      if (['USD', 'CNY', 'XRP', 'XLM'].indexOf($scope.counter_code) >= 0) {
+        $scope.price_precise = 4;
+        if (['BTC', 'ETH'].indexOf($scope.base_code) >= 0) {
+          $scope.price_precise = 0;
         }
-        $scope.value_precise = 2;
+      } else if (['BTC', 'ETH'].indexOf($scope.counter_code) >= 0) {
+        $scope.price_precise = 6;
+      } else {
+        $scope.price_precise = 4;
       }
     }
     $scope.precise_jutify();

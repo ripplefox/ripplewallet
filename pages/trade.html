@@ -284,7 +284,7 @@
 							<div class="col-xs-4">{{'bid_price' | translate}}<div class="currency">{{counter_code | fmtcode}}</div></div>
 						</div>
 						<div class="row" ng-class="{my: item.account == address}" title="{{item.account}}" ng-repeat="item in book.bids" ng-click="pickPrice('bid', item.price)">
-							<div class="col-xs-4">{{item.depth | number: value_precise}}</div>
+							<div class="col-xs-4">{{item.depth | number: precise}}</div>
 							<div class="col-xs-4">{{item.amount | number: precise}}</div>
 							<div class="col-xs-4">{{item.price | number: price_precise}}</div>
 						</div>
@@ -301,7 +301,7 @@
 						<div class="row" ng-class="{my: item.account == address}" title="{{item.account}}" ng-repeat="item in book.asks" ng-click="pickPrice('ask', item.price)">
 							<div class="col-xs-4">{{item.price | number: price_precise}}</div>
 							<div class="col-xs-4">{{item.amount | number: precise}}</div>
-							<div class="col-xs-4">{{item.depth | number: value_precise}}</div>
+							<div class="col-xs-4">{{item.depth | number: precise}}</div>
 						</div>
 						<div ng-show="!book.asks.length" class="message" translate="no_asks">There are currently no asks for this pair.</div>
 					</div>
