@@ -2,6 +2,14 @@
 
 myApp.factory('Gateways', ['$rootScope', function($rootScope) {
     let _gateways = {
+        "xrps.is" : {
+          name : 'xrps.io',
+          website : 'https://xrps.io/',
+          assets : [
+            {code : 'XRPS', issuer : 'rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL', list: true, name: "XRP Inscription", logo: "img/coin/xrps.png", mint: "mint@xrps.io"}
+          ],
+          logo : "img/coin/xrps.png"
+        },
         "ripplefox.com" : {
           name : 'ripplefox.com',
           website : 'https://ripplefox.com/',

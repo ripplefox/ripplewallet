@@ -12,7 +12,7 @@ myApp.factory('Federation', ['$rootScope', '$q', '$http',  function($rootScope, 
     var urls = [
       'https://www.' + domain + '/ripple.txt',
       'https://' + domain + '/ripple.txt'
-    ].reverse();
+    ];
 
     var next = function() {
       if (!urls.length) {
