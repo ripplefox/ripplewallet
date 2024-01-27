@@ -53,6 +53,7 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
       $scope.manual_name = gateway.name;
     }
     $scope.hasLine = function(code, issuer) {
+      code = realCode(code);
       if (!$rootScope.lines[code] || !$rootScope.lines[code][issuer]) {
         return false;
       }

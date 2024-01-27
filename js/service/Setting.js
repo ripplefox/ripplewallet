@@ -8,9 +8,9 @@ myApp.factory('SettingFactory', function($window) {
         translationKey: 'public_url',
         networkType: 'xrp',
         servers: [
-          {server: 's1.ripple.com', port: 443},
-          {server: 'xrplcluster.com', port: 443},
-          {server: 'xrpl.ws', port: 443}
+          {server: 'us.xrps.io', port: 443},
+          {server: 'xrpl.ws', port: 443},
+          {server: 's1.ripple.com', port: 443}
         ],
         coin: {
           name: "ripple",
@@ -41,9 +41,7 @@ myApp.factory('SettingFactory', function($window) {
         networkType: 'xag',
         servers: [
           {server: 'g1.xrpgen.com', port: 443},
-          {server: 'g2.xrpgen.com', port: 443},
-          {server: 'g3.xrpgen.com', port: 443},
-          {server: 'g4.xrpgen.com', port: 443}
+          {server: 'g2.xrpgen.com', port: 443}
         ],
         coin: {
           name: "xrpgen",

@@ -1,6 +1,6 @@
 {
   "name": "FoxletRipple",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "RippleFox Client",
   "main": "main.js",
   "chromium-args": "--disable-gpu",
@@ -10,7 +10,7 @@
     "mac": "build --tasks mac-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
     "win": "build --tasks win-x86,win-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
     "linux": "build --tasks linux-x86,linux-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
-    "start": "run --x64 --mirror https://npm.taobao.org/mirrors/nwjs/ ."
+    "start": "run --x64 --mirror https://dl.nwjs.io/ ."
   },
   "author": "ripplefox",
   "license": "ISC",
