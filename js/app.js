@@ -1,6 +1,5 @@
 /* globals angular, nw, translate_cn, translate_en, translate_jp */
 window.RippleAPI = require('ripple-lib').RippleAPI;
-window.ripple = require('ripplelib');
 window.appinfo = require('./package.json');
 
 /* exported myApp */
@@ -142,19 +141,23 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       $location.path(url);
     };
 
-    XrpApi.client = "foxlet-" + appinfo.version;
+    XrpApi.appVersion = "foxlet-" + appinfo.version;
     $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
     $rootScope.native = $rootScope.currentNetwork.coin;
     
     $rootScope.balance = "0"; //native asset;
     $rootScope.reserve = 0;
-    $rootScope.lines = {}; // lines.CNY.xxx = {code: 'CNY', issuer: 'xxx', balance: 200, limit: 1000}
+    $rootScope.lines = []; // lines.CNY.xxx = {code: 'CNY', issuer: 'xxx', balance: 200, limit: 1000}
     $rootScope.getBalance = function(code, issuer) {
       if (code == $rootScope.native.code) {
-        return $rootScope.balance;
+        code = "XRP";
       } else {
-        return $rootScope.lines[code] && $rootScope.lines[code][issuer] ? $rootScope.lines[code][issuer].balance : 0;
+        code = realCode(code);
       }
+      let asset = $rootScope.balances.find(x => {
+        return code == 'XRP' ? x.currency == 'XRP' : x.currency == code && x.issuer == issuer;
+      });
+      return asset ? Number(asset.value) : 0;
     }
     $rootScope.funded = function() {
       return $rootScope.balance !== "0";
@@ -166,13 +169,13 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       $rootScope.fed_name = "";
       $rootScope.address  = 'undefined';
       $rootScope.contacts = [];
-      $rootScope.lines = {};
+      $rootScope.balances = [];
+      $rootScope.lines = [];
       $rootScope.balance = "0";
       $rootScope.reserve = 0;
 
       $rootScope.events = [];
-      $rootScope.history = [];
-      $rootScope.balances = {};
+      $rootScope.history = [];      
       $rootScope.loadState = [];
       $rootScope.unseenNotifications = {
         count: 0
@@ -209,6 +212,10 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       SM.connect().then((name)=>{
         console.log(`ServerManager connect to ${name}`);
         XrpApi.remote = SM.remote;
+      });
+      SM.connectClient().then((name) => {
+        console.log(`Client connect to ${name}`);
+        XrpApi.client = SM.client;
       });
     } catch(e) {
       console.error("Cannot set server", SettingFactory.getNetworkType(), e);
@@ -268,7 +275,13 @@ var realCode = function(input) {
 };
 
 var fmtCode = function(input) {
-  return input && input.length == 40 ? hexToAscii(input) : input;
+  if (!input || input.length != 40) {
+    return input;
+  }
+  if (input.substring(0, 2) == "03") {
+    return input.substring(0, 7) + "...";
+  }
+  return hexToAscii(input);
 };
 
 function key(code, issuer) {

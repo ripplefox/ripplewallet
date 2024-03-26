@@ -6,11 +6,11 @@
   "chromium-args": "--disable-gpu",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dist": "build --tasks win-x86,win-x64,linux-x86,linux-x64,mac-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
-    "mac": "build --tasks mac-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
-    "win": "build --tasks win-x86,win-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
-    "linux": "build --tasks linux-x86,linux-x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
-    "start": "run --x64 --mirror https://dl.nwjs.io/ ."
+    "dist": "build --tasks win-x86,win-x64,linux-x86,linux-x64,mac-x64 --mirror https://repo.huaweicloud.com/nwjs/ .",
+    "mac": "build --tasks mac-x64 --mirror https://repo.huaweicloud.com/nwjs/ .",
+    "win": "build --tasks win-x86,win-x64 --mirror https://repo.huaweicloud.com/nwjs/ .",
+    "linux": "build --tasks linux-x86,linux-x64 --mirror https://repo.huaweicloud.com/nwjs/ .",
+    "start": "run --x64 --mirror https://repo.huaweicloud.com/nwjs/ ."
   },
   "author": "ripplefox",
   "license": "ISC",
@@ -33,9 +33,10 @@
     "ripple-address-codec": "^4.1.1",
     "ripple-keypairs": "^1.0.0",
     "ripple-lib": "^1.7.1",
-    "ripplelib": "^1.2.5",
+    "ripple-lib-transactionparser": "^0.8.2",
     "sjcl": "^1.0.8",
-    "underscore": "^1.9.2"
+    "underscore": "^1.9.2",
+    "xrpl": "^3.0.0"
   },
   "build": {
     "nwVersion": "0.52.0",

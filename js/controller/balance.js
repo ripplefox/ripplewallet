@@ -6,12 +6,11 @@ myApp.controller("BalanceCtrl", [ '$scope', '$rootScope', '$location', '$http', 
     $scope.refresh = function() {
       if ($scope.working) { return; }
       $scope.working = true;
-      XrpApi.queryAccount(function(err){
-        $scope.$apply(function(){
-          $scope.working = false;
-          $scope.removeState = {};
-        });
+      XrpApi.queryAccount().then(()=>{
+        $scope.working = false;
+        $scope.removeState = {};
         console.log($rootScope.lines);
+        $scope.$apply();
       });
     };
     $scope.refresh();

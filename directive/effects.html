@@ -1,94 +1,60 @@
 <ul ng-show="tx.effects" class="effects">
-		<li ng-repeat="effect in tx.showEffects" ng-switch="effect.type">
-			<!-- ngSwitchWhen: offer_funded -->
-			<span ng-switch-when="offer_funded">
-				<span ng-show="effect.sell">
-					{{ 'you_sold' | translate }}
-					<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency:native.code}}</strong> 
-					{{ 'you_sold_for' | translate }} 
-					<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency:native.code}}</strong>
-				</span>
-				<span ng-hide="effect.sell">
-					{{ 'you_bought' | translate }} 
-					<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency:native.code}}</strong> 
-					{{ 'you_bought_for' | translate }} 
-					<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency:native.code}}</strong>
-				</span>
-				({{ 'price' | translate }} <strong>{{effect.price | rpamount:{precision: 4} }}</strong>){{ 'order_filled' | translate}}
-			</span>
-			<!-- ngSwitchWhen: offer_partially_funded -->
-			<span ng-switch-when="offer_partially_funded">
-				<span ng-show="effect.sell">
-					{{ 'you_sold' | translate }}
-					<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency:native.code}}</strong> 
-					{{ 'you_sold_for' | translate }} 
-					<strong>{{effect.paid | rpamount}} {{effect.paid | rpcurrency:native.code}}</strong>
-				</span>
-				<span ng-hide="effect.sell">
-					{{ 'you_bought' | translate }}
-					<strong>{{effect.paid | rpamount}} {{effect.paid | rpcurrency:native.code}}</strong> 
-					{{ 'you_bought_for' | translate }} 
-					<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency:native.code}}</strong>
-				</span>
-				({{ 'price' | translate }} <strong>{{effect.price | rpamount:{precision: 4} }}</strong>)
-				<span ng-show="effect.cancelled" translate="rest_cancel"></span>
-				<span ng-hide="effect.deleted">{{'order_has' | translate}} {{effect.remaining | rpamount}} {{effect.remaining | rpcurrency:native.code}} {{'remaining' | translate}}</span>
-			</span>
+		<li ng-repeat="effect in tx.effects" ng-switch="effect.type">
 			<!-- ngSwitchWhen: offer_cancelled -->
-      <span ng-switch-when="offer_cancelled">
-				{{ 'order_cancel' | translate }}
-				<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency:native.code}}</strong>
-				{{ 'order_cancel_for' | translate }}
-				<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency:native.code}}</strong> 
-				{{ 'order_cancel_due' | translate }}
+			<span ng-switch-when="offer_cancel_buy">
+				<span ng-show="effect.force">{{ 'order_cancel_buy' | translate }}</span>
+				<span ng-hide="effect.force">{{ 'you_cancel_buy' | translate }}</span>				
+				<strong>{{effect.quantity.value | fmtnum}} {{effect.quantity.currency | rpcurrency:native.code}}</strong> 
+				{{ 'you_buy_for' | translate }}
+				<strong>{{effect.total.value | fmtnum}} {{effect.total.currency | rpcurrency:native.code}}</strong> 
+				({{ 'price' | translate }} <strong>{{effect.price | fmtnum}}</strong>)
+				<span ng-show="effect.force">{{ 'order_cancel_due' | translate }}</span>
+			</span>
+			<span ng-switch-when="offer_cancel_sell">
+				<span ng-show="effect.force">{{ 'order_cancel_sell' | translate }}</span>
+				<span ng-hide="effect.force">{{ 'you_cancel_sell' | translate }}</span>
+				<strong>{{effect.quantity.value | fmtnum}} {{effect.quantity.currency | rpcurrency:native.code}}</strong> 
+				{{ 'you_sell_for' | translate }}
+				<strong>{{effect.total.value | fmtnum}} {{effect.total.currency | rpcurrency:native.code}}</strong> 
+				({{ 'price' | translate }} <strong>{{effect.price | fmtnum}}</strong>)
+				<span ng-show="effect.force">{{ 'order_cancel_due' | translate }}</span>
 			</span>
 			<!-- ngSwitchWhen: offer_created -->
-			<span ng-switch-when="offer_created">
-				<span ng-show="effect.sell">
-					You created an order to sell
-					<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency:native.code}}</strong> 
-					for
-					<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency:native.code}}</strong>
-				</span>
-				<span ng-hide="effect.sell">
-					You created an order to buy
-					<strong>{{effect.pays | rpamount}} {{effect.pays | rpcurrency:native.code}}</strong> 
-					for
-					<strong>{{effect.gets | rpamount}} {{effect.gets | rpcurrency:native.code}}</strong>
-				</span>
-				({{ 'price' | translate }} <strong>{{effect.price | rpamount:{precision: 4} }}</strong>)
+			<span ng-switch-when="offer_create_buy">
+				{{ 'you_buy' | translate }}
+				<strong>{{effect.quantity.value | fmtnum}} {{effect.quantity.currency | rpcurrency:native.code}}</strong> 
+				{{ 'you_buy_for' | translate }}
+				<strong>{{effect.total.value | fmtnum}} {{effect.total.currency | rpcurrency:native.code}}</strong> 
+				({{ 'price' | translate }} <strong>{{effect.price | fmtnum}}</strong>)
+			</span>
+			<span ng-switch-when="offer_create_sell">
+				{{ 'you_sell' | translate }}
+				<strong>{{effect.quantity.value | fmtnum}} {{effect.quantity.currency | rpcurrency:native.code}}</strong> 
+				{{ 'you_sell_for' | translate }}
+				<strong>{{effect.total.value | fmtnum}} {{effect.total.currency | rpcurrency:native.code}}</strong> 
+				({{ 'price' | translate }} <strong>{{effect.price | fmtnum}}</strong>)
 			</span>
 			<!-- ngSwitchWhen: offer_bought -->
 			<span ng-switch-when="offer_bought">
 				{{ 'you_bought' | translate }}
-				<strong>{{effect.got | rpamount}} {{effect.got | rpcurrency:native.code}}</strong> 
+				<strong>{{effect.quantity.value | fmtnum}} {{effect.quantity.currency | rpcurrency:native.code}}</strong> 
 				{{ 'you_bought_for' | translate }}
-				<strong>{{effect.paid | rpamount}} {{effect.paid | rpcurrency:native.code}}</strong> 
-				({{ 'price' | translate }} <strong>{{effect.price | rpamount:{invert: true} }}</strong>)
+				<strong>{{effect.total.value | fmtnum}} {{effect.total.currency | rpcurrency:native.code}}</strong> 
+				({{ 'price' | translate }} <strong>{{effect.price | fmtnum}}</strong>)
+				<span ng-show="effect.filled">{{ 'order_filled' | translate}}</span>
 			</span>
-			<!-- ngSwitchWhen: trust_create_local -->
-			<span ng-switch-when="trust_create_local">
-				You now trust {{effect.counterparty}} for {{effect.limit | rpamount}} {{effect.limit | rpcurrency:native.code}}
+			<span ng-switch-when="offer_sold">
+				{{ 'you_sold' | translate }}
+				<strong>{{effect.quantity.value | fmtnum}} {{effect.quantity.currency | rpcurrency:native.code}}</strong> 
+				{{ 'you_sold_for' | translate }}
+				<strong>{{effect.total.value | fmtnum}} {{effect.total.currency | rpcurrency:native.code}}</strong> 
+				({{ 'price' | translate }} <strong>{{effect.price | fmtnum}}</strong>)
+				<span ng-show="effect.filled">{{ 'order_filled' | translate}}</span>
 			</span>
-			<!-- ngSwitchWhen: trust_create_remote -->
-			<span ng-switch-when="trust_create_remote">
-				{{effect.counterparty}} is trusting you for {{effect.limit | rpamount}} {{effect.limit | rpcurrency:native.code}}
-			</span>
-			<!-- ngSwitchWhen: trust_change_local -->
-			<span ng-switch-when="trust_change_local">
-				You have changed {{effect.limit | rpcurrency:native.code}} trust for {{effect.counterparty}} from {{effect.prevLimit | rpamount}} to {{effect.limit | rpamount}}.
-			</span>
-			<!-- ngSwitchWhen: trust_change_remote -->
-			<span ng-switch-when="trust_change_remote">
-				{{effect.counterparty}} changed the {{effect.limit | rpcurrency:native.code}} trust from {{effect.prevLimit | rpamount}} to {{effect.limit | rpamount}}.
-			</span>
-			<!-- ngSwitchWhen: trust_change_balance -->
-			<span ng-switch-when="trust_change_balance">
-				Trust balance between you and {{effect.counterparty}} has been changed by {{effect.amount | rpamount}} {{effect.amount | rpcurrency:native.code}}.
-			</span>
+
 			<!-- ngSwitchWhen: balance_change -->
 			<span ng-switch-when="balance_change">
-				{{'bal_change' | translate}} {{effect.amount | rpamount}} {{effect.amount | rpcurrency:native.code}}
+				{{'bal_change' | translate}} {{effect.amount.value | fmtnum}} {{effect.amount.currency | rpcurrency:native.code}}
 			</span>
 			<!-- ngSwitchWhen: exception -->
 			<span ng-switch-default>{{effect.type}} 未解析</span>

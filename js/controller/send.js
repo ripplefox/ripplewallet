@@ -478,9 +478,9 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       if (address.indexOf("@") >=0) {
         return address;
       }
-      if (!isNaN(ripple.Base.decode_check([0, 5], address, 'bitcoin'))) {
-        return address + "@" + SettingFactory.getFedBitcoin();
-      }
+      // if (!isNaN(ripple.Base.decode_check([0, 5], address, 'bitcoin'))) {
+      //   return address + "@" + SettingFactory.getFedBitcoin();
+      // }
       return address;
     }
 

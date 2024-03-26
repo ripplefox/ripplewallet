@@ -54,10 +54,10 @@ myApp.controller("TrustCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Gateways', 'F
     }
     $scope.hasLine = function(code, issuer) {
       code = realCode(code);
-      if (!$rootScope.lines[code] || !$rootScope.lines[code][issuer]) {
-        return false;
-      }
-      return $rootScope.lines[code][issuer].limit > 0;
+      let asset = $rootScope.lines.find(x => {
+        return x.currency == code && x.issuer == issuer;
+      });
+      return asset ? asset.limit > 0 : false;
     };
     
     var changing = {};

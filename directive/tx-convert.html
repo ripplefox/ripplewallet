@@ -6,9 +6,9 @@
 		<div class="transaction">
 			<span>
 				{{ 'you_convert' | translate }}
-				<strong>{{tx.transaction.spent | rpamount}} {{tx.transaction.spent | rpcurrency:native.code}}</strong>
+				<strong>{{tx.transaction.sendMax.value | fmtnum}} {{tx.transaction.sendMax.currency | rpcurrency:native.code}}</strong>
 				{{ 'you_convert_to' | translate }}
-				<strong>{{tx.transaction.amount | rpamount}} {{tx.transaction.amount | rpcurrency:native.code}}</strong>
+				<strong>{{tx.transaction.delivered.value | fmtnum}} {{tx.transaction.delivered.currency | rpcurrency:native.code}}</strong>
 			</span>
 			<effects></effects>
 		</div>

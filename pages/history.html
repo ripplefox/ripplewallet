@@ -12,9 +12,9 @@
 						{{error_msg | translate:currentNetwork.coin}}
 			</div>
 				
-			<div class="history class="col-xs-12">
+			<div class="history" class="col-xs-12">
 				<div ng-repeat="tx in history" ng-switch="tx.transaction.type">
-					<tx-convert ng-switch-when="exchange"></tx-convert>
+					<tx-convert ng-switch-when="convert"></tx-convert>
 					<tx-offer ng-switch-when="offernew"></tx-offer>
 					<tx-offercancel ng-switch-when="offercancel"></tx-offercancel>
 					<tx-payment ng-switch-when="sent"></tx-payment>
@@ -23,6 +23,7 @@
 					<tx-trust ng-switch-when="trusting"></tx-trust>
 					<tx-message ng-switch-when="accountset"></tx-message>
 					<tx-message ng-switch-when="rippling"></tx-message>
+					<tx-message ng-switch-when="amm"></tx-message>
 					<tx-message ng-switch-when="failed"></tx-message>
 					<tx-default ng-switch-default></tx-default>
 				</div>

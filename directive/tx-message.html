@@ -6,7 +6,8 @@
 		<div class="transaction">
 			<span ng-show="tx.transaction.type == 'accountset'" translate="accountset">Account details have been changed</span>
 			<span ng-show="tx.transaction.type == 'rippling'" translate="rippling">Rippling</span>
-			<span ng-show="tx.transaction.type == 'failed'">{{'failedtx' | translate}} {{tx.tx_result}}</span>
+			<span ng-show="tx.transaction.type == 'amm'"><strong>{{tx.transaction.action}}</strong></span>
+			<span ng-show="tx.transaction.type == 'failed'">{{'failedtx' | translate}} <strong>{{tx.tx_result}}</strong></span>
 			<effects></effects>
 		</div>
 		<div class="hash" ng-show="currentNetwork.networkType != 'xag'"> <a href="https://xrpscan.com/tx/{{tx.hash}}" target="_blank">{{tx.hash}}</a> </div>

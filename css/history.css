@@ -16,6 +16,7 @@
 
 .history .effects li {
   list-style-type: none;
+  color: #999999;
 }
 
 .history .received {
