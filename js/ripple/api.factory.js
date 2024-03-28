@@ -14,6 +14,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     let _client;
     let _appVersion = ""; // foxlet version
     const failHard = true;
+    const lsfSell = 0x00020000;
 
     const sleep = (timeountMS) => new Promise((resolve) => {
       setTimeout(resolve, timeountMS);
@@ -27,6 +28,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return new BigNumber(new BigNumber(amount).toPrecision(16)).toString()
       }
     };
+    function parseAmount(input) {
+      return "object" === typeof input ? input : {currency: "XRP", value: xrpl.dropsToXrp(input)};
+    }
 
     return {
       set remote(remote) {
@@ -142,36 +146,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
-      checkFunded(address) {
-        return new Promise(async (resolve, reject)=>{
-          await this.connect();
-          _remote.getAccountInfo(address || this.address).then(() => {
-              resolve(true);
-          }).catch(e => {
-              if (e.data.error === 'actNotFound') {
-                resolve(false);
-              } else {
-                reject(e);
-              }
-          });
-        });
-      },
-      
-      checkObjects(address) {
-        return new Promise(async (resolve, reject)=>{
-          try {
-            await this.connect();
-            let info = await _remote.getAccountObjects(address || this.address);
-            resolve(info);
-          } catch(e){
-            if (e.data && e.data.error === 'actNotFound') {
-              e.unfunded = true;
-            }
-            reject(e);
-          };
-        });
-      },
-      
       checkSettings(address) {
         return new Promise(async (resolve, reject)=>{
           try {
@@ -202,50 +176,20 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      checkBalances(address) {
-        return new Promise(async (resolve, reject)=>{
-          try {
-            await this.connect();
-            let bal = await _remote.getBalances(address || this.address);
-            resolve(bal);
-          } catch(e) {
-            console.error('getBalance', e);
-            reject(e);
-          }
-        });
-      },
-      
-      checkTrustlines(address) {
-        return new Promise(async (resolve, reject)=>{
-          await this.connect();
-          _remote.getTrustlines(address || this.address).then((ret) => {
-            let lines = {};
-            ret.forEach((item)=>{
-              var keystr = key(item.specification.currency, item.specification.counterparty);
-              lines[keystr] = item.specification; //{limit: "100000000", currency: "USD", counterparty: "rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y", ripplingDisabled: true}
-              lines[keystr].balance = item.state.balance;
-            });
-            _trustlines = lines;
-            console.log('lines:', ret);
-            resolve(lines);
-          }).catch(e => {
-            console.error('getTrustlines', e);
-            reject(e);
+      async checkOffers(address) {
+        try {
+          const {result} = await _client.request({command: "account_offers", account: address || this.address});
+          let offers = result.offers.map(offer => {
+            offer.type = offer.flags & lsfSell ? "sell" : "buy";
+            offer.quantity = offer.type == "sell" ? parseAmount(offer.taker_gets) : parseAmount(offer.taker_pays);
+            offer.total = offer.type == "sell" ? parseAmount(offer.taker_pays) : parseAmount(offer.taker_gets);
+            offer.price = new BigNumber(offer.total.value).dividedBy(offer.quantity.value).toString();
+            return offer;
           });
-        });
-      },
-      
-      checkOffers(address) {
-        address = address || this.address;
-        return new Promise(async (resolve, reject)=>{
-          try {
-            await this.connect();
-            let page = await _remote.getOrders(address, {limit: 200});
-            resolve(page);
-          } catch (err) {
-            reject(err);
-          }
-        });
+          return offers;
+        } catch (err) {
+          throw err;
+        }
       },
       
       async checkTx(marker, address) {
@@ -316,7 +260,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           };
           if (amount1.issuer) { amm_deposit.Asset.issuer = amount1.issuer; }
           if (amount2.issuer) { amm_deposit.Asset2.issuer = amount2.issuer; }
-          let ledger = await _client.getLedgerIndex();
+          const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(amm_deposit);
           const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
           const response = await _client.submit(tx_blob, {failHard});
@@ -348,9 +292,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             amm_withdraw.Flags = xrpl.AMMWithdrawFlags.tfLPToken;
             amm_withdraw.LPTokenIn = convertAmount(lpAmount);
           }
-          let ledger = await _client.getLedgerIndex();
+          const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(amm_withdraw);
-          console.log(tx_json);
           const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
           const response = await _client.submit(tx_blob, {failHard});
           if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
@@ -477,7 +420,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             let prepared = await _remote.preparePayment(this.address, payment);
             const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction, true);
-            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            this.verify(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
             if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
               return reject(new Error(result.engine_result_message || result.engine_result));
@@ -498,68 +441,58 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         return this.pathPayment(this.address, srcAmount, destAmount, paths, null, null, null, true);
       },
       
-      offer(options) {
-        let totalPriceValue = new BigNumber(options.amount).multipliedBy(options.price).toString();
-        const order = {
-          'direction': options.type,
-          'quantity'  : {value: convertAmount(options.amount)},
-          'totalPrice': {value: convertAmount(totalPriceValue)}
-        };
-        if (options.base_issuer) {
-          order.quantity.currency = options.base;
-          order.quantity.counterparty = options.base_issuer;
-        } else {
-          order.quantity.currency = 'XRP';
-          order.quantity.value = round(order.quantity.value, 6).toString();
-        }
-        if (options.counter_issuer) {
-          order.totalPrice.currency = options.counter;
-          order.totalPrice.counterparty = options.counter_issuer;
-        } else {
-          order.totalPrice.currency = 'XRP';
-          order.totalPrice.value = round(order.totalPrice.value, 6).toString();
-        }
-        order.memos = [{data: _appVersion, type: 'client', format: 'text'}];
-        return new Promise(async (resolve, reject) => {
-          try {
-            let ledger = await _remote.getLedger();
-            let prepared = await _remote.prepareOrder(this.address, order);
-            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
-            let result = await _remote.submit(signedTransaction, true);
-            //this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
-            this.verify(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
-            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
-              console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result));
-            }
-            resolve(id);
-          } catch (err) {
-            console.error('offer', err);
-            reject(err);
+      async offer(options) {
+        try {
+          let totalValue = new BigNumber(options.amount).multipliedBy(options.price).toString();
+          let quantity = options.base_issuer ? {currency: options.base, issuer: options.base_issuer, value: options.amount} : {currency: "XRP", value: options.amount};
+          let total = options.counter_issuer ? {currency: options.counter, issuer: options.counter_issuer, value: totalValue} : {currency: "XRP", value: totalValue};
+
+          let order = {
+            "Account": this.address,
+            "TransactionType": "OfferCreate",
+            "Flags"    : options.type == "sell" ? xrpl.OfferCreateFlags.tfSell : 0,
+            "TakerGets": options.type == "sell" ? convertAmount(quantity) : convertAmount(total),
+            "TakerPays": options.type == "sell" ? convertAmount(total) : convertAmount(quantity)
+          };
+          order.memos = [{data: _appVersion, type: 'client', format: 'text'}];
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(order);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
           }
-        });
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error("offer", err);
+          throw err;
+        }        
       },
       
-      cancelOffer (offer_id) {
-        const orderCancellation = {orderSequence: offer_id};
-        orderCancellation.memos = [{data: _appVersion, type: 'client', format: 'text'}];
-        return new Promise(async (resolve, reject) => {
-          try {
-            let ledger = await _remote.getLedger();
-            let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
-            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
-            let result = await _remote.submit(signedTransaction, true);
-            this.verify(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
-            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
-              console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result || error.error_exception || 'UNKNOWN'));
-            }
-            resolve(id);
-          } catch (err) {
-            console.error('cancelOffer', err);
-            reject(err);
+      async cancelOffer (offer_id) {
+        try {
+          let cancel = {
+            "Account" : this.address,
+            "TransactionType": "OfferCancel",
+            "OfferSequence": offer_id
+          };
+          cancel.memos = [{data: _appVersion, type: 'client', format: 'text'}];          
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(cancel);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
           }
-        });
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error("cancel", err);
+          throw err;
+        }
       },
       
       deleteAccount(dest_account) {

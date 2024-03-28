@@ -213,19 +213,6 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
     function parseAmount(input) {
       return "object" === typeof input ? input : {currency: "XRP", value: xrpl.dropsToXrp(input)};
     }
-    function minusAmount(amount1, amount2) {
-      var clonedObj = Object.assign({}, amount1);
-      clonedObj.value =  new BigNumber(amount1.value).minus(amount2.value).toString();
-    }
-    function getTxPrice(effect) {
-      var g = effect.got ? effect.got : effect.gets;
-      var p = effect.paid ? effect.paid : effect.pays;
-      if (effect.sell) {
-        return new BigNumber(p.value).dividedBy(g.value).toString();
-      } else {
-        return new BigNumber(g.value).dividedBy(p.value).toString();
-      }
-    }
     function isEmptyObject(obj) {
       return !Object.keys(obj).length;
     }
@@ -243,22 +230,6 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
           data: m.Memo.parsed_memo_data || hexToString(m.Memo.MemoData)
         };
       });
-    }
-    function processAnode(an) {
-      var result = {};
-      ["CreatedNode", "ModifiedNode", "DeletedNode"].forEach(function (x) {
-        if (an[x]) result.diffType = x;
-      });
-      if (!result.diffType) return null;
-      an = an[result.diffType];
-
-      result.entryType = an.LedgerEntryType;
-      result.ledgerIndex = an.LedgerIndex;
-      result.fields = Object.assign({}, an.PreviousFields, an.NewFields, an.FinalFields);
-      result.fieldsPrev = an.PreviousFields || {};
-      result.fieldsNew = an.NewFields || {};
-      result.fieldsFinal = an.FinalFields || {};
-      return result;
     }
     
   } ]);

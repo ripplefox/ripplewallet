@@ -19,47 +19,17 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         this.ask = [];
         this.bid = [];
         data.forEach(offer => {
-          var id, taker_gets, taker_pays, quantity, total, price;
-          if (offer.specification.direction == 'sell') {
-            taker_gets = native2coin(offer.specification.quantity);
-            taker_pays = native2coin(offer.specification.totalPrice);
-            quantity = taker_gets;
-            total  = taker_pays;
-            price = new BigNumber(total.value).dividedBy(quantity.value).toString();
-          } else {
-            taker_gets = native2coin(offer.specification.totalPrice);
-            taker_pays = native2coin(offer.specification.quantity);
-            quantity = taker_pays;
-            total  = taker_gets;
-            price = new BigNumber(taker_gets.value).dividedBy(quantity.value).toString();
+          offer.quantity = native2coin(offer.quantity);
+          offer.total = native2coin(offer.total);          
+          this.all[offer.seq] = offer;
+          if (sameAsset(offer.quantity.currency, offer.quantity.issuer, $scope.base_code, $scope.base_issuer)
+              && sameAsset(offer.total.currency, offer.total.issuer, $scope.counter_code, $scope.counter_issuer)) {
+            if (offer.type == "sell") {
+              this.ask.push(offer);
+            } else {
+              this.bid.push(offer);
+            }
           }
-          id = offer.properties.sequence;
-          this.all[id] = {
-              id : id,
-              direction : offer.specification.direction,
-              quantity : quantity,
-              total  : total,
-              price  : price
-          };
-          
-          if (sameAsset(taker_gets.currency, taker_gets.counterparty, $scope.base_code, $scope.base_issuer)
-              && sameAsset(taker_pays.currency, taker_pays.counterparty, $scope.counter_code, $scope.counter_issuer)) {
-              this.ask.push({
-                id : id,
-                quantity : taker_gets,
-                total : taker_pays,
-                price : new BigNumber(taker_pays.value).dividedBy(taker_gets.value).toString()
-              });
-            }
-          if (sameAsset(taker_gets.currency, taker_gets.counterparty, $scope.counter_code, $scope.counter_issuer)
-              && sameAsset(taker_pays.currency, taker_pays.counterparty, $scope.base_code, $scope.base_issuer) ) {
-              this.bid.push({
-                id : id,
-                quantity : taker_pays,
-                total : taker_gets,
-                price : new BigNumber(taker_gets.value).dividedBy(taker_pays.value).toString()
-              });
-            }
         });
         try {
           this.ask = this.ask.sort((a, b) => {

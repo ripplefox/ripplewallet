@@ -211,13 +211,13 @@
 							<div class="col-xs-4 right" translate="total">Total</div>
 							<div class="col-xs-2 right" translate="action">Action</div>
 						</div>
-						<div class="row" ng-repeat="item in offers.bid" ng-class="{cancelling: isCancelling(item.id)}">
+						<div class="row" ng-repeat="item in offers.bid" ng-class="{cancelling: isCancelling(item.seq)}">
 							<div class="col-xs-3 right">{{item.price | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-xs-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency | fmtcode}}</div>
 							<div class="col-xs-4 right">{{item.total.value | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-xs-2 action">
-								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(item.id)"></i>
-								<a href="javascript:" ng-click="cancel(item.id, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
+								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(item.seq)"></i>
+								<a href="javascript:" ng-click="cancel(item.seq, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
 							</div>
 				    </div>
 				    <div ng-show="!offers.bid.length" class="message" translate="no_offers">You haven't placed any orders.</div>
@@ -233,13 +233,13 @@
 							<div class="col-xs-4 right" translate="total">Total</div>
 							<div class="col-xs-2 right" translate="action">Action</div>
 						</div>
-						<div class="row" ng-repeat="item in offers.ask" ng-class="{cancelling: isCancelling(item.id)}">
+						<div class="row" ng-repeat="item in offers.ask" ng-class="{cancelling: isCancelling(item.seq)}">
 							<div class="col-xs-3 right">{{item.price | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-xs-3 right">{{item.quantity.value | fmtnum}} {{item.quantity.currency | fmtcode}}</div>
 							<div class="col-xs-4 right">{{item.total.value | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-xs-2 action">
-								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(item.id)"></i>
-								<a href="javascript:" ng-click="cancel(item.id, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
+								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(item.seq)"></i>
+								<a href="javascript:" ng-click="cancel(item.seq, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
 							</div>
 				    </div>
 				    <div ng-show="!offers.ask.length" class="message" translate="no_offers">You haven't placed any orders.</div>
@@ -255,14 +255,14 @@
 							<div class="col-sm-3 right" translate="total">Total</div>
 							<div class="col-sm-2" translate="action">Action</div>
 						</div>
-						<div class="row" ng-repeat="(id, item) in offers.all" ng-class="{cancelling: isCancelling(id)}">
+						<div class="row" ng-repeat="(seq, item) in offers.all" ng-class="{cancelling: isCancelling(seq)}">
 							<div class="col-sm-1">{{item.direction | translate}}</div>
 							<div class="col-sm-3 right">{{item.price | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-sm-3 right" title="{{item.quantity.counterparty}}">{{item.quantity.value | fmtnum}} {{item.quantity.currency | fmtcode}}</div>
 							<div class="col-sm-3 right" title="{{item.total.counterparty}}">{{item.total.value | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-sm-2 action">
-								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(id)"></i>
-								<a href="javascript:" ng-click="cancel(item.id, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
+								<i class="fa fa-spinner fa-pulse" ng-show="isCancelling(seq)"></i>
+								<a href="javascript:" ng-click="cancel(item.seq, 'all')" class="danger">{{'offer_cancel' | translate}}</a>
 							</div>
 						</div>
 						<div ng-hide="objKeyLength(offers.all)" class="message" translate="no_offers">You haven't placed any orders.</div>
