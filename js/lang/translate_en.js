@@ -124,6 +124,7 @@ var translate_en = {
   act_will_upd  : 'Your account will update once the transaction has cleared.',
   back_convert  : 'Do another conversion',
   go_balance    : 'Back to balance',
+  tx_success    : 'The transaction was applied.',
   
   /** History **/
   history: 'History',
@@ -225,6 +226,17 @@ var translate_en = {
   show_all   : 'Show all offers',
   buying     : 'Buying',
   selling    : 'Selling',
+
+  show_amm    : 'Show AMM',
+  lp_info     : 'LP Information',
+  trade_fee   : 'Trading fee',
+  total_supply: 'Total supply',
+  you_hold    : 'You hold',
+  token_locked: 'Total Tokens Locked',
+  deposit_lp  : 'Deposit LP',
+  withdraw_lp : 'Withdraw LP',
+  AMMDeposit  : 'AMM Deposit',
+  AMMWithdraw : 'AMM Withdraw',
 
   /** Setting & security **/
   settings : 'Settings',

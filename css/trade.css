@@ -138,6 +138,7 @@ a.AssetPairRow:hover .AssetPair__separator {
 	margin-bottom: 5px;
 }
 
+.amm_pad,
 .contact_pad,
 .offers_pad {
 	margin: 0 auto;
@@ -661,3 +662,102 @@ a.AssetPairRow:hover .AssetPair__separator {
   text-align: center;
   padding: 20px;
 }
+
+
+.ammboard {
+  
+}
+
+.amm_info {
+  padding: 10px;  
+  display: flex;
+}
+
+.amm_info h4 {
+  padding: 10px;
+  margin: 0 -15px 15px -15px;
+  font: bold 15px 'OpenSansRegular';
+  text-align: left;
+  background: #f2f2f2;
+}
+
+.amm_info_left, .amm_info_right {
+  flex: 1;
+  margin: 10px;
+  border-radius: 5px;
+  padding: 0 15px;
+  background: #fafafa;
+  border: 1px solid #e1e1e1;
+  background-clip: padding-box;
+}
+
+.amm_content {
+  margin-top: 10px;
+}
+
+.amm_item {
+  margin-bottom: 10px;
+  display: flex; /* 每行内容水平排列 */
+}
+
+.amm_item span {
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+.amm_item p {
+  margin: 0; /* 去除段落的默认上下间距 */
+  margin-left: auto; /* 文字向右对齐 */
+  line-height: 30px;
+  padding-right: 10px;
+}
+
+.amm_icon {
+  width: 30px; /* 根据实际图标大小调整 */
+  height: 30px; /* 根据实际图标大小调整 */
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+  margin-left: 10px;
+  margin-right: 10px; /* 图标与文字之间的间距 */
+}
+
+.amm_icon img {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    display: block;
+    border-radius: 3px;
+}
+
+.amm_asset {
+  padding: 10px;
+}
+
+.amm_submit {
+  margin-top: 10px;
+  padding: 10px;
+  border-top: 1px solid #dedfe0;
+}
+
+.amm_asset .picker {
+    position: relative;
+    height: 54px;
+    text-align: center;
+}
+
+  .ellipse {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 10px;
+    cursor: pointer;
+    line-height: 50px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+
+  .ellipse:hover {
+    background-color: #999;
+  }

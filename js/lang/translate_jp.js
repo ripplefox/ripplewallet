@@ -124,6 +124,7 @@ var translate_jp = {
   act_will_upd  : '取引完了後、アカウントの情報は更新されます。',
   back_convert  : '次の兌換をする',
   go_balance    : 'バランス画面に戻る',
+  tx_success    : '取引は有効になりました。',
 
   /** History **/
   history: '履歴',
@@ -225,6 +226,17 @@ var translate_jp = {
   show_all   : '注文一覧',
   buying     : '購入中',
   selling    : '売却中',
+
+  show_amm    : 'AMM 情報を表示',
+  lp_info     : '流動性プール情報',
+  trade_fee   : '取引手数料',
+  total_supply: '総供給',
+  you_hold    : 'あなたはホールドします',
+  token_locked: 'ロックされたトークンの総数',
+  deposit_lp  : '流動性を追加',
+  withdraw_lp : '流動性を引き出す',
+  AMMDeposit  : 'AMM 入金',
+  AMMWithdraw : 'AMM 出金',
 
   /** Setting & security **/
   settings : '設定',

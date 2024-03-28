@@ -98,10 +98,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
 
     $scope.tradeAssets = {};
     function addLinesToTradePairs() {
-      for (var code in $rootScope.lines) {
-        for (var issuer in $rootScope.lines[code]) {
-          $scope.tradeAssets[key(code, issuer)] = {code: code, issuer: issuer};
-        }
+      for (var line of $rootScope.lines) {
+        $scope.tradeAssets[key(line.currency, line.issuer)] = {code: line.currency, issuer: line.issuer};
       }
     };
     addLinesToTradePairs();
@@ -129,6 +127,9 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         $scope.price_precise = 4;
         if (['BTC', 'ETH'].indexOf($scope.base_code) >= 0) {
           $scope.price_precise = 0;
+        }
+        if ("XRPS" == fmtCode($scope.base_code)) {
+          $scope.price_precise = 6;
         }
       } else if (['BTC', 'ETH'].indexOf($scope.counter_code) >= 0) {
         $scope.price_precise = 6;
@@ -215,6 +216,105 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     }
     $scope.refreshBook();
 
+    $scope.amm = {};
+    $scope.refreshingAmm = false;
+    $scope.refreshAmm = function() {
+      $scope.refreshingAmm = true;
+      XrpApi.checkAmm($scope.base_code, $scope.base_issuer, $scope.counter_code, $scope.counter_issuer).then(data => {
+        $scope.refreshingAmm = false;
+        if (!data) {
+          $scope.amm = {};
+          return;
+        }
+        data.logo = $rootScope.getGateway(data.amount.currency, data.amount.issuer).logo;
+        data.logo2 = $rootScope.getGateway(data.amount2.currency, data.amount2.issuer).logo;
+        data.rate = fmtNumber(data.amount.value / data.amount2.value);
+        data.rate2 = fmtNumber(data.amount2.value / data.amount.value);
+        data.hold_1 = $rootScope.getBalance(data.amount.currency, data.amount.issuer);
+        data.hold_2 = $rootScope.getBalance(data.amount2.currency, data.amount2.issuer);
+        data.hold_lp = $rootScope.getBalance(data.lp_token.currency, data.lp_token.issuer);
+        data.hold_lp_pct = data.hold / data.lp_token.value * 100;
+        data.trading_fee = data.trading_fee / 1000;
+        $scope.amm = data;
+        console.log(data);
+      }).catch(err => {
+        console.error('Should not reach here.', err);
+        $scope.amm = {};
+        $scope.refreshingAmm = false;
+      });
+    }
+    $scope.refreshAmm();
+
+    $scope.calcAmm = function(name) {
+      if ("asset1" == name) {
+        $scope.asset2_amt = round($scope.asset1_amt * $scope.amm.rate2, 8);
+      } else {
+        $scope.asset1_amt = round($scope.asset2_amt * $scope.amm.rate, 8);
+      }
+    }
+    $scope.withdrawAll = false;
+    $scope.updateLpValue = function(rate) {
+      if (rate) {
+        $scope.withdrawAll = rate == 1;
+        $scope.lp_amt = round($scope.amm.hold_lp * rate, 8);
+      } else {
+        $scope.withdrawAll = false;
+      }      
+    }
+
+    $scope.adding = false;
+    $scope.add_fail;
+    $scope.addLp = function() {
+      $scope.adding = true;
+      $scope.add_hash = "";
+      $scope.add_state = "";
+      $scope.add_fail = "";
+      let amount1 = Object.assign({}, $scope.amm.amount);
+      let amount2 = Object.assign({}, $scope.amm.amount2);
+      amount1.value = $scope.asset1_amt.toString();
+      amount2.value = $scope.asset2_amt.toString();
+      $scope.adding = true;
+      XrpApi.addLp(amount1, amount2).then(hash => {
+        $scope.adding = false;
+        $scope.add_hash = hash;
+        $scope.add_state = "submitted";
+        $scope.asset1_amt = "";
+        $scope.asset2_amt = "";
+        $scope.$apply();
+        $scope.refreshAmm();
+      }).catch(err => {
+        $scope.adding = false;
+        $scope.add_fail = err.message;
+        $scope.$apply();
+      });
+    }
+    $scope.withdrawing = false;
+    $scope.withdraw_fail;
+    $scope.withdrawLp = function() {
+      $scope.withdrawing = true;
+      $scope.withdraw_hash = "";
+      $scope.withdraw_state = "";
+      $scope.withdraw_fail = "";
+      let asset1 = {currency: $scope.amm.amount.currency, issuer: $scope.amm.amount.issuer};
+      let asset2 = {currency: $scope.amm.amount2.currency, issuer: $scope.amm.amount2.issuer};
+      let lpAmount = Object.assign({}, $scope.amm.lp_token);
+      lpAmount.value = $scope.lp_amt.toString();
+      $scope.withdrawing = true;
+      XrpApi.withdrawLp(asset1, asset2, lpAmount, $scope.withdrawAll).then(hash => {
+        $scope.withdrawing = false;
+        $scope.withdraw_hash = hash;
+        $scope.withdraw_state = "submitted";
+        $scope.lp_amt = "";
+        $scope.withdrawAll = false;
+        $scope.$apply();
+        $scope.refreshAmm();
+      }).catch(err => {
+        $scope.withdrawing = false;
+        $scope.withdraw_fail = err.message;
+        $scope.$apply();
+      });
+    }
+
     $scope.refreshingOffer = false;
     $scope.refreshOffer = function() {
       $scope.refreshingOffer = true;
@@ -245,20 +345,42 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.buy_state = "";
     $scope.sell_hash = "";
     $scope.sell_state = "";
+    $scope.add_hash = "";
+    $scope.add_state = "";
+    $scope.withdraw_hash = "";
+    $scope.withdraw_hash = "";
     $scope.$on("txSuccess", function(e, tx) {
       console.debug('txSuccess event', tx);
       if (tx.hash == $scope.buy_hash) $scope.buy_state = "success";
       if (tx.hash == $scope.sell_hash) $scope.sell_state = "success";
+      if (tx.hash == $scope.add_hash) $scope.add_state = "success";
+      if (tx.hash == $scope.withdraw_hash) $scope.withdraw_state = "success";
       $scope.refreshOffer();
       $scope.refreshBook();
+      $scope.refreshAmm();
       $scope.$apply();
     });
     $scope.$on("txFail", function(e, tx) {
       console.debug('txFail event', tx);
-      if (tx.hash == $scope.buy_hash) $scope.buy_state = "fail";
-      if (tx.hash == $scope.sell_hash) $scope.sell_state = "fail";
+      if (tx.hash == $scope.buy_hash) {
+        $scope.buy_state = "fail";
+        $scope.buy_fail = tx.message;
+      }
+      if (tx.hash == $scope.sell_hash) {
+        $scope.sell_state = "fail";
+        $scope.sell_fail = tx.message;
+      }
+      if (tx.hash == $scope.add_hash) {
+        $scope.add_state = "fail";
+        $scope.add_fail = tx.message;
+      }
+      if (tx.hash == $scope.withdraw_hash) {
+        $scope.withdraw_state = "fail";
+        $scope.withdraw_fail = tx.message;
+      }
       $scope.refreshOffer();
       $scope.refreshBook();
+      $scope.refreshAmm();
       $scope.$apply();
     });
 
@@ -379,6 +501,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         $scope.offerDelete = {};
         $scope.refreshOffer();
         $scope.refreshBook();
+        $scope.show_amm = false;
+        $scope.refreshAmm();
         $scope.savePair();
       }
     }
@@ -405,6 +529,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         $scope.offerDelete = {};
         $scope.refreshOffer();
         $scope.refreshBook();
+        $scope.show_amm = false;
+        $scope.refreshAmm();
         $scope.savePair();
       }
     }
@@ -423,6 +549,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         $scope.countdown = $scope.countdown - 1;
         if ($scope.countdown <= 0) {
           $scope.refreshBook();
+          $scope.refreshAmm();
         }
       });
     }, 1000);
@@ -450,4 +577,13 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       return obj;
     }
 
+    function fmtNumber(num) {
+      if (num > 100) {
+        return parseFloat(num.toFixed(2));
+      } else if (num > 10) {
+        return parseFloat(num.toFixed(3));
+      } else {
+        return parseFloat(num.toFixed(6));
+      }
+    }
   } ]);

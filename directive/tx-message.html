@@ -6,7 +6,7 @@
 		<div class="transaction">
 			<span ng-show="tx.transaction.type == 'accountset'" translate="accountset">Account details have been changed</span>
 			<span ng-show="tx.transaction.type == 'rippling'" translate="rippling">Rippling</span>
-			<span ng-show="tx.transaction.type == 'amm'"><strong>{{tx.transaction.action}}</strong></span>
+			<span ng-show="tx.transaction.type == 'amm'">{{tx.transaction.action | translate}}</span>
 			<span ng-show="tx.transaction.type == 'failed'">{{'failedtx' | translate}} <strong>{{tx.tx_result}}</strong></span>
 			<effects></effects>
 		</div>

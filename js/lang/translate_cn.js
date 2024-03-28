@@ -124,6 +124,7 @@ var translate_cn = {
   act_will_upd  : '您的账户会在交易完成后即时更新。',
   back_convert  : '进行另一个兑换',
   go_balance    : '返回到余额界面',
+  tx_success    : '交易已生效。',
 
   /** History **/
   history: '历史',
@@ -225,6 +226,17 @@ var translate_cn = {
   show_all   : '显示所有委托单',
   buying     : '买入',
   selling    : '卖出',
+
+  show_amm    : '显示AMM信息',
+  lp_info     : '流动性池信息',
+  trade_fee   : '交易费',
+  total_supply: '总供应量',
+  you_hold    : '你持有',
+  token_locked: '锁定代币总数',
+  deposit_lp  : '添加流动性',
+  withdraw_lp : '取出流动性',
+  AMMDeposit  : 'AMM 添加流动性',
+  AMMWithdraw : 'AMM 取出流动性',
 
   /** Setting & security **/
   settings : '设置',

@@ -152,6 +152,12 @@ myApp.factory('AuthenticationFactory', ['$rootScope', '$window', 'AuthData', 'Au
       return signedTransaction;
     }
 
+    localSign(api, txtJson) {
+      const kp = this.availablePKs[api.address];
+      if (!kp) throw new Error(`No keypair found for ${address}`);
+      const wallet = xrpl.Wallet.fromSeed(kp.secret, {algorithm: "secp256k1"});
+      return wallet.sign(txtJson);
+    }
     //
     // Contact Management. Implicitly saves and stores AuthData.
     //

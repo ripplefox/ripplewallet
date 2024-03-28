@@ -1,6 +1,4 @@
 /* global _, myApp, round, RippleAPI */
-const rewriter = require('./js/ripple/jsonrewriter.js');
-
 myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager', 'XrpPath', 'XrpOrderbook',
   function($rootScope, AuthenticationFactory, SM, XrpPath, XrpOrderbook) {
 
@@ -8,21 +6,23 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     let _xrpBalance = "";
     let _sequence = 0;
     
-    let _balances = {}; // all balances include xrp
-    let _trustlines = {}; // no xrp line
-    let _history = [];
+    let _balances = []; // all balances include xrp
+    let _lines = []; // no xrp
+
     let _myHandleAccountEvent = undefined;
     let _remote;
-    let _client = ""; // foxlet version
-    
-    function toTimestamp(rpepoch) {
-      return (rpepoch + 0x386D4380) * 1000;
-    };
-    
+    let _client;
+    let _appVersion = ""; // foxlet version
+    const failHard = true;
+
+    const sleep = (timeountMS) => new Promise((resolve) => {
+      setTimeout(resolve, timeountMS);
+    });
+
     function convertAmount(amount) {
       if ("object" === typeof amount) {
         amount.value = new BigNumber(new BigNumber(amount.value).toPrecision(16)).toString();
-        return amount;
+        return amount.currency == "XRP" ? xrpl.xrpToDrops(amount.value) : amount;
       } else {
         return new BigNumber(new BigNumber(amount).toPrecision(16)).toString()
       }
@@ -33,26 +33,36 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         _remote = remote;
         XrpPath.remote = remote;
         XrpOrderbook.remote = remote;
-        
+      },
+      
+      set client(client) {
+        _client = client;
         if (this.address) {
           this.queryAccount();
           this.listenStream();
         }
       },
-      
-      set client(info) {
-        _client = info;
+
+      set appVersion(info) {
+        _appVersion = info;
       },
       
       connect() {
         if (!_remote) throw new Error("NotConnectedError");
         return _remote.isConnected() ? Promise.resolve() : _remote.connect();
       },
+
+      async conn() {
+        if (!_client) throw new Error("NotConnectedError");
+        if (!_client.isConnected()) {
+          await _client.connect();
+        }
+      },
       
       init() {
-        if (this.address && _remote) {
-          this.queryAccount();
+        if (this.address && _client) {
           this.listenStream();
+          this.queryAccount();
         }
       },
       
@@ -60,9 +70,8 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         _ownerCount = 0;
         _xrpBalance = "";
         _sequence = 0;
-        _balances = {}; // all balances include xrp
-        _trustlines = {}; // no xrp line
-        _history = [];
+        _balances = []; // all balances include xrp
+        _lines = []; // no xrp line
         this._closeStream();
       },
       
@@ -101,6 +110,37 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           }
         });
       },
+
+      async verify(hash, minLedger, maxLedger) {
+        await sleep(2000);
+        let latestLedger = 0;
+        try {
+          lastestLedger = await _client.getLedgerIndex();
+          const response = await _client.request({command: 'tx', transaction: hash, min_ledger: minLedger, max_ledger: maxLedger});
+          if (response.result.validated) {
+            let result_code = response.result.meta.TransactionResult;
+            if (result_code == "tesSUCCESS") {
+              $rootScope.$broadcast('txSuccess', {hash: hash});
+            } else {
+              console.error("Verify fail", txResponse.result);
+              $rootScope.$broadcast('txFail', {hash: hash, message: result_code});
+            }
+            return {done: result_code == "tesSUCCESS", hash, hash, message: result_code};
+          } else {
+            console.warn("Tx not validated.", response);
+            return await this.verify(hash, minLedger, maxLedger);
+          }
+        } catch (err) {
+          if (lastestLedger > maxLedger) {
+            console.warn(err.data ? err.data.error : err); //err.data.error == "txnNotFound"
+            console.warn(`${lastestLedger} is larger than ${maxLedger}`);
+            $rootScope.$broadcast('txFail', {hash: hash, message: err.data ? err.data.error : err.message});
+            return {done: false, hash: hash, message: err.data ? err.data.error : err.message};
+          } else {
+            return await this.verify(hash, minLedger, maxLedger);
+          }
+        }
+      },
       
       checkFunded(address) {
         return new Promise(async (resolve, reject)=>{
@@ -114,21 +154,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
                 reject(e);
               }
           });
-        });
-      },
-      
-      checkInfo(address) {
-        return new Promise(async (resolve, reject)=>{
-          try {
-            await this.connect();
-            let info = await _remote.getAccountInfo(address || this.address);
-            resolve(info);
-          } catch(e){
-            if (e.data && e.data.error === 'actNotFound') {
-              e.unfunded = true;
-            }
-            reject(e);
-          };
         });
       },
       
@@ -223,36 +248,121 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      checkTx(marker, address) {
-        var address = address || this.address;
-        var params = {
-            account: address,
+      async checkTx(marker, address) {
+        try {
+          await this.conn();
+          const {result: {info} } = await _client.request({command: "server_info"});
+          console.log(info);
+          let params = {
+            command: 'account_tx',
+            account: address || this.address,
             ledger_index_min: -1,
             limit: 30,
             binary: false
-        };
-        if (marker) {
-          params.marker = marker;
-        }
-        return new Promise(async (resolve, reject)=>{
-          try {
-            await this.connect();
-            let data = await _remote.request('account_tx', params);
-            var transactions = [];
-            if (data.transactions) {
-              data.transactions.forEach(function (e) {
-                var tx = rewriter.processTxn(e.tx, e.meta, address);
-                if (tx) {
-                  transactions.push(tx);
-                }
-              });
-            }
-            resolve({marker: data.marker, transactions: transactions});
-          } catch (err) {
-            console.error('getTx', err);
-            reject(err);
+          };
+          if (marker) {
+            params.marker = marker;
           }
-        });
+          let {result} = await _client.request(params);
+          console.log(result);
+          return {marker: result.marker, transactions: result.transactions};
+        } catch (err) {
+          console.error(err);
+          return {marker: null, transactions: []};
+        }
+      },
+
+      async checkAmm(base_code, base_issuer, counter_code, counter_issuer) {
+        try {
+          await this.conn();
+          const asset = base_code == "XRP" ? {currency: "XRP"} : { "currency": realCode(base_code), "issuer": base_issuer};
+          const asset2 = counter_code == "XRP" ? {currency: "XRP"} : { "currency": realCode(counter_code), "issuer": counter_issuer};
+          const amm_info_request = {
+            "command": "amm_info",
+            "asset" : asset,
+            "asset2": asset2,
+            "ledger_index": "validated"
+          };
+
+          const amm_info_result = await _client.request(amm_info_request);
+          let info = amm_info_result.result.amm;
+          if ("string" == typeof info.amount) {
+            info.amount = {"currency": "XRP", value: xrpl.dropsToXrp(info.amount)};
+          }
+          if ("string" == typeof info.amount2) {
+            info.amount2 = {"currency": "XRP", value: xrpl.dropsToXrp(info.amount2)};
+          }
+          return info;
+        } catch(err) {          
+          if (err.data && err.data.error === 'actNotFound') {
+            console.log(`No AMM exists yet for the pair. (This is probably as expected.)`);
+          } else {
+            console.error("getAmm", err);
+          }
+          return null;
+        }
+      },
+
+      async addLp(amount1, amount2) {
+        try {
+          const amm_deposit = {
+            "Account" : this.address,
+            "Asset" : { "currency" : amount1.currency },
+            "Asset2": { "currency" : amount2.currency },
+            "Amount" : convertAmount(amount1),
+            "Amount2": convertAmount(amount2),
+            "Flags": xrpl.AMMDepositFlags.tfTwoAsset,
+            "TransactionType" : "AMMDeposit"
+          };
+          if (amount1.issuer) { amm_deposit.Asset.issuer = amount1.issuer; }
+          if (amount2.issuer) { amm_deposit.Asset2.issuer = amount2.issuer; }
+          let ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(amm_deposit);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
+          }
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
+      },
+
+      async withdrawLp(asset1, asset2, lpAmount, withdrawAll = false) {
+        try {
+          let amm_withdraw = {
+            "Account" : this.address,
+            "Asset" : { "currency" : asset1.currency },
+            "Asset2": { "currency" : asset2.currency },
+            "TransactionType" : "AMMWithdraw"
+          };
+          if (asset1.issuer) { amm_withdraw.Asset.issuer = asset1.issuer; }
+          if (asset2.issuer) { amm_withdraw.Asset2.issuer = asset2.issuer; }
+          if (withdrawAll) {
+            amm_withdraw.Flags = xrpl.AMMWithdrawFlags.tfWithdrawAll;
+          } else {
+            amm_withdraw.Flags = xrpl.AMMWithdrawFlags.tfLPToken;
+            amm_withdraw.LPTokenIn = convertAmount(lpAmount);
+          }
+          let ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(amm_withdraw);
+          console.log(tx_json);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
+          }
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
       },
       
       changeSettings(settings) {
@@ -280,7 +390,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           limit: limit,
           ripplingDisabled: ripplingDisabled
         };
-        trustline.memos = [{data: _client, type: 'client', format: 'text'}];
+        trustline.memos = [{data: _appVersion, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject)=> {
           try {
             let ledger = await _remote.getLedger();
@@ -313,7 +423,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
         if (tag) payment.destination.tag = Number(tag);
         if (invoice) payment.invoiceID = invoice;
-        payment.memos = [{data: _client, type: 'client', format: 'text'}].concat(memos || []);
+        payment.memos = [{data: _appVersion, type: 'client', format: 'text'}].concat(memos || []);
         return new Promise(async (resolve, reject)=>{
           try {
             let ledger = await _remote.getLedger();
@@ -360,7 +470,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         if (paths.length) payment.paths = JSON.stringify(paths);
         if (tag) payment.destination.tag = Number(tag);
         if (invoice) payment.invoiceID = invoice;
-        payment.memos = [{data: _client, type: 'client', format: 'text'}].concat(memos || []);
+        payment.memos = [{data: _appVersion, type: 'client', format: 'text'}].concat(memos || []);
         return new Promise(async (resolve, reject)=>{
           try {
             let ledger = await _remote.getLedger();
@@ -409,14 +519,15 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           order.totalPrice.currency = 'XRP';
           order.totalPrice.value = round(order.totalPrice.value, 6).toString();
         }
-        order.memos = [{data: _client, type: 'client', format: 'text'}];
+        order.memos = [{data: _appVersion, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {
           try {
             let ledger = await _remote.getLedger();
             let prepared = await _remote.prepareOrder(this.address, order);
             const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction, true);
-            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            //this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            this.verify(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
             if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
               return reject(new Error(result.engine_result_message || result.engine_result));
@@ -431,14 +542,14 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       cancelOffer (offer_id) {
         const orderCancellation = {orderSequence: offer_id};
-        orderCancellation.memos = [{data: _client, type: 'client', format: 'text'}];
+        orderCancellation.memos = [{data: _appVersion, type: 'client', format: 'text'}];
         return new Promise(async (resolve, reject) => {
           try {
             let ledger = await _remote.getLedger();
             let prepared = await _remote.prepareOrderCancellation(this.address, orderCancellation);
             const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
             let result = await _remote.submit(signedTransaction, true);
-            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
+            this.verify(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
             if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
               console.warn(result);
               return reject(new Error(result.engine_result_message || result.engine_result || error.error_exception || 'UNKNOWN'));
@@ -477,46 +588,39 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      queryAccount(callback) {
-        this.checkInfo().then(info => {
-          _xrpBalance = info.xrpBalance;
-          _ownerCount = info.ownerCount;
-          _sequence = info.sequence;
-          return this.checkTrustlines();
-        }).then(lines => {
+      async queryAccount() {
+        try {
+          console.debug("queryAccount");
+          let response = await _client.request({ command: "account_info", account: this.address, ledger_index: "validated" });
+          _xrpBalance = xrpl.dropsToXrp(response.result.account_data.Balance);
+          _ownerCount = response.result.account_data.OwnerCount;
+          _sequence = response.result.account_data.Sequence;
+          response = await _client.request({ command: "account_lines", account: this.address });
+          _lines = [];
+          _balances = [{currency: "XRP", value: _xrpBalance}];
+          response.result.lines.forEach(line => {
+            if (line.balance != "0" || line.limit != "0") {
+              let item = {currency: line.currency, issuer: line.account, value: line.balance, limit: line.limit};
+              _lines.push(item);
+              _balances.push(item);
+            }
+          });
           this._updateRootInfo();
-          if (callback) { callback(); }
-        }).catch(err => {
+        } catch (err) {
           if (err.data && err.data.error === 'actNotFound') {
             $rootScope.unfunded = true;
             $rootScope.$apply();
+          } else {
+            console.log(err);
           }
-          if (callback) { callback(err); }
-        });
+        }
       },
       
       _updateRootInfo() {
         $rootScope.balance = _xrpBalance;
         $rootScope.reserve = SM.reserveBaseXRP + SM.reserveIncrementXRP * _ownerCount;
-        
-        var lines = {};
-        for(var keystr in _trustlines) {
-          var line = _trustlines[keystr];
-          if (line.balance == "0" && line.limit == "0") {
-            continue;
-          }
-          if (!lines[line.currency]) {
-            lines[line.currency] = {};
-          }
-          lines[line.currency][line.counterparty] = {
-              code    : line.currency,
-              issuer  : line.counterparty,
-              balance : line.balance,
-              limit   : line.limit,
-              ripplingDisabled: line.ripplingDisabled
-          };
-        }
-        $rootScope.lines = lines;
+        $rootScope.lines = _lines;
+        $rootScope.balances = _balances;
         $rootScope.$broadcast("balanceChange");
         $rootScope.$apply();
       },
@@ -528,8 +632,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         _myHandleAccountEvent = function(e) {
           self._handleAccountEvent(e)
         }
-        _remote.connection.on('transaction', _myHandleAccountEvent);
-        _remote.request('subscribe', {
+        _client.connection.on('transaction', _myHandleAccountEvent);
+        _client.request({
+          command: "subscribe",
           accounts: [ this.address ]
         }).then(response => {
           console.log('subscribe done', response);
@@ -541,9 +646,10 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       _closeStream() {
         if(_myHandleAccountEvent) {
           console.log('unsubscribe', this.address);
-          _remote.connection.removeListener('transaction', _myHandleAccountEvent);
+          _client.connection.removeListener('transaction', _myHandleAccountEvent);
           _myHandleAccountEvent = undefined;
-          _remote.request('unsubscribe', {
+          _client.request({
+            command : 'unsubscribe',
             accounts: [ this.address ]
           }).then(response => {
             console.log('unsubscribe done', response);
@@ -555,164 +661,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       _handleAccountEvent(event) {
         console.log('event', event);
-        try {
-          this._processTx(event.transaction, event.meta);
-        } catch(err) {
-          console.error(err);
-        };
-      },
-      
-      _handleAccountEntry(data) {
-        _xrpBalance = round(data.Balance / 1000000, 6).toString();
-        _ownerCount = data.OwnerCount || 0;
-        this._updateRootInfo();
-      },
-      
-      _updateLines(effects) {
-        if (!Array.isArray(effects)) return;
-
-        effects.forEach(effect => {
-          if (['trust_create_local',
-               'trust_create_remote',
-               'trust_change_local',
-               'trust_change_remote',
-               'trust_change_balance',
-               'trust_change_no_ripple'].indexOf(effect.type) >= 0) {
-            var line = {};
-            var index = key(effect.currency, effect.counterparty);
-
-            line.currency = effect.currency;
-            line.counterparty = effect.counterparty;
-            line.flags = effect.flags;
-            line.no_ripple = !!effect.noRipple; // Force Boolean
-
-            if (effect.balance) {
-              line.balance = effect.balance.to_number().toString();
-            }
-
-            if (effect.deleted) {
-              delete _trustlines[index];
-              return;
-            }
-
-            if (effect.limit) {
-              line.limit = effect.limit.to_number().toString();
-            }
-
-            if (effect.limit_peer) {
-              line.limit_peer = effect.limit_peer;
-            }
-            console.log('_lines need update', line);
-            if (_trustlines[index]) {
-              _trustlines[index].limit = line.limit || _trustlines[index].limit;
-              _trustlines[index].balance = line.balance || _trustlines[index].balance;
-              _trustlines[index].ripplingDisabled = line.no_ripple;
-            } else {
-              _trustlines[index] = {
-                  limit: line.limit,
-                  currency: line.currency,
-                  counterparty: line.counterparty,
-                  ripplingDisabled: line.no_ripple,
-                  balance: line.balance
-              }
-            }
-          }
-        });
-        this._updateRootInfo();
-      },
-      
-      _updateOffer(offer) {
-        console.log('_updateOffer', offer);
-        $rootScope.$broadcast("offerChange");
-      },
-      
-      _processTx(tx, meta, is_historic) {
-        var self = this;
-        var processedTxn = rewriter.processTxn(tx, meta, this.address);
-        if (processedTxn && processedTxn.error) {
-          console.error('Error processing transaction ', processedTxn.error);
-          // Add to history only
-          _history.unshift(processedTxn);
-        } else if (processedTxn) {
-          var transaction = processedTxn.transaction;
-
-          // Update account
-          if (processedTxn.accountRoot) {
-            this._handleAccountEntry(processedTxn.accountRoot);
-          }
-
-          // Show status notification
-          if (processedTxn.tx_result === "tesSUCCESS" && transaction && !is_historic) {
-            console.log('tx success', tx);
-            $rootScope.$broadcast('txSuccess', { hash:tx.hash, tx: transaction });
-          }
-
-          // Add to recent notifications
-          if (processedTxn.tx_result === "tesSUCCESS" && transaction) {
-
-            var effects = [];
-            // Only show specific transactions
-            switch (transaction.type) {
-              case 'offernew':
-              case 'exchange':
-                var funded = false;
-                processedTxn.effects.some(function(effect) {
-                  if (['offer_bought','offer_funded','offer_partially_funded'].indexOf(effect.type)>=0) {
-                    funded = true;
-                    effects.push(effect);
-                    return true;
-                  }
-                });
-
-                // Only show trades/exchanges which are at least partially funded
-                if (!funded) {
-                  break;
-                }
-                /* falls through */
-              case 'received':
-                // Is it unseen?
-                //if (processedTxn.date > ($scope.userBlob.data.lastSeenTxDate || 0)) {
-                  //processedTxn.unseen = true;
-                  //$scope.unseenNotifications.count++;
-                //}
-
-                processedTxn.showEffects = effects;
-                //$scope.events.unshift(processedTxn);
-            }
-          }
-
-          // Add to history
-          _history.unshift(processedTxn);
-
-          // Update Ripple lines
-          if (processedTxn.effects && !is_historic) {
-            this._updateLines(processedTxn.effects);
-          }
-
-          // Update my offers
-          if (processedTxn.effects && !is_historic) {
-            // Iterate on each effect to find offers
-            processedTxn.effects.forEach(function (effect) {
-              // Only these types are offers
-              if (['offer_created', 'offer_funded', 'offer_partially_funded', 'offer_cancelled'].indexOf(effect.type) >= 0) {
-                var offer = {
-                  seq: +effect.seq,
-                  gets: effect.gets,
-                  pays: effect.pays,
-                  deleted: effect.deleted,
-                  flags: effect.flags
-                };
-
-                self._updateOffer(offer);
-              }
-            });
-
-            //$scope.$broadcast('$offersUpdate');
-          }
-        }
-        
-        console.log(processedTxn);
-      },
+        $rootScope.$broadcast("accountEvent");
+        this.queryAccount();
+      }
 
     };
   } ]);

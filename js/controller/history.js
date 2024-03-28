@@ -123,7 +123,7 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
       }
 
       var offerChanges = parser.parseOrderbookChanges(meta);
-      var balanceChanges = parser.parseBalanceChanges(meta);
+      var balanceChanges = parser.parseBalanceChanges(meta); //xrpl.getBalanceChanges(meta);
       obj.effects = filterOrderbookChanges(offerChanges, account, tx);
       if (balanceChanges[account]) {
         balanceChanges[account].forEach(change => {
