@@ -1,38 +1,11 @@
 /* global myApp */
 
 myApp.factory('XrpOrderbook', ['$rootScope', 'AuthenticationFactory', '$q', function($rootScope, AuthenticationFactory, $q) {
-  let _remote;
-  let _myHandler;
+  let _client;
   
-  function formatOrder(item) {
-    var order = {};
-    order.account = item.properties.maker;
-    if (item.specification.direction == 'sell') {
-      order.gets_currency = item.specification.quantity.currency;
-      order.gets_value = item.state ? parseFloat(item.state.fundedAmount.value) : parseFloat(item.specification.quantity.value);
-      order.pays_currency = item.specification.totalPrice.currency
-      order.pays_value = item.state ? parseFloat(item.state.priceOfFundedAmount.value) : parseFloat(item.specification.totalPrice.value);
-      order.volume = order.pays_value;
-      order.amount = order.gets_value;
-      order.price = order.pays_value/order.gets_value;
-    } else {
-      order.gets_currency = item.specification.totalPrice.currency;
-      order.gets_value = item.state ? parseFloat(item.state.fundedAmount.value) : parseFloat(item.specification.totalPrice.value);
-      order.pays_currency = item.specification.quantity.currency
-      order.pays_value = item.state ? parseFloat(item.state.priceOfFundedAmount.value) : parseFloat(item.specification.quantity.value);
-      order.volume = order.gets_value;
-      order.amount = order.pays_value;
-      order.price = order.gets_value/order.pays_value;
-    }
-    return order;
+  function parseAmount(input) {
+    return "object" === typeof input ? input : {currency: "XRP", value: xrpl.dropsToXrp(input)};
   };
-  
-  function formatBook(book) {
-    return {
-      asks: book.asks.map(formatOrder),
-      bids: book.bids.map(formatOrder)
-    }
-  }
 
   return {
     get address() {
@@ -43,63 +16,90 @@ myApp.factory('XrpOrderbook', ['$rootScope', 'AuthenticationFactory', '$q', func
       return $rootScope.currentNetwork.coin.code;
     },
 
-    set remote(remote) {
-      _remote = remote;
+    set client(client) {
+      _client = client;
     },
     
     connect() {
-      if (!_remote) throw new Error("NotConnectedError");
-      return _remote.isConnected() ? Promise.resolve() : _remote.connect();
+      if (!_client) throw new Error("NotConnectedError");
+      return _client.isConnected() ? Promise.resolve() : _client.connect();
     },
     
-    checkBook(info) {
+    async checkBook(info) {
+      let asset1, asset2;
       if (this.nativeCode === info.base.currency) {
-        info.base.currency = 'XRP';
-        delete info.base.counterparty;
+        asset1 = {currency: "XRP"};
+      } else {
+        asset1 = {currency: info.base.currency, issuer: info.base.issuer};
       }
       if (this.nativeCode === info.counter.currency) {
-        info.counter.currency = 'XRP';
-        delete info.counter.counterparty;
-      }
-      var bookPromise = $q.defer();
-      if (info.base.currency !== 'XRP' && (info.counter.currency !== 'XRP')) {
-        this._bridgeBook(info, bookPromise);
+        asset2 = {currency: "XRP"};
       } else {
-        this._getBook(info).then(data => {
-          bookPromise.resolve(formatBook(data));
-        });
+        asset2 = {currency: info.counter.currency, issuer: info.counter.issuer};
       }
-      return bookPromise.promise;
+      if (asset1.currency !== "XRP" && asset2.currency !== "XRP") {
+        return await this._bridgeBook(asset1, asset2);
+      } else {
+        return await this._getBook(asset1, asset2);
+      }
     },
     
-    _getBook(info) {
-      return new Promise(async (resolve, reject)=>{
+    async _getBook(asset1, asset2) {
         try {
           await this.connect();
-          const response = await _remote.getOrderbook(this.address, info, {limit: 40});
-          resolve(response);
+          let data = {asks:[], bids:[]};
+          const book1 = await _client.request({"command": "book_offers", "taker_gets": asset1, "taker_pays": asset2, "limit": 40});
+          book1.result.offers.forEach(offer => {            
+            let taker_gets = parseAmount(offer.taker_gets_funded ? offer.taker_gets_funded : offer.TakerGets);
+            let taker_pays = parseAmount(offer.taker_pays_funded ? offer.taker_pays_funded : offer.TakerPays);
+            let order = {
+              account: offer.Account,
+              gets_currency : taker_gets.currency,
+              gets_value : parseFloat(taker_gets.value),
+              pays_currency : taker_pays.currency,
+              pays_value : parseFloat(taker_pays.value)
+            };
+            order.amount = order.gets_value;
+            order.volume = order.pays_value;
+            order.price = order.volume/order.amount;
+            data.asks.push(order);
+          });
+
+          const book2 = await _client.request({"command": "book_offers", "taker_gets": asset2, "taker_pays": asset1, "limit": 40});
+          book2.result.offers.forEach(offer => {            
+            let taker_gets = parseAmount(offer.taker_gets_funded ? offer.taker_gets_funded : offer.TakerGets);
+            let taker_pays = parseAmount(offer.taker_pays_funded ? offer.taker_pays_funded : offer.TakerPays);
+            let order = {
+              account: offer.Account,
+              gets_currency : taker_gets.currency,
+              gets_value : parseFloat(taker_gets.value),
+              pays_currency : taker_pays.currency,
+              pays_value : parseFloat(taker_pays.value)
+            };
+            order.amount = order.pays_value;
+            order.volume = order.gets_value;
+            order.price = order.volume/order.amount;
+            data.bids.push(order);
+          });
+          return data;
         } catch (err) {
-          console.error(info.base.currency + '/' + info.counter.currency, err);
-          resolve({asks:[], bids:[]});
+          console.error(asset1.currency + '/' + asset2.currency, err);
+          return {asks:[], bids:[]};
         }
-      });
     },
     
-    _bridgeBook(info, bookPromise) {
-      var info1 = { base : info.base, counter : {currency: 'XRP'} };
-      var info2 = { base : {currency: 'XRP'}, counter: info.counter };
-      Promise.all([this._getBook(info), this._getBook(info1), this._getBook(info2)]).then(values => {
-        var book0 = formatBook(values[0]);
-        var book1 = formatBook(values[1]);
-        var book2 = formatBook(values[2]);
-        var bridge_asks = this._calculateAsks(book1.asks, book2.asks).concat(book0.asks).sort((a, b)=>{
-          return a.price - b.price
-        });
-        var birdge_bids = this._calculateBids(book1.bids, book2.bids).concat(book0.bids).sort((a, b)=>{
-          return b.price - a.price;
-        });
-        bookPromise.resolve({asks: bridge_asks, bids: birdge_bids});
+    async _bridgeBook(asset1, asset2) {
+      let values = await Promise.all([this._getBook(asset1, asset2), this._getBook(asset1, {currency: "XRP"}), this._getBook({currency: "XRP"}, asset2)]);
+      let book0 = values[0];
+      let book1 = values[1];
+      let book2 = values[2];
+      let bridge_asks = this._calculateAsks(book1.asks, book2.asks).concat(book0.asks).sort((a, b)=>{
+        return a.price - b.price
       });
+      let birdge_bids = this._calculateBids(book1.bids, book2.bids).concat(book0.bids).sort((a, b)=>{
+        return b.price - a.price;
+      });
+      return {asks: bridge_asks, bids: birdge_bids};
     },
     
     _calculateAsks(asks1, asks2) {

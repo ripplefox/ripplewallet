@@ -256,7 +256,7 @@
 							<div class="col-sm-2" translate="action">Action</div>
 						</div>
 						<div class="row" ng-repeat="(seq, item) in offers.all" ng-class="{cancelling: isCancelling(seq)}">
-							<div class="col-sm-1">{{item.direction | translate}}</div>
+							<div class="col-sm-1">{{item.type | translate}}</div>
 							<div class="col-sm-3 right">{{item.price | fmtnum}} {{item.total.currency | fmtcode}}</div>
 							<div class="col-sm-3 right" title="{{item.quantity.counterparty}}">{{item.quantity.value | fmtnum}} {{item.quantity.currency | fmtcode}}</div>
 							<div class="col-sm-3 right" title="{{item.total.counterparty}}">{{item.total.value | fmtnum}} {{item.total.currency | fmtcode}}</div>

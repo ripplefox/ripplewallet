@@ -36,11 +36,12 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       set remote(remote) {
         _remote = remote;
         XrpPath.remote = remote;
-        XrpOrderbook.remote = remote;
       },
       
       set client(client) {
         _client = client;
+        XrpOrderbook.client = client;
+        XrpPath.client = client;
         if (this.address) {
           this.queryAccount();
           this.listenStream();
@@ -262,7 +263,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           if (amount2.issuer) { amm_deposit.Asset2.issuer = amount2.issuer; }
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(amm_deposit);
-          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
           const response = await _client.submit(tx_blob, {failHard});
           if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
             console.warn(response);
@@ -294,7 +295,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           }
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(amm_withdraw);
-          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
           const response = await _client.submit(tx_blob, {failHard});
           if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
             console.warn(response);
@@ -457,7 +458,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           order.memos = [{data: _appVersion, type: 'client', format: 'text'}];
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(order);
-          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
           const response = await _client.submit(tx_blob, {failHard});
           if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
             console.warn(response);
@@ -481,7 +482,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           cancel.memos = [{data: _appVersion, type: 'client', format: 'text'}];          
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(cancel);
-          const {tx_blob, hash} = await AuthenticationFactory.localSign(this, tx_json);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
           const response = await _client.submit(tx_blob, {failHard});
           if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
             console.warn(response);

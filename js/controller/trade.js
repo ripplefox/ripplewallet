@@ -166,8 +166,8 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.refreshingBook = false;
     $scope.refreshBook = function() {
       var info = {
-          base : {currency: $scope.base_code, counterparty: $scope.base_issuer},
-          counter : {currency: $scope.counter_code, counterparty: $scope.counter_issuer}
+          base : {currency: $scope.base_code, issuer: $scope.base_issuer},
+          counter : {currency: $scope.counter_code, issuer: $scope.counter_issuer}
       };
       $scope.refreshingBook = true;
       $scope.countdown = 30;
