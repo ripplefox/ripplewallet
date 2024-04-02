@@ -22,9 +22,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     function convertAmount(amount) {
       if ("object" === typeof amount) {
         amount.value = new BigNumber(new BigNumber(amount.value).toPrecision(16)).toString();
-        return amount.currency == "XRP" ? xrpl.xrpToDrops(amount.value) : amount;
+        return amount.currency == "XRP" ? xrpl.xrpToDrops(Number(amount.value).toFixed(6)) : amount;
       } else {
-        return new BigNumber(new BigNumber(amount).toPrecision(16)).toString()
+        return parseInt(amount).toString();
       }
     };
     function parseAmount(input) {
