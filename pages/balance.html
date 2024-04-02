@@ -48,9 +48,9 @@
 						</td>
 						<td>
 							<span class="BalancesTable__row__limit">{{line.limit | number : 0}}</span><br/>
-							<span class="BalancesTable__row__removeLink" translate="trust_noremove_desc" ng-show="line.limit == 0 && line.ripplingDisabled">No need to remove the trustline.</span>
+							<span class="BalancesTable__row__removeLink" translate="trust_noremove_desc" ng-show="line.limit == 0 && line.no_ripple">No need to remove the trustline.</span>
 							<a class="BalancesTable__row__removeLink" href="javascript:"
-								ng-hide="line.limit == 0 && line.ripplingDisabled || isRemoving(line.currency, line.issuer)"
+								ng-hide="line.limit == 0 && line.no_ripple || isRemoving(line.currency, line.issuer)"
 								ng-click="delTrust(line.currency, line.issuer)"
 								translate="trust_remove">Remove trust</a>
 							<span class="BalancesTable__row__removeLink"

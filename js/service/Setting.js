@@ -25,7 +25,7 @@ myApp.factory('SettingFactory', function($window) {
         translationKey: 'test_url',
         networkType: 'xrpTest',
         servers: [
-          {server: 's.altnet.rippletest.net', port: 51233}
+          {server: 's.devnet.rippletest.net', port: 51233}
         ],
         coin: {
           name: "ripple",

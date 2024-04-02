@@ -1,4 +1,4 @@
-/* global _, myApp, round, RippleAPI */
+/* global _, myApp, round */
 
 myApp.factory('ServerManager', ['$rootScope',
   function($rootScope) {

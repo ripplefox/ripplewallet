@@ -1,4 +1,4 @@
-/* global _, myApp, round, RippleAPI */
+/* global _, myApp, round */
 myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager', 'XrpPath', 'XrpOrderbook',
   function($rootScope, AuthenticationFactory, SM, XrpPath, XrpOrderbook) {
 
@@ -508,7 +508,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           _balances = [{currency: "XRP", value: _xrpBalance}];
           response.result.lines.forEach(line => {
             if (line.balance != "0" || line.limit != "0") {
-              let item = {currency: line.currency, issuer: line.account, value: line.balance, limit: line.limit};
+              let item = {currency: line.currency, issuer: line.account, value: line.balance, limit: line.limit, no_ripple: line.no_ripple};
               _lines.push(item);
               _balances.push(item);
             }

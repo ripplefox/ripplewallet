@@ -1,5 +1,4 @@
 /* globals angular, nw, translate_cn, translate_en, translate_jp */
-window.RippleAPI = require('ripple-lib').RippleAPI;
 window.appinfo = require('./package.json');
 
 /* exported myApp */

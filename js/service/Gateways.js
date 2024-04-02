@@ -101,16 +101,22 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
     };
 
     let _testingnet = {
-        "xrptoolkit.com" : {
-          name : 'xrptoolkit.com',
-          website : 'https://xrptoolkit.com',
+        "xrps.is" : {
+          name : 'xrps.io',
+          website : 'https://xrps.io/',
           assets : [
-            {code : 'USD', issuer : 'rD9W7ULveavz8qBGM1R5jMgK2QKsEDPQVi', list: true, name: "USD (Testing)"},
-            {code : 'BTC', issuer : 'rD9W7ULveavz8qBGM1R5jMgK2QKsEDPQVi', list: true, name: "BTC (Testing)"},
-            {code : 'ETH', issuer : 'rD9W7ULveavz8qBGM1R5jMgK2QKsEDPQVi', name: "ETH (Testing)"},
-            {code : 'EUR', issuer : 'rD9W7ULveavz8qBGM1R5jMgK2QKsEDPQVi', name: "EUR (Testing)"},
+            {code : 'XRPS', issuer : 'rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL', list: true, name: "XRPS (Testing)", logo: "img/coin/xrps.png", mint: "mint@xrps.io"}
           ],
-          logo : "img/gateway/xrptoolkit.png"
+          logo : "img/coin/xrps.png"
+        },
+        "ripplefox.com" : {
+          name : 'ripplefox.com',
+          website : 'https://ripplefox.com/',
+          deposit : 'https://ripplefox.com/deposit',
+          assets : [
+            {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Lumens (Testing)", logo: "img/coin/xlm.png", deposit: true}
+          ],
+          logo : "img/gateway/ripplefox.png"
         }
     };
     
@@ -149,21 +155,13 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
       }
     });
 
-    //add testing net asset to asset2gateway
-    _testingnet["xrptoolkit.com"].assets.forEach(asset => {
-      _asset2gateway[asset.issuer] = {
-          name : _testingnet["xrptoolkit.com"].name,
-          website : _testingnet["xrptoolkit.com"].website,
-          logo : _testingnet["xrptoolkit.com"].logo
-      }
-    });
-    
     return {
       getGateway(code, issuer) {
         if (code === $rootScope.currentNetwork.coin.code) {
-          return {
-            logo : $rootScope.currentNetwork.coin.logo
-          }
+          return { logo : $rootScope.currentNetwork.coin.logo };
+        }
+        if (code.length == 40 && code.substring(0, 2) == "03") {
+          return { logo : "img/coin/lp.png" };
         }
         return _asset2gateway[key(code, issuer)] || _asset2gateway[issuer] || {logo : 'img/unknown.png'};
       },

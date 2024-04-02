@@ -3,14 +3,12 @@ const {derivePath} = require('ed25519-hd-key');
 const keypairs = require('ripple-keypairs');
 
 myApp.factory('Id', function($window) {
-  let _ripple = new RippleAPI();
-  
   return {
     isValidAddress : function(address) {
-      return RippleAPI.isValidClassicAddress(address);
+      return xrpl.isValidAddress(address);
     },
     isValidSecret : function(secret) {
-      return _ripple.isValidSecret(secret);
+      return xrpl.isValidSecret(secret);
     },
     isValidEmail : function(email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -55,14 +53,13 @@ myApp.factory('Id', function($window) {
         const keypair = keypairs.deriveKeypair(secret);
         const classicAddress = keypairs.deriveAddress(keypair.publicKey)
         return {address: classicAddress, secret: secret};
-      } else {
-        kp = _ripple.generateAddress();
       }
-      return {address: kp.address, secret: kp.secret};
+      const wallet = xrpl.Wallet.generate("ecdsa-secp256k1");
+      return {address: wallet.classicAddress, secret: wallet.seed};
     },
     fromSecret : function(secret) {
-      var keypair = _ripple.deriveKeypair(secret);
-      return {address:  RippleAPI.deriveClassicAddress(keypair.publicKey), secret: secret};
+      const wallet = xrpl.Wallet.fromSeed(secret, {algorithm: "secp256k1"});
+      return {address:  wallet.classicAddress, secret: secret};
     },
     generateFilename : function() {
       var dt = new Date();
