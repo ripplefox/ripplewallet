@@ -129,7 +129,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       
       var amount = null;
       if ($scope.asset.code == native.code) {
-        amount = round($scope.asset.amount * 1000000).toString();
+        amount = xrpl.xrpToDrops($scope.asset.amount);
       } else {
         amount = {
             currency : $scope.asset.code,
@@ -154,21 +154,21 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
 
         if (err) {
           $scope.stopPath();
-          if (err.message !== "Unknown method.") {
-            $scope.send_error = err.message;
+          if ($scope.mode !== "input") {
             return;
           }
+          $scope.send_error = err.message; // "Unknown method." or other errors, can send anyway
+
           // s1, s2 does not support path;
           $scope.found = true;
           // only need to create for issued assets
           if ($scope.asset.code !== native.code) {
             if (!$scope.asset.issuer) { // Not federation protocol, it does not have issuer.
               var default_issuer = null;
-              if ($rootScope.lines[$scope.asset.code]) {
-                const gatewayKeys = Object.keys($rootScope.lines[$scope.asset.code]);
-                if (gatewayKeys.length) {
-                  const first_issuer = gatewayKeys[0];
-                  default_issuer = Number($rootScope.lines[$scope.asset.code][first_issuer].balance) > 0 ? first_issuer : null;
+              for (let i=0; i<$rootScope.lines.length; i++) {
+                let line = $rootScope.lines[i];
+                if (line.currency == $scope.asset.code && Number(line.value) > 0) {
+                  default_issuer = line.issuer;
                 }
               }
               amount.issuer = default_issuer || $rootScope.address;
@@ -426,38 +426,37 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       if (alt) {
         if ("string" === typeof alt.source_amount) {
           srcAmount = {
-              currency : 'drops',
-              value : round(alt.source_amount * 1.01).toString()
+              currency : 'XRP',
+              value : xrpl.dropsToXrp(alt.source_amount * 1.01)
           }
         } else {
           srcAmount = {
               currency : alt.source_amount.currency,
-              counterparty : alt.source_amount.issuer,
+              issuer : alt.source_amount.issuer,
               value : new BigNumber(alt.source_amount.value).multipliedBy(1.01).toString()
           }
         }
       } else {
         srcAmount = {
-            currency : 'drops',
-            value : round($scope.asset.amount * 1000000).toString()
+            currency : 'XRP',
+            value : $scope.asset.amount.toString()
         }
       }
       if ($scope.asset.code == native.code) {
         dstAmount = {
-            currency : 'drops',
-            value : round($scope.asset.amount * 1000000).toString()
+            currency : 'XRP',
+            value : $scope.asset.amount.toString()
         }
       } else {
         dstAmount = {
             currency : $scope.asset.code,
-            counterparty : $scope.real_address,
+            issuer : $scope.real_address,
             value : $scope.asset.amount.toString()
         }
       }
 
-      var payment = alt && alt.paths_computed ? XrpApi.pathPayment($scope.real_address, srcAmount, dstAmount, alt.paths_computed, $scope.tag, $scope.invoice, $scope.memos) :
-                       XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag, $scope.invoice, $scope.memos);
-      payment.then(hash => {
+      var pathArray = alt && alt.paths_computed ? alt.paths_computed : null;
+      XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag, $scope.invoice, $scope.memos, pathArray).then(hash => {
         $scope.hash = hash;
         $scope.tx_state = "submitted";
         $scope.sending = false;

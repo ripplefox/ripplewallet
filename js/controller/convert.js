@@ -27,7 +27,7 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
       
       var amount = null;
       if ($scope.dst_currency == $rootScope.currentNetwork.coin.code) {
-        amount = round($scope.dst_amount * 1000000).toString();
+        amount = xrpl.xrpToDrops($scope.dst_amount);
       } else {
         amount = {
             currency : $scope.dst_currency,
@@ -116,25 +116,25 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
       var srcAmount, dstAmount;
       if ("string" === typeof alt.source_amount) {
         srcAmount = {
-            currency : 'drops',
-            value : round(alt.source_amount * 1.01).toString()
+            currency : 'XRP',
+            value : xrpl.dropsToXrp(alt.source_amount * 1.01)
         }
       } else {
         srcAmount = {
             currency : alt.source_amount.currency,
-            counterparty : alt.source_amount.issuer,
+            issuer : alt.source_amount.issuer,
             value : new BigNumber(alt.source_amount.value).multipliedBy(1.01).toString()
         }
       }
       if ($scope.dst_currency == $rootScope.currentNetwork.coin.code) {
         dstAmount = {
-            currency : 'drops',
-            value : round($scope.dst_amount * 1000000).toString()
+            currency : 'XRP',
+            value : $scope.dst_amount.toString()
         }
       } else {
         dstAmount = {
             currency : $scope.dst_currency,
-            counterparty : $rootScope.address,
+            issuer : $rootScope.address,
             value : $scope.dst_amount.toString()
         }
       }

@@ -35,7 +35,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     return {
       set remote(remote) {
         _remote = remote;
-        XrpPath.remote = remote;
       },
       
       set client(client) {
@@ -354,92 +353,43 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         });
       },
       
-      payment(destinationAddress, srcAmount, destAmount, tag, invoice, memos) {
+      async payment(destinationAddress, srcAmount, destAmount, tag, invoice, memos, paths) {
         const payment = {
-            "source": {
-              "address": this.address,
-              "maxAmount": convertAmount(srcAmount)
-            },
-            "destination": {
-              "address": destinationAddress,
-              "amount": convertAmount(destAmount)
-            }
+          "TransactionType": "Payment",
+          "Account": this.address,
+          "Destination": destinationAddress,
+          "Amount" : convertAmount(destAmount)          
+        };
+        if (srcAmount.currency !== "XRP" || destAmount.currency !== "XRP") {
+          payment.SendMax = convertAmount(srcAmount);
         }
-        if (tag) payment.destination.tag = Number(tag);
-        if (invoice) payment.invoiceID = invoice;
-        payment.memos = [{data: _appVersion, type: 'client', format: 'text'}].concat(memos || []);
-        return new Promise(async (resolve, reject)=>{
-          try {
-            let ledger = await _remote.getLedger();
-            let prepared = await _remote.preparePayment(this.address, payment);
-            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
-            let result = await _remote.submit(signedTransaction, true);
-            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
-            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
-              console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result));
-            }
-            resolve(id);
-          } catch (err) {
-            if (err.data) {
-              console.error(err.data);
-              return reject(new Error(err.data.engine_result_message || err.data.engine_result || err.data.error_exception || 'UNKNOWN'));
-            } 
-            console.error('payment', payment, err);
-            reject(err);
-          }
-        });
-      },
-      
-      pathPayment(destinationAddress, srcAmount, destAmount, paths, tag, invoice, memos, partial) {
-        //remove the type, type_hex to pass checkTxSerialization in sign function
-        paths.forEach(path => {
-          path.forEach(asset => {
-            delete asset.type;
-            delete asset.type_hex;
-          });
-        });
-        const payment = {
-            "source": {
-              "address": this.address,
-              "maxAmount": convertAmount(srcAmount)
-            },
-            "destination": {
-              "address": destinationAddress,
-              "amount": convertAmount(destAmount)
-            },
-            //"paths" : JSON.stringify(paths),
-            "allowPartialPayment": !!partial
+        if (paths && paths.length) {
+          payment.Paths = paths;
         }
-        if (paths.length) payment.paths = JSON.stringify(paths);
-        if (tag) payment.destination.tag = Number(tag);
-        if (invoice) payment.invoiceID = invoice;
+        if (tag) payment.DestinationTag = Number(tag);
+        if (invoice) payment.InvoiceID = invoice;
         payment.memos = [{data: _appVersion, type: 'client', format: 'text'}].concat(memos || []);
-        return new Promise(async (resolve, reject)=>{
-          try {
-            let ledger = await _remote.getLedger();
-            let prepared = await _remote.preparePayment(this.address, payment);
-            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
-            let result = await _remote.submit(signedTransaction, true);
-            this.verify(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
-            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
-              console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result));
-            }
-            resolve(id);
-          } catch (err) {
-            if (err.data) {
-              console.error(err.data);
-              return reject(new Error(err.data.engine_result_message || err.data.engine_result || err.data.error_exception || 'UNKNOWN'));
-            } 
-            console.error('pathPayment', payment, err);
-            reject(err);
+
+        try {
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(payment);
+          console.log(tx_json);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
           }
-        });
-      },
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error("payment", err);
+          throw err;
+        }
+      },      
       
       convert(srcAmount, destAmount, paths) {
-        return this.pathPayment(this.address, srcAmount, destAmount, paths, null, null, null, true);
+        return this.payment(this.address, srcAmount, destAmount, null, null, null, paths);
       },
       
       async offer(options) {
