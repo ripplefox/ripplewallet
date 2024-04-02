@@ -47,7 +47,7 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       $scope.error = '';
       $scope.domain_done = false;
       $scope.domain_working = true;
-      XrpApi.changeSettings({'domain': $scope.domain}).then(result => {
+      XrpApi.setDomain($scope.domain).then(result => {
         $scope.domain_working = false;
         $scope.domain_done = true;
         $rootScope.$apply();
@@ -65,9 +65,7 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       $scope.error = '';
       $scope.flags_done = false;
       $scope.flags_working = true;
-      var settings = {};
-      settings[field] = value;
-      XrpApi.changeSettings(settings).then(result => {
+      XrpApi.setFlag(field, value).then(result => {
         $scope.flags_working = false;
         $scope.flags_done = true;
         $rootScope.$apply();
@@ -89,7 +87,7 @@ myApp.controller("SecurityCtrl", ['$scope', '$rootScope', 'AuthenticationFactory
       if ($scope.isEthAddress) {
         $scope.messagekey = '02' + '0'.repeat(24) + $scope.messagekey.slice(2).toUpperCase();
       }
-      XrpApi.changeSettings({'messageKey': $scope.messagekey}).then(result => {
+      XrpApi.setMessageKey($scope.messagekey).then(result => {
         $scope.messagekey_working = false;
         $scope.messagekey_done = true;
         $rootScope.$apply();

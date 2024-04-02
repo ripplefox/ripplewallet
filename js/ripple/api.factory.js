@@ -146,34 +146,37 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
-      checkSettings(address) {
-        return new Promise(async (resolve, reject)=>{
-          try {
-            await this.connect();
-            let data = await _remote.getSettings(address || this.address);
-            resolve(data);
-          } catch(e){
-            if (e.data && e.data.error === 'actNotFound') {
-              e.unfunded = true;
-            }
-            reject(e);
+      async checkSettings(address) {
+        try {
+          await this.conn();
+          let {result} = await _client.request({ command: "account_info", account: address || this.address, ledger_index: "validated" });
+          let data = {
+            domain : result.account_data.Domain ? hexToAscii(result.account_data.Domain) : null,
+            messageKey : result.account_data.MessageKey,
+            disallowIncomingXRP : result.account_flags.disallowIncomingXRP,
+            requireDestinationTag : result.account_flags.requireDestinationTag,
+            defaultRipple : result.account_flags.defaultRipple
           };
-        });
+          return data;
+        } catch(e){
+          if (e.data && e.data.error === 'actNotFound') {
+            e.unfunded = true;
+          }
+          throw e;
+        };
       },
       
-      checkCurrencies(address) {
-        return new Promise(async (resolve, reject)=>{
-          try {
-            await this.connect();
-            let data = await _remote.request('account_currencies', {account: address || this.address});
-            resolve(data);
-          } catch(e){
-            if (e.data && e.data.error === 'actNotFound') {
-              e.unfunded = true;
-            }
-            reject(e);
-          };
-        });
+      async checkCurrencies(address) {
+        try {
+          await this.conn();
+          const {result} = await _client.request({ command: "account_currencies", account: address || this.address, ledger_index: "validated" });
+          return result;
+        } catch(e) {
+          if (e.data && e.data.error === 'actNotFound') {
+            e.unfunded = true;
+          }
+          throw e;
+        };
       },
       
       async checkOffers(address) {
@@ -308,22 +311,87 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
-      changeSettings(settings) {
-        return new Promise(async (resolve, reject)=> {
-          try {
-            let prepared = await _remote.prepareSettings(this.address, settings);
-            const {signedTransaction} = AuthenticationFactory.sign(this, prepared.txJSON);
-            let result = await _remote.submit(signedTransaction, true);
-            if ("tesSUCCESS" !== result.engine_result) {
-              console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result));
-            }
-            resolve(result);
-          } catch (err) {
-            console.info('changeSettings', err.data || err);
-            reject(err);
+      async setDomain(str) {
+        try {
+          let hex = '';
+          for(let i = 0; i < str.length; i++) {
+              hex += str.charCodeAt(i).toString(16).padStart(2, '0');
           }
-        });
+          const settings = {
+            "Account" : this.address,
+            "TransactionType": "AccountSet",
+            "Domain": hex         
+          };
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(settings);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
+          }
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
+      },
+
+      async setMessageKey(str) {
+        try {          
+          const settings = {
+            "Account" : this.address,
+            "TransactionType": "AccountSet",
+            "MessageKey": str         
+          };
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(settings);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
+          }
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
+      },
+
+      //xrpl.AccountSetAsfFlags
+      //{"1":"asfRequireDest","2":"asfRequireAuth","3":"asfDisallowXRP","4":"asfDisableMaster","5":"asfAccountTxnID","6":"asfNoFreeze","7":"asfGlobalFreeze","8":"asfDefaultRipple",
+      //"9":"asfDepositAuth","10":"asfAuthorizedNFTokenMinter","12":"asfDisallowIncomingNFTokenOffer","13":"asfDisallowIncomingCheck","14":"asfDisallowIncomingPayChan","15":"asfDisallowIncomingTrustline","16":"asfAllowTrustLineClawback",
+      //"asfRequireDest":1,"asfRequireAuth":2,"asfDisallowXRP":3,"asfDisableMaster":4,"asfAccountTxnID":5,"asfNoFreeze":6,"asfGlobalFreeze":7,"asfDefaultRipple":8,
+      //"asfDepositAuth":9,"asfAuthorizedNFTokenMinter":10,"asfDisallowIncomingNFTokenOffer":12,"asfDisallowIncomingCheck":13,"asfDisallowIncomingPayChan":14,"asfDisallowIncomingTrustline":15,"asfAllowTrustLineClawback":16}
+      async setFlag(name, value) {
+        try {
+          const settings = {
+            "Account" : this.address,
+            "TransactionType": "AccountSet"
+          };
+          let flag_index = xrpl.AccountSetAsfFlags[name]; //
+          if (value) {
+            settings.SetFlag = flag_index;
+          } else {
+            settings.ClearFlag = flag_index;
+          }          
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(settings);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
+          }
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
       },
       
       changeTrust(code, issuer, limit, ripplingDisabled = true) {
