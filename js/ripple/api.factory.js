@@ -92,29 +92,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
-      verifyTx(hash, minLedger, maxLedger) {
-        const options = {
-          minLedgerVersion: minLedger,
-          maxLedgerVersion: maxLedger
-        };
-        _remote.getTransaction(hash, options).then(data => {
-          if (data.outcome.result === 'tesSUCCESS') {
-            $rootScope.$broadcast('txSuccess', { hash: hash, options: options});
-          } else {
-            console.error(data);
-            $rootScope.$broadcast('txFail', { hash: hash});
-          }
-        }).catch(err => {
-          console.warn('verify fail', err);
-          /* If transaction not in latest validated ledger, try again until max ledger hit */
-          if (err instanceof _remote.errors.PendingLedgerVersionError) {
-             setTimeout(() => this.verifyTx(hash, minLedger, maxLedger), 1000);
-          } else {
-            console.error("Transaction may have failed.");
-          }
-        });
-      },
-
       async verify(hash, minLedger, maxLedger) {
         await sleep(2000);
         let latestLedger = 0;
@@ -339,7 +316,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       },
 
       async setMessageKey(str) {
-        try {          
+        try {
           const settings = {
             "Account" : this.address,
             "TransactionType": "AccountSet",
@@ -394,31 +371,30 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
-      changeTrust(code, issuer, limit, ripplingDisabled = true) {
-        const trustline = {
-          currency: realCode(code),
-          counterparty: issuer,
-          limit: limit,
-          ripplingDisabled: ripplingDisabled
-        };
-        trustline.memos = [{data: _appVersion, type: 'client', format: 'text'}];
-        return new Promise(async (resolve, reject)=> {
-          try {
-            let ledger = await _remote.getLedger();
-            let prepared = await _remote.prepareTrustline(this.address, trustline);
-            const {signedTransaction, id} = AuthenticationFactory.sign(this, prepared.txJSON);
-            let result = await _remote.submit(signedTransaction, true);
-            this.verifyTx(id, ledger.ledgerVersion, prepared.instructions.maxLedgerVersion);
-            if ("tesSUCCESS" !== result.engine_result && "terQUEUED" !== result.engine_result) {
-              console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result));
-            }
-            resolve(id);
-          } catch (err) {
-            console.info('changeTrust', err);
-            reject(err);
+      async changeTrust(code, issuer, limit) {
+        try {
+          const trustline = {
+            "Account": this.address,
+            "TransactionType":"TrustSet",
+            "LimitAmount":{"currency": realCode(code), "issuer": issuer, "value": limit},
+            "Flags": xrpl.TrustSetFlags.tfSetNoRipple
+          };
+          trustline.memos = [{data: _appVersion, type: 'client', format: 'text'}];
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(trustline);
+          console.log(tx_json);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
           }
-        });
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
       },
       
       async payment(destinationAddress, srcAmount, destAmount, tag, invoice, memos, paths) {
