@@ -65,7 +65,7 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
           XrpApi.logout();
           SM.connect().then((name)=>{
             console.log(`ServerManager connect to ${name}`);
-            XrpApi.remote = SM.remote;
+            XrpApi.client = SM.client;
           });
           $rootScope.reset();
           $rootScope.currentNetwork = SettingFactory.getCurrentNetwork();
@@ -76,6 +76,7 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
         }
       }
       
+      // no use
       if (mode == 'settings') {
         try {
           SettingFactory.setTimeout($scope.network_timeout);
@@ -86,7 +87,7 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
           XrpApi.logout();
           SM.connect().then((name)=>{
             console.log(`ServerManager connect to ${name}`);
-            XrpApi.remote = SM.remote;
+            XrpApi.client = SM.client;
           });
           $rootScope.reset();
           location.reload();
@@ -95,12 +96,12 @@ myApp.controller("SettingsCtrl", [ '$scope', '$rootScope', '$location', 'Setting
           $scope.network_error = e.message;
         }
       }
-
+      // no use
       if (mode == 'federation') {
         SettingFactory.setFedRipple($scope.fed_ripple);
         SettingFactory.setFedBitcoin($scope.fed_bitcoin);
       }
-
+      // no use
       if (mode == 'proxy') {
         SettingFactory.setProxy($scope.proxy);
       }

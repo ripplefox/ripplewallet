@@ -206,14 +206,10 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
 
     $translate.use(SettingFactory.getLang());
     try {
-      SM.setMaxfee(SettingFactory.getMaxfee());
-      SM.setTimeout(SettingFactory.getTimeout());
+      //SM.setMaxfee(SettingFactory.getMaxfee());
+      //SM.setTimeout(SettingFactory.getTimeout());
       SM.setServers(SettingFactory.getServers());
-      SM.connect().then((name)=>{
-        console.log(`ServerManager connect to ${name}`);
-        XrpApi.remote = SM.remote;
-      });
-      SM.connectClient().then((name) => {
+      SM.connect().then((name) => {
         console.log(`Client connect to ${name}`);
         XrpApi.client = SM.client;
       });

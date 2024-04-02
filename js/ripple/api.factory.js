@@ -10,7 +10,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     let _lines = []; // no xrp
 
     let _myHandleAccountEvent = undefined;
-    let _remote;
     let _client;
     let _appVersion = ""; // foxlet version
     const failHard = true;
@@ -32,11 +31,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       return "object" === typeof input ? input : {currency: "XRP", value: xrpl.dropsToXrp(input)};
     }
 
-    return {
-      set remote(remote) {
-        _remote = remote;
-      },
-      
+    return {      
       set client(client) {
         _client = client;
         XrpOrderbook.client = client;
@@ -51,11 +46,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         _appVersion = info;
       },
       
-      connect() {
-        if (!_remote) throw new Error("NotConnectedError");
-        return _remote.isConnected() ? Promise.resolve() : _remote.connect();
-      },
-
       async conn() {
         if (!_client) throw new Error("NotConnectedError");
         if (!_client.isConnected()) {
@@ -81,15 +71,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       get address() {
         return AuthenticationFactory.address;
-      },
-      
-      // used by auth factory only
-      sign(txtJson, secret, maxFee) {
-        if (maxFee) {
-          return new RippleAPI({maxFeeXRP: maxFee}).sign(txtJson, secret);
-        } else {
-          return _remote.sign(txtJson, secret);
-        }
       },
       
       async verify(hash, minLedger, maxLedger) {
@@ -490,30 +471,29 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
       },
       
-      deleteAccount(dest_account) {
-        const localInstructions = { maxFee: SM.reserveIncrementXRP.toString()};
-        return new Promise(async (resolve, reject) => {
-          try {
-            let prepared = await _remote.prepareTransaction({
-              TransactionType: 'AccountDelete',
-              Account: this.address,
-              Destination: dest_account
-            }, localInstructions);
-            console.log(prepared);
-            var obj = JSON.parse(prepared.txJSON);
-            obj.Fee = "" + SM.reserveIncrementXRP + "000000";
-            const {signedTransaction} = AuthenticationFactory.sign(this, JSON.stringify(obj), SM.reserveIncrementXRP.toString());
-            let result = await _remote.submit(signedTransaction, true);
-            if ("tesSUCCESS" !== result.engine_result) {
-              console.warn(result);
-              return reject(new Error(result.engine_result_message || result.engine_result));
-            }
-            resolve(result);
-          } catch (err) {
-            console.error('deleteAccount', err);
-            reject(err);
+      async deleteAccount(dest_account) {
+        try {
+          let special = {
+            "Account" : this.address,
+            "TransactionType": "AccountDelete",
+            "Destination": dest_account
+          };
+          special.Fee = xrpl.xrpToDrops(SM.reserveIncrementXRP);          
+          special.memos = [{data: _appVersion, type: 'client', format: 'text'}];          
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(special);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
           }
-        });
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error("cancel", err);
+          throw err;
+        }
       },
       
       async queryAccount() {

@@ -3,9 +3,9 @@
 		<div class="col-sm-3">
 			<div class="settingPage">
 				<a href="javascript:" ng-class="{active: mode=='network'}" ng-click="mode='network'">{{'network' | translate}}</a>
-				<a href="javascript:" ng-class="{active: mode=='settings'}" ng-click="mode='settings'">{{'settings' | translate}}</a>
+				<a ng-hide="true" href="javascript:" ng-class="{active: mode=='settings'}" ng-click="mode='settings'">{{'settings' | translate}}</a>
 				<a ng-hide="true" href="javascript:" ng-class="{active: mode=='federation'}" ng-click="mode='federation'">{{'fed_protocol' | translate}}</a>
-				<a href="javascript:" ng-class="{active: mode=='proxy'}" ng-click="mode='proxy'">{{'proxy' | translate}}</a>
+				<a ng-hide="true" href="javascript:" ng-class="{active: mode=='proxy'}" ng-click="mode='proxy'">{{'proxy' | translate}}</a>
 			</div>
 		</div>
 
