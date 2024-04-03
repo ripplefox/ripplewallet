@@ -69,6 +69,9 @@ myApp.factory('ServerManager', ['$rootScope',
                   $rootScope.$broadcast("networkChange");
                   console.warn(_client.name, 'client disconnected, code:', code);
                 });
+                _client.client.on('error', (errorCode, errorMessage, data) => {
+                  console.error(errorCode, errorMessage, data);
+                });
                 _client.client.request({command: "server_info"}).then(response => {
                   _reserveBaseXRP = response.result.info.validated_ledger.reserve_base_xrp;
                   _reserveIncrementXRP = response.result.info.validated_ledger.reserve_inc_xrp;
