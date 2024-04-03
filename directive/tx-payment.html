@@ -11,7 +11,7 @@
 					<strong>{{tx.transaction.destination}}</strong>
 				</span>
 				<span ng-show="tx.transaction.type == 'received'">
-					<strong>{{tx.transaction.destination}}</strong>
+					<strong>{{tx.transaction.source}}</strong>
 					{{'sent_you' | translate}}
 					<strong>{{tx.transaction.delivered.value | fmtnum}} {{tx.transaction.delivered.currency | rpcurrency:native.code}}</strong>
 				</span>

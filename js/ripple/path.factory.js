@@ -1,22 +1,20 @@
 /* global myApp */
 
-myApp.factory('XrpPath', ['$rootScope', function($rootScope) {
-  let _remote;
+myApp.factory('XrpPath', ['$rootScope', 'ServerManager', function($rootScope, SM) {
+  let _client;
   let _src_act;
   let _myHandler;
 
   return {
-
-    set client(client) {
-      _client = client;
-    },
-    
     connect() {
       if (!_client) throw new Error("NotConnectedError");
       return _client.isConnected() ? Promise.resolve() : _client.connect();
     },
     
     close() {
+      if (!_client) {
+        _client = SM.pathNode;
+      }
       if (_myHandler) {
         _client.connection.removeListener('path_find', _myHandler);
         _myHandler = undefined;
@@ -31,8 +29,10 @@ myApp.factory('XrpPath', ['$rootScope', function($rootScope) {
       }
     },
     
-    open(src_act, dest_act, xrpDropsOrAmountObj, handler) {
+    async open(src_act, dest_act, xrpDropsOrAmountObj, handler) {
       this.close();
+      await this.connect();
+
       _myHandler = function(e){
         handler(null, e);
       };

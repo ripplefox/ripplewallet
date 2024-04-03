@@ -1,6 +1,6 @@
 /* global _, myApp, round */
-myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager', 'XrpPath', 'XrpOrderbook',
-  function($rootScope, AuthenticationFactory, SM, XrpPath, XrpOrderbook) {
+myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager', 'XrpOrderbook',
+  function($rootScope, AuthenticationFactory, SM, XrpOrderbook) {
 
     let _ownerCount = 0;
     let _xrpBalance = "";
@@ -35,7 +35,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       set client(client) {
         _client = client;
         XrpOrderbook.client = client;
-        XrpPath.client = client;
         if (this.address) {
           this.queryAccount();
           this.listenStream();
@@ -498,7 +497,6 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       
       async queryAccount() {
         try {
-          console.debug("queryAccount");
           let response = await _client.request({ command: "account_info", account: this.address, ledger_index: "validated" });
           _xrpBalance = xrpl.dropsToXrp(response.result.account_data.Balance);
           _ownerCount = response.result.account_data.OwnerCount;

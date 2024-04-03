@@ -4,6 +4,7 @@ myApp.factory('ServerManager', ['$rootScope',
   function($rootScope) {
     let _clients = {};
     let _client = undefined;
+    let _path = undefined; // full function node for path find
 
     let _timeout = 10000;
     
@@ -13,6 +14,10 @@ myApp.factory('ServerManager', ['$rootScope',
     return {
       get client() {
         return _client ? _client.client : null;
+      },
+
+      get pathNode() {
+        return _path ? _path.client : this.client;
       },
       
       get online() {
@@ -49,8 +54,6 @@ myApp.factory('ServerManager', ['$rootScope',
       },
 
       connect() {
-        _client = undefined;
-
         return new Promise((resolve, reject)=>{
           for (var name in _clients) {
             this._connect(_clients[name], name).then((result) => {
@@ -74,7 +77,11 @@ myApp.factory('ServerManager', ['$rootScope',
                 $rootScope.$broadcast("networkChange");
                 resolve(result.name);
               } else {
-                result.client.disconnect();
+                if (_path && _path.name == result.name) {
+                  console.warn("pathNode connected.", _path.name);
+                } else {
+                  result.client.disconnect();
+                }
               }
             }).catch((err) => {
               console.log('ignore client', err);
@@ -87,6 +94,7 @@ myApp.factory('ServerManager', ['$rootScope',
         this.disconnect();
         _clients = {};
         _client = undefined;
+        _path = undefined;
       },
 
       setServers(arr) {
@@ -97,6 +105,9 @@ myApp.factory('ServerManager', ['$rootScope',
             
             var client = new xrpl.Client(full_url, {feeCushion: 1.1, connectionTimeout: _timeout});
             _clients[item.server] = client;
+            if (["xrpl.ws", "xrplcluster.com"].indexOf(item.server) >= 0) {
+              _path = {name: item.server, client: client};
+            }
         });
       },
     };
