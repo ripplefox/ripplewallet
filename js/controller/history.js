@@ -1,9 +1,7 @@
 /* global myApp */
 myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'AuthenticationFactory',
   function($scope, $rootScope, XrpApi, AuthenticationFactory) {
-    const lsfSell = 0x00020000;
     const parser = require("ripple-lib-transactionparser");
-
     const address = $rootScope.address;
     $scope.history = [];
     $scope.loading = false;
@@ -233,4 +231,3 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
     }
     
   } ]);
-

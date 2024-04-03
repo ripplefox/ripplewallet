@@ -106,6 +106,8 @@ var translate_jp = {
   error_invalid_tag     : '有効な宛先タグではありません',
   error_already_name    : '同名の連絡者が既に存在します',
 
+
+
   /** Convert **/
   convert       : '兌換',
   convert_title : '資産を別資産へ兌換します',

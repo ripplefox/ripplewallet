@@ -106,6 +106,8 @@ var translate_cn = {
   error_invalid_tag     : '不是有效的标签号',
   error_already_name    : '已有同名联系人',
 
+
+
   /** Convert **/
   convert       : '兑换',
   convert_title : '把一种货币转换成另一种',

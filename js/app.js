@@ -93,9 +93,6 @@ myApp.config(function($routeProvider, $httpProvider, $translateProvider, $compil
   });
 });
 
-//myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'StellarApi', 'SettingFactory', 'RemoteFactory', 'AnchorFactory',
-//  function($rootScope, $window, $location, $translate, AuthenticationFactory, StellarApi, SettingFactory, RemoteFactory, AnchorFactory) {
-
 myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFactory', 'SettingFactory', 'Id', 'ServerManager', 'XrpApi', 'Gateways',
   function($rootScope, $window, $location, $translate, AuthenticationFactory, SettingFactory, Id, SM, XrpApi, Gateways) {
 
@@ -146,7 +143,7 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
     
     $rootScope.balance = "0"; //native asset;
     $rootScope.reserve = 0;
-    $rootScope.lines = []; // lines.CNY.xxx = {code: 'CNY', issuer: 'xxx', balance: 200, limit: 1000}
+    $rootScope.lines = [];
     $rootScope.getBalance = function(code, issuer) {
       if (code == $rootScope.native.code) {
         code = "XRP";
@@ -172,13 +169,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       $rootScope.lines = [];
       $rootScope.balance = "0";
       $rootScope.reserve = 0;
-
-      $rootScope.events = [];
-      $rootScope.history = [];      
-      $rootScope.loadState = [];
-      $rootScope.unseenNotifications = {
-        count: 0
-      };
     }
 
     $rootScope.reset = function(){
@@ -202,8 +192,8 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
     $rootScope.isLangCN = function() {
       return SettingFactory.getLang() == 'cn';
     }
-
     $translate.use(SettingFactory.getLang());
+
     try {
       //SM.setMaxfee(SettingFactory.getMaxfee());
       //SM.setTimeout(SettingFactory.getTimeout());
@@ -219,13 +209,6 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
       SM.setServers(SettingFactory.getServers());
     }
 
-    if (SettingFactory.getProxy()) {
-      try {
-        nw.App.setProxyConfig(SettingFactory.getProxy()); //"127.0.0.1:53323"
-      } catch(e) {
-        console.error("Cannot set proxy", SettingFactory.getProxy(), e);
-      }
-    }
   }]);
 
 
