@@ -235,10 +235,13 @@ var translate_jp = {
   total_supply: '総供給',
   you_hold    : 'あなたはホールドします',
   token_locked: 'ロックされたトークンの総数',
-  deposit_lp  : '流動性を追加',
-  withdraw_lp : '流動性を引き出す',
-  AMMDeposit  : 'AMM 入金',
-  AMMWithdraw : 'AMM 出金',
+  deposit_lp  : '追加',
+  withdraw_lp : '撤回',
+  vote_lp     : '投票',
+  vote_notice : '手数料を0%から1%の間で設定してください。',
+  AMMVote     : 'AMM - 議決権行使手数料',
+  AMMDeposit  : 'AMM - 既存の AMM に資金を追加します。',
+  AMMWithdraw : 'AMM - 資金を削除するには、LP トークンを AMM に返します。',
 
   /** Setting & security **/
   settings : '設定',

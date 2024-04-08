@@ -30,6 +30,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     function parseAmount(input) {
       return "object" === typeof input ? input : {currency: "XRP", value: xrpl.dropsToXrp(input)};
     }
+    function isXRP(amount) {
+      return "object" === typeof amount ? amount.currency == "XRP" : true;
+    }
 
     return {      
       set client(client) {
@@ -267,7 +270,34 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           throw err;
         }
       },
-      
+
+      async voteLp(asset1, asset2, fee) {
+        try {
+          let amm_vote = {
+            "Account" : this.address,
+            "Asset" : { "currency" : asset1.currency },
+            "Asset2": { "currency" : asset2.currency },
+            "TradingFee": parseInt(fee),
+            "TransactionType" : "AMMVote"
+          };
+          if (asset1.issuer) { amm_vote.Asset.issuer = asset1.issuer; }
+          if (asset2.issuer) { amm_vote.Asset2.issuer = asset2.issuer; }          
+          const ledger = await _client.getLedgerIndex();
+          const tx_json = await _client.autofill(amm_vote);
+          const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
+          const response = await _client.submit(tx_blob, {failHard});
+          if (["tesSUCCESS", "terQUEUED"].indexOf(response.result.engine_result) < 0) {
+            console.warn(response);
+            throw new Error(response.result.engine_result_message);
+          }
+          this.verify(hash, ledger, tx_json.LastLedgerSequence);
+          return hash;
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
+      },
+
       async setDomain(str) {
         try {
           let hex = '';
@@ -384,7 +414,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           "Destination": destinationAddress,
           "Amount" : convertAmount(destAmount)          
         };
-        if (srcAmount.currency !== "XRP" || destAmount.currency !== "XRP") {
+        if (!isXRP(srcAmount) || !isXRP(destAmount)) {
           payment.SendMax = convertAmount(srcAmount);
         }
         if (paths && paths.length) {

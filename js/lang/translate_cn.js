@@ -235,10 +235,13 @@ var translate_cn = {
   total_supply: '总供应量',
   you_hold    : '你持有',
   token_locked: '锁定代币总数',
-  deposit_lp  : '添加流动性',
-  withdraw_lp : '取出流动性',
-  AMMDeposit  : 'AMM 添加流动性',
-  AMMWithdraw : 'AMM 取出流动性',
+  deposit_lp  : '添加',
+  withdraw_lp : '取出',
+  vote_lp     : '投票',
+  vote_notice : '投票决定交易费（0%到1%），最终费用由前8名投票生成。',
+  AMMVote     : 'AMM - 投票交易费用',
+  AMMDeposit  : 'AMM - 添加流动性',
+  AMMWithdraw : 'AMM - 取出流动性',
 
   /** Setting & security **/
   settings : '设置',

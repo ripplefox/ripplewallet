@@ -328,52 +328,64 @@
 								<span class="icon"><strong translate="total_supply">Total supply</strong></span>
 								<p><strong>{{amm.lp_token.value | fmtnum}}</strong></p>
 							</div>
-							<div class="amm_item">
-								<span class="icon"><strong translate="you_hold">You hold</strong></span>
-								<p><strong>{{getBalance(amm.lp_token.currency, amm.lp_token.issuer) | fmtnum}}/{{100 * getBalance(amm.lp_token.currency, amm.lp_token.issuer)/amm.lp_token.value | number : 2}}%</strong></p>
-							</div>				
+						</div>
+						<h4 translate="token_locked">Total Tokens Locked</h4>
+						<div class="amm_content">							
+							<div class="amm_item" style="justify-content: space-around;">
+								<div class="amm_balance">
+									<div class="currency">{{amm.amount.currency | rpcurrency}}</div>
+									<div class="value">{{amm.amount.value | fmtnum}}</div>
+									<div class="rate">1 {{amm.amount.currency | rpcurrency}} = {{amm.rate2}} {{amm.amount2.currency | rpcurrency}}</div>
+								</div>
+								<div class="amm_balance">
+									<div class="currency">{{amm.amount2.currency | rpcurrency}}</div>
+									<div class="value">{{amm.amount2.value | fmtnum}}</div>
+									<div class="rate">1 {{amm.amount2.currency | rpcurrency}} = {{amm.rate}} {{amm.amount.currency | rpcurrency}}</div>
+								</div>
+							</div>
+						</div>
+						<h4 translate="you_hold">You hold</h4>
+						<div class="amm_content">
+							<div class="amm_item" style="justify-content: space-around;">
+								<div class="amm_balance">
+									<div class="currency">{{amm.amount.currency | rpcurrency}}</div>
+									<div class="value">{{getBalance(amm.lp_token.currency, amm.lp_token.issuer)/amm.lp_token.value * amm.amount.value | fmtnum}}</div>
+								</div>
+								<div class="amm_balance">
+									<div class="currency">{{amm.amount2.currency | rpcurrency}}</div>
+									<div class="value">{{getBalance(amm.lp_token.currency, amm.lp_token.issuer)/amm.lp_token.value * amm.amount2.value | fmtnum}}</div>
+								</div>
+								<div class="amm_balance">
+									<div class="currency">LP-Token</div>
+									<div class="value">{{getBalance(amm.lp_token.currency, amm.lp_token.issuer) | fmtnum}}/{{100 * getBalance(amm.lp_token.currency, amm.lp_token.issuer)/amm.lp_token.value | number : 2}}%</div>
+								</div>
+							</div>
 						</div>
 		            </div>		            
 		       		<div class="amm_info_right">
-						<h4 translate="token_locked">Total Tokens Locked</h4>
-						<div class="amm_content">							
-							<div class="amm_item">
-								<div class="amm_icon"><img data-ng-src="{{amm.logo}}"></div>
-								<p><strong>{{amm.amount.value | fmtnum}} {{amm.amount.currency | fmtcode}}</strong></p>
-							</div>
-							<div class="amm_item">
-								<div class="amm_icon"><img data-ng-src="{{amm.logo2}}"></div>
-								<p><strong>{{amm.amount2.value | fmtnum}} {{amm.amount2.currency | fmtcode}}</strong></p>
-							</div>
-							<div class="amm_item">
-								<span class="icon">1 {{amm.amount.currency | fmtcode}} = {{amm.rate2}} {{amm.amount2.currency | fmtcode}}</span>
-								<p>1 {{amm.amount2.currency | fmtcode}} = {{amm.rate}} {{amm.amount.currency | fmtcode}}</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="amm_info">
-		            <div class="amm_info_left">
-		             	<h4 translate="deposit_lp">Deposit LP</h4>
-						<div class="amm_content">
+						<div class="amm-tabs">
+		       				<div class="tab-item" ng-class="{active: ammtab == 'deposit'}" ng-click="ammtab='deposit'"><span translate="deposit_lp">Deposit LP</span></div>
+		       				<div class="tab-item" ng-class="{active: ammtab == 'withdraw'}" ng-click="ammtab='withdraw'"><span translate="withdraw_lp">Withdraw LP</span></div>
+		       				<div class="tab-item" ng-class="{active: ammtab == 'vote'}" ng-click="ammtab='vote'"><span translate="vote_lp">Vote Fee</span></div>
+		       			</div>
+		       			<div class="amm_content" ng-show="ammtab == 'deposit'">							
 							<div class="amm_asset">
 								<div class="input-group">
 									<input type="text" class="form-control" ng-model="asset1_amt" ng-change="calcAmm('asset1')">
-									<div class="input-group-addon addon-font">{{amm.amount.currency | fmtcode}}</div>
+									<div class="input-group-addon addon-font">{{amm.amount.currency | rpcurrency}}</div>
 								</div>
 								<div class="overview">
-									{{'you_have' | translate}} {{getBalance(amm.amount.currency, amm.amount.issuer)}} {{amm.amount.currency | fmtcode}}
+									{{'you_have' | translate}} {{getBalance(amm.amount.currency, amm.amount.issuer)}} {{amm.amount.currency | rpcurrency}}
 								</div>								
 							</div>
 							
 							<div class="amm_asset">
 								<div class="input-group">
 									<input type="text" class="form-control" ng-model="asset2_amt" ng-change="calcAmm('asset2')">
-									<div class="input-group-addon addon-font">{{amm.amount2.currency | fmtcode}}</div>
+									<div class="input-group-addon addon-font">{{amm.amount2.currency | rpcurrency}}</div>
 								</div>
 								<div class="overview">
-									{{'you_have' | translate}} {{getBalance(amm.amount2.currency, amm.amount2.issuer)}} {{amm.amount2.currency | fmtcode}}
+									{{'you_have' | translate}} {{getBalance(amm.amount2.currency, amm.amount2.issuer)}} {{amm.amount2.currency | rpcurrency}}
 								</div>								
 							</div>
 
@@ -382,45 +394,58 @@
 								<div class="s-alert s-alert--success" ng-show="add_state=='success'" translate="tx_success">Transaction was applied.</div>
 								<div class="s-alert s-alert--error" ng-show="add_fail">{{add_fail}}</div>
 								<button class="btn btn-success" ng-click="addLp()" ng-disabled="adding">{{'deposit_lp' | translate}}</button>
-							</div>							
+							</div>
 						</div>
-		            </div>		            
-		       		<div class="amm_info_right">
-						<h4 translate="withdraw_lp">Withdraw LP</h4>
-						<div class="amm_content">							
-							<div class="amm_content">
-								<div class="amm_asset">
-									<div class="input-group">
-										<input type="text" class="form-control" ng-model="lp_amt" ng-change="updateLpValue()" ng-disabled="withdrawAll">
-										<div class="input-group-addon addon-font">{{amm.lp_token.currency | fmtcode}}</div>
-									</div>
-									<div class="overview">
-										{{'you_have' | translate}} {{getBalance(amm.lp_token.currency, amm.lp_token.issuer)}} LP tokens
-									</div>								
+						<div class="amm_content" ng-show="ammtab == 'withdraw'">
+							<div class="amm_asset">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="lp_amt" ng-change="updateLpValue()" ng-disabled="withdrawAll">
+									<div class="input-group-addon addon-font">LP-Token</div>
 								</div>
+								<div class="overview">
+									{{'you_have' | translate}} {{getBalance(amm.lp_token.currency, amm.lp_token.issuer)}} LP tokens
+								</div>								
+							</div>
 
-								<div class="amm_asset">								
-									<div class="picker">
-									    <div class="ellipse" ng-click="updateLpValue(0.25)">25%</div>
-									    <div class="ellipse" ng-click="updateLpValue(0.50)">50%</div>
-									    <div class="ellipse" ng-click="updateLpValue(0.75)">75%</div>
-									    <div class="ellipse" ng-click="updateLpValue(1)">100%</div>
-									</div>							
+							<div class="amm_asset">								
+								<div class="picker">
+								    <div class="ellipse" ng-click="updateLpValue(0.25)">25%</div>
+								    <div class="ellipse" ng-click="updateLpValue(0.50)">50%</div>
+								    <div class="ellipse" ng-click="updateLpValue(0.75)">75%</div>
+								    <div class="ellipse" ng-click="updateLpValue(1)">100%</div>
+								</div>							
+							</div>
+							
+							<div class="amm_submit">
+								<div class="s-alert s-alert--info" ng-show="withdraw_state=='submitted'" translate="submitted">Transaction submitted.</div>
+								<div class="s-alert s-alert--success" ng-show="withdraw_state=='success'" translate="tx_success">Transaction was applied.</div>
+								<div class="s-alert s-alert--error" ng-show="withdraw_fail">{{withdraw_fail}}</div>
+								<button class="btn btn-success" ng-click="withdrawLp()" ng-disabled="withdrawing">{{'withdraw_lp' | translate}}</button>
+							</div>
+						</div>
+						<div class="amm_content" ng-show="ammtab == 'vote'">
+							<div class="vote_item" ng-repeat="v in amm.vote_slots">
+								<span class="icon">{{v.account}}</span>
+								<p>{{v.trading_fee/1000 | number:3}}%</p>
+							</div>
+							<div class="amm_asset" style="margin-top: 10px">
+								<div class="input-group">
+									<input type="text" class="form-control" ng-model="lp_fee">
+									<div class="input-group-addon addon-font">%</div>
 								</div>
-								
-								<div class="amm_submit">								
-									<div class="s-alert s-alert--info" ng-show="withdraw_state=='submitted'" translate="submitted">Transaction submitted.</div>
-									<div class="s-alert s-alert--success" ng-show="withdraw_state=='success'" translate="tx_success">Transaction was applied.</div>
-									<div class="s-alert s-alert--error" ng-show="withdraw_fail">{{withdraw_fail}}</div>
-									<button class="btn btn-success" ng-click="withdrawLp()" ng-disabled="withdrawing">{{'withdraw_lp' | translate}}</button>
-								</div>
+								<div class="overview" translate="vote_notice">The fee should >=0 and <=1.</div>
+							</div>
+
+							<div class="amm_submit">
+								<div class="s-alert s-alert--info" ng-show="vote_state=='submitted'" translate="submitted">Transaction submitted.</div>
+								<div class="s-alert s-alert--success" ng-show="vote_state=='success'" translate="tx_success">Transaction was applied.</div>
+								<div class="s-alert s-alert--error" ng-show="vote_fail">{{vote_fail}}</div>
+								<button class="btn btn-success" ng-click="voteLp()" ng-disabled="voting">{{'vote_lp' | translate}}</button>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
-
 	</div>
 	</group>
 </section>

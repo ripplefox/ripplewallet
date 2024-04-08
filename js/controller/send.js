@@ -1,6 +1,5 @@
 /* global myApp */
 const {isValidXAddress, xAddressToClassicAddress} = require('ripple-address-codec')
-
 myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 'XrpPath', 'Id', 'SettingFactory', 'AuthenticationFactory', 'Federation', '$http',
   function($scope, $rootScope, $routeParams, XrpApi, XrpPath, Id, SettingFactory, AuthenticationFactory, Federation, $http) {
     console.log('Send to', $routeParams);
@@ -129,7 +128,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       
       var amount = null;
       if ($scope.asset.code == native.code) {
-        amount = xrpl.xrpToDrops($scope.asset.amount);
+        amount = round($scope.asset.amount * 1000000).toString();
       } else {
         amount = {
             currency : $scope.asset.code,
@@ -425,10 +424,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       var srcAmount, dstAmount;
       if (alt) {
         if ("string" === typeof alt.source_amount) {
-          srcAmount = {
-              currency : 'XRP',
-              value : xrpl.dropsToXrp(alt.source_amount * 1.01)
-          }
+          srcAmount = round(alt.source_amount * 1.01).toString();
         } else {
           srcAmount = {
               currency : alt.source_amount.currency,
@@ -437,16 +433,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
           }
         }
       } else {
-        srcAmount = {
-            currency : 'XRP',
-            value : $scope.asset.amount.toString()
-        }
+        srcAmount = round($scope.asset.amount * 1000000).toString();
       }
       if ($scope.asset.code == native.code) {
-        dstAmount = {
-            currency : 'XRP',
-            value : $scope.asset.amount.toString()
-        }
+        dstAmount = round($scope.asset.amount * 1000000).toString();
       } else {
         dstAmount = {
             currency : $scope.asset.code,
@@ -477,21 +467,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       if (address.indexOf("@") >=0) {
         return address;
       }
-      // if (!isNaN(ripple.Base.decode_check([0, 5], address, 'bitcoin'))) {
-      //   return address + "@" + SettingFactory.getFedBitcoin();
-      // }
+      //TODO: XLM address + @ripplefox.com
       return address;
     }
 
-    function fmtbal(code, value) {
-      if (['BTC', 'ETH', 'LTC'].indexOf(code) >= 0) {
-        return round(value, 6) + " " + code;
-      } else {
-        return round(value) + " " + code;
-      }
-     
-    };
-    
     // exchange address
     var special_destinations = {
       'r3ipidkRUZWq8JYVjnSnNMf3v7o69vgLEW' : {name: 'RippleFox'},
@@ -516,4 +495,3 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     $scope.runOnceWhenOpen();
 
 } ]);
-

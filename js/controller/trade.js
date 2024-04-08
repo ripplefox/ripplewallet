@@ -69,7 +69,9 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.tradeAssets = {};
     function addLinesToTradePairs() {
       for (var line of $rootScope.lines) {
-        $scope.tradeAssets[key(line.currency, line.issuer)] = {code: line.currency, issuer: line.issuer};
+        if (line.currency.substring(0, 2) !== "03") {
+          $scope.tradeAssets[key(line.currency, line.issuer)] = {code: line.currency, issuer: line.issuer};
+        }
       }
     };
     addLinesToTradePairs();
@@ -186,6 +188,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     }
     $scope.refreshBook();
 
+    $scope.ammtab = "deposit"; //For tab switch
     $scope.amm = {};
     $scope.refreshingAmm = false;
     $scope.refreshAmm = function() {
@@ -205,6 +208,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         data.hold_lp = $rootScope.getBalance(data.lp_token.currency, data.lp_token.issuer);
         data.hold_lp_pct = data.hold / data.lp_token.value * 100;
         data.trading_fee = data.trading_fee / 1000;
+        data.vote_slots.sort((a,b) => { return b.vote_weight - a.vote_weight; });
         $scope.amm = data;
         console.log(data);
       }).catch(err => {
@@ -284,6 +288,30 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         $scope.$apply();
       });
     }
+    $scope.voting = false;
+    $scope.vote_fail;
+    $scope.voteLp = function() {
+      $scope.voting = true;
+      $scope.vote_hash = "";
+      $scope.vote_state = "";
+      $scope.vote_fail = "";
+      let asset1 = {currency: $scope.amm.amount.currency, issuer: $scope.amm.amount.issuer};
+      let asset2 = {currency: $scope.amm.amount2.currency, issuer: $scope.amm.amount2.issuer};
+      let fee = round($scope.lp_fee * 1000).toString();
+      $scope.voting = true;      
+      XrpApi.voteLp(asset1, asset2, fee).then(hash => {
+        $scope.voting = false;
+        $scope.vote_hash = hash;
+        $scope.vote_state = "submitted";
+        $scope.lp_fee = "";
+        $scope.$apply();
+        $scope.refreshAmm();
+      }).catch(err => {
+        $scope.voting = false;
+        $scope.vote_fail = err.message;
+        $scope.$apply();
+      });
+    }
 
     $scope.refreshingOffer = false;
     $scope.refreshOffer = function() {
@@ -318,16 +346,33 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.add_hash = "";
     $scope.add_state = "";
     $scope.withdraw_hash = "";
-    $scope.withdraw_hash = "";
+    $scope.withdraw_state = "";
+    $scope.vote_hash = "";
+    $scope.vote_state = "";
     $scope.$on("txSuccess", function(e, tx) {
       console.debug('txSuccess event', tx);
-      if (tx.hash == $scope.buy_hash) $scope.buy_state = "success";
-      if (tx.hash == $scope.sell_hash) $scope.sell_state = "success";
-      if (tx.hash == $scope.add_hash) $scope.add_state = "success";
-      if (tx.hash == $scope.withdraw_hash) $scope.withdraw_state = "success";
-      $scope.refreshOffer();
-      $scope.refreshBook();
-      $scope.refreshAmm();
+      if (tx.hash == $scope.buy_hash) {
+        $scope.buy_state = "success";
+        $scope.refreshOffer();
+        $scope.refreshBook();
+      }
+      if (tx.hash == $scope.sell_hash) {
+        $scope.sell_state = "success";
+        $scope.refreshOffer();
+        $scope.refreshBook();
+      }
+      if (tx.hash == $scope.add_hash) {
+        $scope.add_state = "success";
+        $scope.refreshAmm();
+      }
+      if (tx.hash == $scope.withdraw_hash) {
+        $scope.withdraw_state = "success";
+        $scope.refreshAmm();
+      }
+      if (tx.hash == $scope.vote_hash) {
+        $scope.vote_state = "success";
+        $scope.refreshAmm();
+      }
       $scope.$apply();
     });
     $scope.$on("txFail", function(e, tx) {
@@ -335,22 +380,30 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       if (tx.hash == $scope.buy_hash) {
         $scope.buy_state = "fail";
         $scope.buy_fail = tx.message;
+        $scope.refreshOffer();
+        $scope.refreshBook();
       }
       if (tx.hash == $scope.sell_hash) {
         $scope.sell_state = "fail";
         $scope.sell_fail = tx.message;
+        $scope.refreshOffer();
+        $scope.refreshBook();
       }
       if (tx.hash == $scope.add_hash) {
         $scope.add_state = "fail";
         $scope.add_fail = tx.message;
+        $scope.refreshAmm();
       }
       if (tx.hash == $scope.withdraw_hash) {
         $scope.withdraw_state = "fail";
         $scope.withdraw_fail = tx.message;
+        $scope.refreshAmm();
       }
-      $scope.refreshOffer();
-      $scope.refreshBook();
-      $scope.refreshAmm();
+      if (tx.hash == $scope.vote_hash) {
+        $scope.vote_state = "fail";
+        $scope.vote_fail = tx.message;
+        $scope.refreshAmm();
+      }
       $scope.$apply();
     });
 

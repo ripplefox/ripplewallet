@@ -155,6 +155,7 @@
 						<div class="dest_feedback">
 							<div class="value">{{input_address}}</div>
 							<div class="extra" ng-show="real_address && real_address != input_address">{{real_address}}</div>
+							<div class="extra" ng-show="tag">{{'dest_tag' | translate}}: {{tag}}</div>
 						</div>
 						<p translate="will_receive">Recipient will receive</p>
 						<p class="amount_feedback"><span class="value">{{asset.amount}} </span><span class="currency">{{asset.code | fmtcode}}</span></p>

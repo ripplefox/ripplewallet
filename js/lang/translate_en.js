@@ -106,6 +106,8 @@ var translate_en = {
   error_invalid_tag     : 'Invalid destination tag',
   error_already_name    : 'You already have a contact with the same name.',
 
+
+
   /** Convert **/
   convert       : 'Convert',
   convert_title : 'Convert one currency into another',
@@ -233,10 +235,13 @@ var translate_en = {
   total_supply: 'Total supply',
   you_hold    : 'You hold',
   token_locked: 'Total Tokens Locked',
-  deposit_lp  : 'Deposit LP',
-  withdraw_lp : 'Withdraw LP',
-  AMMDeposit  : 'AMM Deposit',
-  AMMWithdraw : 'AMM Withdraw',
+  deposit_lp  : 'Deposit',
+  withdraw_lp : 'Withdraw`',
+  vote_lp     : 'Vote',
+  vote_notice : 'Please set the fee from 0% to 1%.',
+  AMMVote     : 'AMM - Vote on the AMM\'s trading fee.',
+  AMMDeposit  : 'AMM - Add funds to an existing AMM.',
+  AMMWithdraw : 'AMM - Return LP Tokens to an AMM to remove funds.',
 
   /** Setting & security **/
   settings : 'Settings',

@@ -8,6 +8,7 @@ myApp.controller("ConvertCtrl", ['$scope', '$rootScope', 'XrpApi', 'XrpPath', 'S
       $scope.dst_currency = $scope.dst_currency || $rootScope.native.code;
       $scope.paths = {};
       $scope.asset = {};
+      $scope.lines = $rootScope.lines.filter(line => line.currency.substring(0,2) !== "03");
     }
     $scope.init();
     
