@@ -132,7 +132,7 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
       obj.tag = tx.DestinationTag;
       obj.invoice = tx.InvoiceID;
       obj.memos = parseMemos(tx);
-      obj.xrc20 = getMemo(obj.memos, "xrc20");
+      obj.message = formatMemos(obj.memos);
       obj.tx_type = tx.TransactionType;
       obj.tx_result = meta.TransactionResult;
       obj.fee = tx.Fee;
@@ -195,6 +195,12 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
       return effects;
     }
 
+    function formatMemos(memos) {
+      if (!memos) return "";
+      const filteredArray = memos.filter(memo => memo.data && "client" !== memo.type);
+      const stringArray = filteredArray.map(memo => memo.data);
+      return stringArray.join('\n');
+    }
     function getMemo(memos, type) {
       if (!memos) {
         return "";
@@ -215,7 +221,12 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
       return !Object.keys(obj).length;
     }
     function hexToString(hex) {
-      return hex ? Buffer.from(hex, 'hex').toString('utf-8') : undefined
+      if (!hex) return hex;
+      let str = '';
+      for (let i = 0; i < hex.length; i += 2) {
+          str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+      }
+      return str;
     }
     function parseMemos(tx) {
       if (!Array.isArray(tx.Memos) || tx.Memos.length === 0) {

@@ -95,7 +95,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         $scope.precise = 2;
       }
 
-      if (['USD', 'CNY', 'XRP', 'XLM'].indexOf($scope.counter_code) >= 0) {
+      if (['USD', 'CNY', 'XRP', 'XLM', 'USDT'].indexOf(fmtCode($scope.counter_code)) >= 0) {
         $scope.price_precise = 4;
         if (['BTC', 'ETH'].indexOf($scope.base_code) >= 0) {
           $scope.price_precise = 0;

@@ -315,6 +315,7 @@ var translate_en = {
   will_recv : 'Recipient will receive',
   can_send  : 'You can send',
   attention : 'Attention',
+  send_with_err: 'If the path is unavailable, you can still send directly.',
 
   ripple : 'Ripple',
   ripple_desktop_client : 'Foxlet Client for Ripple',

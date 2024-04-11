@@ -6,7 +6,8 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           name : 'xrps.io',
           website : 'https://xrps.io/',
           assets : [
-            {code : 'XRPS', issuer : 'rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL', list: true, name: "XRP Inscription", logo: "img/coin/xrps.png", mint: "mint@xrps.io"}
+            {code : 'XRPS', issuer : 'rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL', list: true, name: "XRP Inscription", logo: "img/coin/xrps.png"},
+            {code : 'USDT', issuer : 'rGbUjUtNVq5M3Un5r4efJqHed4o5P2Usdt', list: true, name: "Tether (USDT)", logo: "img/coin/usdt.svg"}
           ],
           logo : "img/coin/xrps.png"
         },
@@ -15,7 +16,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           website : 'https://ripplefox.com/',
           deposit : 'https://ripplefox.com/deposit',
           assets : [
-            {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "USDT", logo: "img/coin/usdt.svg", deposit: true, withdraw: "usdt@ripplefox.com"},
+            {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: false, name: "USDT", logo: "img/coin/usdt.svg", deposit: true, withdraw: "usdt@ripplefox.com"},
             {code : 'ETH', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Ethereum", logo: "img/coin/eth.svg", deposit: true, withdraw: "eth@ripplefox.com"},
             {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Stellar Lumens", logo: "img/coin/xlm.png", deposit: true},
             {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Ultiledger", logo: "img/coin/ult.png"}

@@ -140,7 +140,7 @@
 					</div>
 					<div class="row" ng-show="send_error || service_error || quote_error || (!serviceForm.$valid && service_currency)">
 						<div class="s-alert s-alert--error">
-							<div ng-show="send_error">{{send_error}}</div>
+							<div ng-show="send_error">{{'send_with_err' | translate}} - {{send_error}}</div>
 							<div ng-show="service_error">{{service_error | translate}}</div>
 							<div ng-show="quote_error">{{quote_error | translate}}</div>
 							<div ng-show="!serviceForm.$valid && service_currency" translate="fill_form">Please fill the form correctly.</div>

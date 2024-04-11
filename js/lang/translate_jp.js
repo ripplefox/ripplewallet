@@ -315,6 +315,7 @@ var translate_jp = {
   will_recv : '相手側は以下の資産を受け取ります',
   can_send  : 'あなたは以下の資産を発送できます',
   attention : '注意点',
+  send_with_err: 'パスが利用できない場合でも、直接送信できます。',
 
   ripple : 'リップル',
   ripple_desktop_client : 'Foxlet Wallet for Ripple',

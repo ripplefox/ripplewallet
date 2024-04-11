@@ -89,6 +89,7 @@ var translate_cn = {
   not_funded   : '未激活。建议发送至少20个{{code}}创建该账号。',
   no_send_path : '找不到你和目标账户之间的路径。',
   you_sending : '你将把{{code}}发送到',
+  send_with_err: '无法使用路径的情况下，你依然可以直接发送。',
 
   contacts : '联系人',
   contact  : '联系人',
