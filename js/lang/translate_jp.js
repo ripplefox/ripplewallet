@@ -70,6 +70,7 @@ var translate_jp = {
   issuer_invalid : '発行者アカウントは有効なリップルアドレスである必要があります。',
   trust_granted  : '与信限度額設定成功！',
 
+
   /** send **/
   send : '発送',
   send_money : '送金',
@@ -89,6 +90,8 @@ var translate_jp = {
   not_funded   : 'アクティブ化されていません。20枚以上の{{code}}を発送してアカウントを作ってください。',
   no_send_path : 'あなたと相手アカウント間のパスが見つかりませんでした。',
   you_sending : 'あなたは{{code}}を以下のアドレスへ発送します',
+  you_sending_to : 'を以下のアドレスへ発送します',
+  send_with_err: 'パスが利用できない場合でも、直接送信できます。',
 
   contacts : '連絡帳',
   contact  : '連絡者',
@@ -105,8 +108,6 @@ var translate_jp = {
   error_invalid_address : '有効なアドレスではありません',
   error_invalid_tag     : '有効な宛先タグではありません',
   error_already_name    : '同名の連絡者が既に存在します',
-
-
 
   /** Convert **/
   convert       : '兌換',

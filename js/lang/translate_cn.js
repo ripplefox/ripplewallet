@@ -70,6 +70,7 @@ var translate_cn = {
   issuer_invalid : '发行方账号必须是有效的瑞波地址编码。',
   trust_granted  : '设置信任额度成功！',
 
+
   /** send **/
   send : '发送',
   send_money : '转账',
@@ -86,9 +87,10 @@ var translate_cn = {
   account_loading: '正在解析账号',
   sending_to   : '正在发送到',
   send_done    : '发送成功',
-  not_funded   : '未激活。建议发送至少20个{{code}}创建该账号。',
+  not_funded   : '未激活。请发送至少10个{{code}}创建该账号。建议发20个或更多。',
   no_send_path : '找不到你和目标账户之间的路径。',
   you_sending : '你将把{{code}}发送到',
+  you_sending_to : '发送到',
   send_with_err: '无法使用路径的情况下，你依然可以直接发送。',
 
   contacts : '联系人',
@@ -106,8 +108,6 @@ var translate_cn = {
   error_invalid_address : '不是有效的账号地址',
   error_invalid_tag     : '不是有效的标签号',
   error_already_name    : '已有同名联系人',
-
-
 
   /** Convert **/
   convert       : '兑换',

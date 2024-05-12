@@ -40,8 +40,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
           });
         } catch(e) {
           cosole.error(e);
-        }
-        
+        }        
       }
     }
 
@@ -149,10 +148,10 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         });
         
         this.asks = this.asks.filter(item => {
-          return new BigNumber(item.gets_value).isGreaterThan("0.001") || new BigNumber(item.pays_value).isGreaterThan("0.001");
+          return new BigNumber(item.amount).isGreaterThan("0.001") || new BigNumber(item.volume).isGreaterThan("0.001");
         });
         this.bids = this.bids.filter(item => {
-          return new BigNumber(item.gets_value).isGreaterThan("0.001") || new BigNumber(item.pays_value).isGreaterThan("0.001");
+          return new BigNumber(item.amount).isGreaterThan("0.001") || new BigNumber(item.volume).isGreaterThan("0.001");
         });
         
         var displayNum = 20;
@@ -173,7 +172,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       };
       $scope.refreshingBook = true;
       $scope.countdown = 30;
-      XrpOrderbook.checkBook(info).then(data => {
+      XrpOrderbook.getBook(info).then(data => {
         if (!$scope.book.origin || !_.isEqual($scope.book.origin.asks, data.asks) || !_.isEqual($scope.book.origin.bids, data.bids)) {
           console.debug('book changed', $scope.book);
         }
@@ -349,6 +348,7 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.withdraw_state = "";
     $scope.vote_hash = "";
     $scope.vote_state = "";
+    $scope.cancel_hash = {};
     $scope.$on("txSuccess", function(e, tx) {
       console.debug('txSuccess event', tx);
       if (tx.hash == $scope.buy_hash) {
@@ -372,6 +372,10 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
       if (tx.hash == $scope.vote_hash) {
         $scope.vote_state = "success";
         $scope.refreshAmm();
+      }
+      if ($scope.cancel_hash[tx.hash]) {
+        $scope.refreshOffer();
+        $scope.refreshBook();
       }
       $scope.$apply();
     });
@@ -507,8 +511,9 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
     $scope.cancel = function(offer_id) {
       $scope.offerDelete[offer_id] = true;
       $scope.cancel_error = "";
-      XrpApi.cancelOffer(offer_id).then(result => {
-        $scope.refreshOffer();
+      XrpApi.cancelOffer(offer_id).then(hash => {
+        $scope.cancel_hash[hash] = hash;
+        //$scope.refreshOffer();
       }).catch(err => {
         $scope.offerDelete[offer_id] = false;
         $scope.cancel_error = err.message;

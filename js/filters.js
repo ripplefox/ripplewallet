@@ -1,5 +1,4 @@
 /* global myApp */
-
 myApp.filter('shortaddress', function() {
   return function(address) {
     if (!address || address.length < 8) {
@@ -24,19 +23,12 @@ myApp.filter('rpcurrency', function($filter) {
     input = input || "";
     nativecode = nativecode || 'XRP';
     input = input == 'XRP' ? nativecode : input;
-    if (input.length == 40) {
-      return input.substring(0, 2) !== "03" ? hexToAscii(input) : input.substring(0, 7) + "...";
-    } else {
-      return input;
-    }
+    return fmtCode(input);
   }
 });
 
 myApp.filter('fmtcode', function($filter) {
   return function(input) {
-    if (!input || input.length != 40) {
-      return input;
-    }
-    return input.substring(0, 2) !== "03" ? hexToAscii(input) : input.substring(0, 7) + "...";
+    return fmtCode(input);
   }
 });

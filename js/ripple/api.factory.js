@@ -34,6 +34,26 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
       return "object" === typeof amount ? amount.currency == "XRP" : true;
     }
 
+    function stringToHex(str) {
+      let hex = '';
+      for(let i = 0; i < str.length; i++) {
+          hex += str.charCodeAt(i).toString(16);
+      }
+      return hex;
+    }
+    function convertMemos(memos) {
+      return memos.map(item => {
+        let memo = { MemoData : stringToHex(item.data || item.MemoData) };
+        if (item.type || item.MemoType) {
+          memo.MemoType = stringToHex(item.type || item.MemoType);
+        }
+        if (item.format || item.MemoFormat) {
+          memo.MemoFormat = stringToHex(item.format || item.MemoFormat);
+        }
+        return { Memo: memo };
+      });
+    }
+
     return {      
       set client(client) {
         _client = client;
@@ -389,7 +409,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             "LimitAmount":{"currency": realCode(code), "issuer": issuer, "value": limit},
             "Flags": xrpl.TrustSetFlags.tfSetNoRipple
           };
-          trustline.memos = [{data: _appVersion, type: 'client', format: 'text'}];
+          trustline.Memos = convertMemos([{data: _appVersion, type: 'client', format: 'text'}]);
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(trustline);
           console.log(tx_json);
@@ -422,7 +442,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
         }
         if (tag) payment.DestinationTag = Number(tag);
         if (invoice) payment.InvoiceID = invoice;
-        payment.memos = [{data: _appVersion, type: 'client', format: 'text'}].concat(memos || []);
+        payment.Memos = convertMemos([{data: _appVersion, type: 'client', format: 'text'}].concat(memos || []));
 
         try {
           const ledger = await _client.getLedgerIndex();
@@ -459,7 +479,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             "TakerGets": options.type == "sell" ? convertAmount(quantity) : convertAmount(total),
             "TakerPays": options.type == "sell" ? convertAmount(total) : convertAmount(quantity)
           };
-          order.memos = [{data: _appVersion, type: 'client', format: 'text'}];
+          order.Memos = convertMemos([{data: _appVersion, type: 'client', format: 'text'}]);
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(order);
           const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
@@ -483,7 +503,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             "TransactionType": "OfferCancel",
             "OfferSequence": offer_id
           };
-          cancel.memos = [{data: _appVersion, type: 'client', format: 'text'}];          
+          cancel.Memos = convertMemos([{data: _appVersion, type: 'client', format: 'text'}]);
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(cancel);
           const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);
@@ -507,8 +527,7 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
             "TransactionType": "AccountDelete",
             "Destination": dest_account
           };
-          special.Fee = xrpl.xrpToDrops(SM.reserveIncrementXRP);          
-          special.memos = [{data: _appVersion, type: 'client', format: 'text'}];          
+          special.Fee = xrpl.xrpToDrops(SM.reserveIncrementXRP);
           const ledger = await _client.getLedgerIndex();
           const tx_json = await _client.autofill(special);
           const {tx_blob, hash} = await AuthenticationFactory.localSign(this.address, tx_json);

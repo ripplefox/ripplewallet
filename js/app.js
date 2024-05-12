@@ -257,7 +257,7 @@ var fmtCode = function(input) {
     return input;
   }
   if (input.substring(0, 2) == "03") {
-    return input.substring(0, 7) + "...";
+    return lp_map[input] ? lp_map[input] : input.substring(0, 7) + "...";
   }
   return hexToAscii(input);
 };
@@ -269,3 +269,16 @@ function key(code, issuer) {
   code = realCode(code);
   return !issuer ? code : code + '.' + issuer;
 };
+
+const lp_map = {  
+  '036A7A7F2A97B4FA6DC31E9C00A24DF4436A76ED' : 'XRPS-XRP',
+  '032A44D0C63117A2189C23C44D071731A2C1D5F8' : 'XRPS-USDT',
+  '03C2744C7F532C62F8C4D49D07C03723E667EC6D' : 'XRPS-ETH',
+  '03819CE473B7EFC3157A6F6E4CD01AF27CC3DAE9' : 'XRPS-XLM',
+  '03F7CA89ED32E3301C581E98F1B6D2F5028F30DE' : 'XRPS-CNY',
+  '038EDFFB6E794DE7401AB32A3FAB7436357BC769' : 'XRPS-ULT',
+  '037F2D4F9A403ABFED3ED22DFD44D24C5FA3618D' : 'XRP-USDT',  
+  '03B9D5AED48B20CC0926373FB46775329CFDB52E' : 'XRP-XLM',
+  '0334E001620110E325E1EEF5A21F1A22FF1DDD2B' : 'XRP-CNY',
+  '03AA0832FC381B3B588121D3B8CD3A39D3E125A3' : 'XLM-CNY'
+}

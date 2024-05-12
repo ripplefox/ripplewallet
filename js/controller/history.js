@@ -222,11 +222,13 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
     }
     function hexToString(hex) {
       if (!hex) return hex;
-      let str = '';
-      for (let i = 0; i < hex.length; i += 2) {
-          str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+      var decoder = new TextDecoder('utf-8');
+      var bytes = [];
+      for (var i = 0; i < hex.length; i += 2) {
+          bytes.push(parseInt(hex.substr(i, 2), 16));
       }
-      return str;
+      var encodedBuffer = new Uint8Array(bytes);
+      return decoder.decode(encodedBuffer);
     }
     function parseMemos(tx) {
       if (!Array.isArray(tx.Memos) || tx.Memos.length === 0) {

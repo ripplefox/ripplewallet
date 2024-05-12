@@ -70,6 +70,7 @@ var translate_en = {
   issuer_invalid : 'Asset issuer account ID must be a valid account ID',
   trust_granted  : 'Trust is granted!',
 
+
   /** send **/
   send : 'Send',
   send_money : 'Send money',
@@ -89,6 +90,8 @@ var translate_en = {
   not_funded   : 'Not funded. To create this account, send it at least 20 {{name}}s ({{code}}).',
   no_send_path : 'Unable to find a path between you and the destination account.',
   you_sending : 'You are sending {{code}} to',
+  you_sending_to : ' to',
+  send_with_err: 'If the path is unavailable, you can still send directly.',
 
   contacts : 'Contacts',
   contact  : 'Contact',
@@ -105,8 +108,6 @@ var translate_en = {
   error_invalid_address : 'Not a valid address.',
   error_invalid_tag     : 'Invalid destination tag',
   error_already_name    : 'You already have a contact with the same name.',
-
-
 
   /** Convert **/
   convert       : 'Convert',
