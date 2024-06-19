@@ -33,8 +33,10 @@ myApp.factory('XrpPath', ['$rootScope', 'ServerManager', function($rootScope, SM
       this.close();
       await this.connect();
 
-      _myHandler = function(e){
-        handler(null, e);
+      _myHandler = function(data){
+        // do not show LP alt
+        data.alternatives = data.alternatives.filter(alt => alt.source_amount.currency.substring(0,2) !== "03");
+        handler(null, data);
       };
 
       _client.connection.on('path_find', _myHandler);

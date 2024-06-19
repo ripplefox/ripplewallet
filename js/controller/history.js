@@ -138,6 +138,7 @@ myApp.controller("HistoryCtrl", [ '$scope', '$rootScope', 'XrpApi', 'Authenticat
       obj.fee = tx.Fee;
       obj.date = xrpl.rippleTimeToUnixTime(tx.date);
       obj.hash = tx.hash;
+      obj.ledger = tx.ledger;
       obj.ledger_index = tx.ledger_index;
 
       console.log(obj);

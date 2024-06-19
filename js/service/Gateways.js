@@ -5,9 +5,13 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
         "xrps.is" : {
           name : 'xrps.io',
           website : 'https://xrps.io/',
+          deposit : "https://xrps.io/deposit",
           assets : [
             {code : 'XRPS', issuer : 'rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL', list: true, name: "XRP Inscription", logo: "img/coin/xrps.png"},
-            {code : 'USDT', issuer : 'rGbUjUtNVq5M3Un5r4efJqHed4o5P2Usdt', list: true, name: "Tether (USDT)", logo: "img/coin/usdt.svg"}
+            {code : 'USDT', issuer : 'rGbUjUtNVq5M3Un5r4efJqHed4o5P2Usdt', list: true, name: "Tether (USDT)", logo: "img/coin/usdt.svg", deposit: true},
+            {code : 'PEOPLE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "ConstitutionDAO", logo: "img/coin/people.png"},
+            {code : 'PEPE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Pepe", logo: "img/coin/pepe.jpg"},
+            {code : 'BTC', issuer : 'raPhno5Bpmch3oWwqXy6e4vgQeidKknBTC', list: true, name: "Bitcoin", logo: "img/coin/btc.svg"}
           ],
           logo : "img/coin/xrps.png"
         },
