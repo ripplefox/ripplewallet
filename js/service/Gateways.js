@@ -11,6 +11,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
             {code : 'USDT', issuer : 'rGbUjUtNVq5M3Un5r4efJqHed4o5P2Usdt', list: true, name: "Tether (USDT)", logo: "img/coin/usdt.svg", deposit: true},
             {code : 'PEOPLE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "ConstitutionDAO", logo: "img/coin/people.png"},
             {code : 'PEPE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Pepe", logo: "img/coin/pepe.jpg"},
+            {code : 'SHIB', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Shiba Inu", logo: "img/coin/shib.svg"},
             {code : 'BTC', issuer : 'raPhno5Bpmch3oWwqXy6e4vgQeidKknBTC', list: true, name: "Bitcoin", logo: "img/coin/btc.svg"}
           ],
           logo : "img/coin/xrps.png"
@@ -22,7 +23,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           assets : [
             {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: false, name: "USDT", logo: "img/coin/usdt.svg", deposit: true, withdraw: "usdt@ripplefox.com"},
             {code : 'ETH', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Ethereum", logo: "img/coin/eth.svg", deposit: true, withdraw: "eth@ripplefox.com"},
-            {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Stellar Lumens", logo: "img/coin/xlm.png", deposit: true},
+            {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Stellar Lumens", logo: "img/coin/xlm.png", deposit: true, withdraw: "xlm@ripplefox.com"},
             {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y', list: true, name: "Ultiledger", logo: "img/coin/ult.png"}
           ],
           logo : "img/gateway/ripplefox.png"
@@ -139,7 +140,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
                 website : gateway.website,
                 logo : asset.logo,
                 deposit : asset.deposit ? gateway.deposit : "",
-                withdraw : asset.withdraw ? asset.withdraw : asset.code.toLowerCase() + "@" + gateway.name
+                withdraw : asset.withdraw
             };
           }
           map[asset.issuer] = {

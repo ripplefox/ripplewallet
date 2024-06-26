@@ -41,8 +41,8 @@
 						<td class="BalancesTable__row__amount">
 							<span> {{line.value | number : 6}}</span>
 							<div>
-								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="resolveDeposit(line.currency, line.issuer)" ng-show="hasService(line.currency, line.issuer)">{{'deposit' | translate}}</a>
-								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="goSend(line.currency, line.issuer)" ng-show="hasService(line.currency, line.issuer)">{{'withdraw' | translate}}</a>
+								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="resolveDeposit(line.currency, line.issuer)" ng-show="hasDeposit(line.currency, line.issuer)">{{'deposit' | translate}}</a>
+								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="goSend(line.currency, line.issuer)" ng-show="hasWithdraw(line.currency, line.issuer)">{{'withdraw' | translate}}</a>
 								<a class="BalancesTable__row__removeLink" href="javascript:" ng-click="goTrade(line.currency, line.issuer)">{{'trade' | translate}}</a>
 							</div>							
 						</td>

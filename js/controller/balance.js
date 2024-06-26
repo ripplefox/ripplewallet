@@ -43,8 +43,11 @@ myApp.controller("BalanceCtrl", [ '$scope', '$rootScope', '$location', '$http', 
       }
     }
 
-    $scope.hasService = function(code, issuer) {
+    $scope.hasDeposit = function(code, issuer) {
       return !!$rootScope.getGateway(code, issuer).deposit;
+    }
+    $scope.hasWithdraw = function(code, issuer) {
+      return !!$rootScope.getGateway(code, issuer).withdraw;
     }
 
     $scope.show_deposit = false;
