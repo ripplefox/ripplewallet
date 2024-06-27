@@ -35,11 +35,14 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
     }
 
     function stringToHex(str) {
-      let hex = '';
-      for(let i = 0; i < str.length; i++) {
-          hex += str.charCodeAt(i).toString(16);
+      var encoder = new TextEncoder();
+      var encodedBuffer = encoder.encode(str);
+      var hex = '';
+      for(var i = 0; i < encodedBuffer.length; i++) {
+          var hexByte = encodedBuffer[i].toString(16);
+          hex += ('0' + hexByte).slice(-2);
       }
-      return hex;
+      return hex.toUpperCase();
     }
     function convertMemos(memos) {
       return memos.map(item => {

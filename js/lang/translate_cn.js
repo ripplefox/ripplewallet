@@ -79,8 +79,9 @@ var translate_cn = {
   recipient : '接受者',
   dest_tag  : '标签',
   tag_need  : '接受者要求发送时必须附带标签。如果你不知道，请先联系对方。',
+  msg_need  : '接受者要求发送时必须附带消息。',
   disallow_xrp: '对方不接受{{code}}转账！你确定你要强行发送{{code}}过去吗?',
-  will_receive: '对方将收到',
+  will_receive: '金额',
   invalid_address : '必须是你的联系人或是有效的瑞波地址。',
   invalid_amount : '不是有效的金额',
   invalid_domain : '域名无响应',
@@ -92,6 +93,7 @@ var translate_cn = {
   you_sending : '你将把{{code}}发送到',
   you_sending_to : '发送到',
   send_with_err: '无法使用路径的情况下，你依然可以直接发送。',
+  message : '消息',
 
   contacts : '联系人',
   contact  : '联系人',
@@ -334,8 +336,9 @@ var translate_cn = {
   /** Error **/
   NotFoundError : '瑞波网络未找到该账号，请先激活此账号。',
   NotConnectedError : '未连接到服务器，请过一会儿再试。',
-  NoRippleTXT: '网站未提供ripple.txt文件',
-  NoFederationUrl: '网站未提供联邦协议服务',
+  NoRippleTXT : '网站未提供ripple.txt文件',
+  NoRippleToml: '未找到网站TOML文件信息',
+  NoFederationUrl: '网站未提供Xrc20协议服务',
   'Invalid Email' : '电子邮箱地址不正确。',
   NetworkError: '网络错误'
 }

@@ -1,5 +1,29 @@
 myApp.factory('Federation', ['$rootScope', '$q', '$http',  function($rootScope, $q, $http) {
-  
+  const toml_data = {};
+
+  async function getToml(domain) {
+    if (toml_data[domain]) {
+      console.log(`${domain} has toml info already.`);
+      return toml_data[domain];
+    }
+    try {
+        const response = await fetch('https://' + domain + '/.well-known/ripple.toml');
+        if (!response.ok) {
+          console.error('Network response was not ok ' + response.statusText);
+          throw new Error("NoRippleToml");
+        }
+        const tomlText = await response.text();
+        const parsedToml = toml.parse(tomlText);
+        //displayParsedToml(parsedToml);
+        console.log(parsedToml);
+        toml_data[domain] = parsedToml;
+        return parsedToml;
+    } catch (error) {
+        console.error('Failed to fetch and parse TOML:', error);
+        throw new Error("NoRippleToml");
+    }
+  }
+
   var promises = {};
 
   function get(domain) {
@@ -60,6 +84,7 @@ myApp.factory('Federation', ['$rootScope', '$q', '$http',  function($rootScope, 
 
   return {
     get: get,
+    getToml: getToml,
     parse: parse
   };
   

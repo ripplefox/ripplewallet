@@ -79,8 +79,9 @@ var translate_jp = {
   recipient : '受取者',
   dest_tag  : '宛先タグ',
   tag_need  : '受取側は宛先タグを添付することを要求しています。分からない場合は、事前に受取者と連絡を取ってください。',
+  msg_need  : '受信者はメッセージを一緒に送信することを要求します。',
   disallow_xrp: '受取側は{{code}}送金を拒否します！強制的に{{code}}送金しますか?',
-  will_receive: '相手は以下の金額を受け取ります',
+  will_receive: '金額',
   invalid_address : '連絡帳に登録した方や有効なリップルアドレスにしてください。',
   invalid_amount : '有効な金額ではありません。',
   invalid_domain : '応答がありません',
@@ -92,6 +93,7 @@ var translate_jp = {
   you_sending : 'あなたは{{code}}を以下のアドレスへ発送します',
   you_sending_to : 'を以下のアドレスへ発送します',
   send_with_err: 'パスが利用できない場合でも、直接送信できます。',
+  message : '情報',
 
   contacts : '連絡帳',
   contact  : '連絡者',
@@ -335,8 +337,9 @@ var translate_jp = {
   /** Error **/
   NotFoundError : '該当アカウントが見つかりませんでした。アクティブ化してください。',
   NotConnectedError : 'サーバーに接続されていません。しばらくしてからもう一度お試しください。',
-  NoRippleTXT: '該当サイトはripple.txtファイルを提供していません',
-  NoFederationUrl: '該当サイトはFederation Protocolが適用されていません',
+  NoRippleTXT : '該当サイトはripple.txtファイルを提供していません',
+  NoRippleToml: '該当サイトはripple.tomlファイルを提供していません',
+  NoFederationUrl: '該当サイトはXrc20 Protocolが適用されていません',
   'Invalid Email' : 'メールアドレスが間違っています。',
   NetworkError: 'Network error.'
 }

@@ -58,8 +58,8 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           website : 'https://www.gatehub.net/',
           assets : [
             {code : 'USD', issuer : 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq'},
-            {code : 'EUR', issuer : 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq', list: true},
-            {code : 'BTC', issuer : 'rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL', list: true}
+            {code : 'EUR', issuer : 'rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq', list: false},
+            {code : 'BTC', issuer : 'rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL', list: false}
           ],
           logo : "img/gateway/gatehub.png"
         },
@@ -68,7 +68,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           website : 'https://xagfans.com/',
           deposit : 'https://xagfans.com/deposit',
           assets : [
-            {code : 'XAG', issuer : 'rpG9E7B3ocgaKqG7vmrsu3jmGwex8W4xAG', list: false, logo: "img/coin/xag.png", deposit: true, withdraw: "xag@xagfans.com"}
+            {code : 'XAG', issuer : 'rpG9E7B3ocgaKqG7vmrsu3jmGwex8W4xAG', list: true, logo: "img/coin/xag.png", deposit: true, withdraw: "xag@xagfans.com"}
           ],
           logo : "img/coin/xag.png"
         },

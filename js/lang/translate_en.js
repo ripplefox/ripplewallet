@@ -79,8 +79,9 @@ var translate_en = {
   recipient : 'Recipient',
   dest_tag  : 'Destination tag',
   tag_need  : 'Recipient requires a destination tag to be specified for the transaction. If you don\'t know the destination tag, please contact them before doing a transaction.',
+  msg_need  : 'Recipient requires a message to be specified for the transaction.',
   disallow_xrp: 'Recipient does not allow {{code}} payments. Are you sure you want to send {{code}} anyway?',
-  will_receive: 'Recipient will receive',
+  will_receive: 'Amount',
   invalid_address : 'Recipient should be either a name from your contact list or Ripple address.',
   invalid_amount : 'Not a valid amount.',
   invalid_domain : 'is unavailable',
@@ -92,6 +93,7 @@ var translate_en = {
   you_sending : 'You are sending {{code}} to',
   you_sending_to : ' to',
   send_with_err: 'If the path is unavailable, you can still send directly.',
+  message : 'Message',
 
   contacts : 'Contacts',
   contact  : 'Contact',
@@ -335,8 +337,9 @@ var translate_en = {
   /** Error **/
   NotFoundError : 'The resource was not found. You must have some {{code}} in your account for it to be activated!',
   NotConnectedError : 'Not connected, please retry later.',
-  NoRippleTXT: 'Ripple.txt was not found.',
-  NoFederationUrl: 'Federation service url was not provided.',
+  NoRippleTXT : 'Ripple.txt was not found.',
+  NoRippleToml: 'Ripple.toml was not found.',
+  NoFederationUrl: 'Xrc20 service url was not provided.',
   'Invalid Email' : 'Invalid Email address.',
   NetworkError: 'Network error.'
 }

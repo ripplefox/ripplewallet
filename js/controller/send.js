@@ -4,7 +4,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
   function($scope, $rootScope, $routeParams, XrpApi, XrpPath, Id, SettingFactory, AuthenticationFactory, Federation, $http) {
     console.log('Send to', $routeParams);
     var native = $rootScope.currentNetwork.coin;
-    $scope.currencies = [];
+    $scope.currencies = [native.code];
     $scope.asset = {code: native.code};
     $scope.init = function(){
       $scope.mode = 'input';
@@ -16,6 +16,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
     
     $scope.input_address;
     $scope.tag_require = false;
+    $scope.msg_require = false; 
     $scope.disallow_xrp = false;
     $scope.tag_provided;
     $scope.sending;
@@ -48,8 +49,11 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.hash = "";
       $scope.tx_state = "";
       $scope.send_error = '';
+
       $scope.tag_require = false;
       $scope.tag_provided = false;
+      $scope.msg_require = false;
+      $scope.msg = "";
 
       $scope.real_address = '';
       $scope.real_not_fund = false;
@@ -57,6 +61,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       $scope.extra_fields = [];
       $scope.invoice = "";
       $scope.memos = [];
+      $scope.xrc20 = null;
 
       $scope.service_error = "";
       $scope.service_amount = 0;
@@ -99,7 +104,8 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       } else {
         $scope.is_federation = true;
         $scope.invalid_address = false;
-        $scope.resolveFederation($scope.full_address);
+        //$scope.resolveFederation($scope.full_address);
+        resolveXrc20($scope.full_address);
       }
     };
     
@@ -118,9 +124,28 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.found = false;
       }
     }
+
+    function isValidAmount() {
+      if (!$scope.asset.amount || $scope.asset.amount <= 0) {
+        console.log("Amount should > 0", $scope.asset.amount);
+        return false;
+      }
+      if ($scope.is_federation && $scope.xrc20) {
+        let item = $scope.xrc20.currencies.find(x=> {
+          return realCode($scope.asset.code) == realCode(x.currency);
+        });
+        if (item && $scope.asset.amount >= item.min && $scope.asset.amount <= item.max) {
+          return true;
+        } else {
+          console.log("Amount match xrc20 limit.", item);
+          return false;
+        }
+      }
+      return true;
+    }
     
     $scope.updatePath = function() {
-      $scope.invalid_amount = !$scope.asset.amount || $scope.asset.amount <= 0;
+      $scope.invalid_amount = !isValidAmount();;
       if ($scope.invalid_amount) {
         $scope.stopPath(true);
         return;
@@ -217,6 +242,112 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       });
     };
 
+    async function resolveXrc20(snapshot) {
+      console.debug('xrc20', snapshot);
+      var i = snapshot.indexOf("@");
+      var prestr = snapshot.substring(0, i);
+      var domain = snapshot.substring(i+1);
+
+      $scope.act_loading = true;
+      $scope.service_error = "";
+      try {
+        let toml_info = await Federation.getToml(domain);
+        let api_url = toml_info.XRC20_SERVER;
+        if (!api_url) {
+          throw new Error("NoFederationUrl");
+        }
+        const params = new URLSearchParams({
+          type : 'xrc20',
+          domain: domain,
+          destination: prestr,
+          address: $rootScope.address,
+          client : 'foxlet-' + appinfo.version,
+          network: $rootScope.currentNetwork.networkType,
+          lang   : SettingFactory.getLang()
+        });
+        const full_url = `${api_url}?${params}`;
+        console.log(full_url);
+        const response = await fetch(full_url);
+        if (snapshot !== $scope.full_address) { // ignore when input field changed
+          return;
+        }
+        if (!response.ok) {
+          console.error('Network response was not ok ' + response.statusText);
+          throw new Error(response.statusText);
+        }
+        const res = await response.json();
+        console.log(res);
+        if (res.error) {
+          throw new Error(res.error_message || res.error);
+        }
+
+        if (res.xrc20_json) {
+          const data = res.xrc20_json;
+          if (data.domain == domain) {
+            if (data.type == "address") {
+              $scope.xrc20 = data; // store the info, later we will use it to check the amount
+              $scope.extra_fields = data.extra_fields;
+              $scope.real_address = data.destination_address;
+              $scope.tag_require = data.tag_require;
+              $scope.tag = data.tag;
+              $scope.msg_require = data.msg_require;
+              $scope.msg = data.msg;
+              $scope.memos = data.memos;
+
+              $scope.currencies = [];
+              data.currencies.forEach(asset => {
+                $scope.currencies.push(realCode(asset.currency));
+              });
+
+              //default value
+              $scope.asset.code = realCode(data.currencies[0].currency);
+              if (data.currencies[0].value) {
+                $scope.asset.amount = data.currencies[0].value;
+                $scope.updatePath();
+              } else {
+                $scope.asset.amount = 0;
+              }
+            } else {
+              throw new Error("The type " + data.type + " is not supported yet.");
+            }
+          } else {
+            throw new Error("The domain field in response must be " + domain);
+          }
+
+        } else if (res.federation_json) { // old federation protocol
+          const data = res.federation_json;
+          if (data.extra_fields) {
+            if (data.domain == domain) {
+              $scope.service_currency = (data.currencies || data.assets)[0].currency;
+              $scope.extra_fields = data.extra_fields;
+              $scope.quote_destination = data.destination;
+              $scope.quote_domain = data.domain;
+              $scope.quote_url = data.quote_url;
+            } else {
+              throw new Error("The domain field in response must be " + domain);
+            }
+          } else {
+            $scope.extra_fields = null;
+            $scope.real_address = data.destination_address;
+            $scope.resolveAccountInfo();
+          }
+        } else {
+          throw new Error("Unkonw protocol.");
+        }
+        $scope.act_loading = false;
+        $scope.$apply();
+      } catch(err) {
+        if (snapshot !== $scope.full_address) {
+          return;
+        }
+        console.log(snapshot, err);
+        $scope.service_error = err.message;
+        $scope.act_loading = false;        
+        $scope.$apply();
+      }
+    }
+
+    // Old Federation protocol handler, should be replaced by Xrc20 handler
     $scope.resolveFederation = function(snapshot) {
       console.debug('resolve', snapshot);
       var i = snapshot.indexOf("@");
@@ -361,7 +492,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       }).then(data => {
         console.log(data);
         $scope.act_loading = false;
-        $scope.currencies = data.receive_currencies;
+        $scope.currencies = [native.code].concat(data.receive_currencies);
         if ($scope.currencies.indexOf($scope.asset.code) < 0) {
           $scope.pickCode(native.code);
         }
@@ -371,7 +502,7 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.act_loading = false;
         if (err.unfunded) {
           $scope.real_not_fund = true;
-          $scope.currencies = [];
+          $scope.currencies = [native.code];
           $scope.pickCode(native.code);
         } else {
           $scope.send_error.message = err.message;
@@ -389,11 +520,16 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         $scope.invalid_tag = $scope.tag_require;
       }
     }
+    $scope.checkMsg = function(){
+      $scope.invalid_msg = $scope.msg_require && !$scope.msg;
+    }
+    
     
     $scope.pickPath = function(code) {
       $scope.checkTag();
       console.log('tag:', $scope.tag, $scope.invalid_tag, $scope.tag_require);
       if ($scope.invalid_tag) return;
+      if ($scope.invalid_msg) return;
       $scope.path = $scope.paths.find(item => {return item.code == code});
       if (!$scope.path && code == native.code) {
         // send XRP/native
@@ -445,6 +581,10 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         }
       }
 
+      if ($scope.msg) {
+        $scope.memos.push({data: $scope.msg, type: 'msg', format: 'text'});
+      }
+
       var pathArray = alt && alt.paths_computed ? alt.paths_computed : null;
       XrpApi.payment($scope.real_address, srcAmount, dstAmount, $scope.tag, $scope.invoice, $scope.memos, pathArray).then(hash => {
         $scope.hash = hash;
@@ -467,8 +607,16 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
       if (address.indexOf("@") >=0) {
         return address;
       }
+      if (isValidTronAddress(address)) {
+        return address + "@xrps.io";
+      }
       //TODO: XLM address + @ripplefox.com
       return address;
+    }
+
+    function isValidTronAddress(address) {
+      var tronAddressRegex = /^T[a-zA-Z0-9]{33}$/;
+      return tronAddressRegex.test(address);
     }
 
     // exchange address
