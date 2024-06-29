@@ -136,9 +136,9 @@ myApp.factory('XrpApi', ['$rootScope', 'AuthenticationFactory', 'ServerManager',
           let data = {
             domain : result.account_data.Domain ? hexToAscii(result.account_data.Domain) : null,
             messageKey : result.account_data.MessageKey,
-            disallowIncomingXRP : result.account_flags.disallowIncomingXRP,
-            requireDestinationTag : result.account_flags.requireDestinationTag,
-            defaultRipple : result.account_flags.defaultRipple
+            disallowIncomingXRP : result.account_flags ? result.account_flags.disallowIncomingXRP : false,
+            requireDestinationTag : result.account_flags ? result.account_flags.requireDestinationTag : false,
+            defaultRipple : result.account_flags ? result.account_flags.defaultRipple : false
           };
           return data;
         } catch(e){
