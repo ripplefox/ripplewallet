@@ -12,7 +12,8 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
             {code : 'PEOPLE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "ConstitutionDAO", logo: "img/coin/people.png"},
             {code : 'PEPE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Pepe", logo: "img/coin/pepe.jpg"},
             {code : 'SHIB', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Shiba Inu", logo: "img/coin/shib.svg"},
-            {code : 'BTC', issuer : 'raPhno5Bpmch3oWwqXy6e4vgQeidKknBTC', list: true, name: "Bitcoin", logo: "img/coin/btc.svg"}
+            {code : 'BTC', issuer : 'raPhno5Bpmch3oWwqXy6e4vgQeidKknBTC', list: true, name: "Bitcoin", logo: "img/coin/btc.svg"},
+            {code : 'FIL', issuer : 'rsL5YuuidUu5zqSDdf4KQEpp3eHdPy2yes', list: true, name: "Filecoin", logo: "img/coin/filecoin.svg"}
           ],
           logo : "img/coin/xrps.png"
         },
@@ -77,19 +78,19 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           website : 'https://www.sologenic.com/',
           service : [],
           assets : [
-            {code : '534F4C4F00000000000000000000000000000000', issuer : 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz', list: true}
+            {code : 'SOLO', issuer : 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz', list: true}
           ],
           logo : "img/gateway/sologenic.jpg"
         },
-        "dxperts.org" : {
-          name : 'dxperts.org',
-          website : 'https://dxperts.org/',
-          service : [],
-          assets : [
-            {code : 'DXP', issuer : 'rM8AhEC5Zz46ecWC8KwkoMugY1KwFQqhZT'}
-          ],
-          logo : "img/gateway/dxperts.png"
-        }
+        // "dxperts.org" : {
+        //   name : 'dxperts.org',
+        //   website : 'https://dxperts.org/',
+        //   service : [],
+        //   assets : [
+        //     {code : 'DXP', issuer : 'rM8AhEC5Zz46ecWC8KwkoMugY1KwFQqhZT'}
+        //   ],
+        //   logo : "img/gateway/dxperts.png"
+        // }
     };
     
     let _xagnet = {
@@ -192,9 +193,9 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           ];
         }
         return [
-          {code : 'CNY', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
-          {code : 'ULT', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
-          {code : 'USD', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
+          {code : 'USDT', issuer : 'rGbUjUtNVq5M3Un5r4efJqHed4o5P2Usdt'},
+          {code : 'CNY',  issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
+          {code : 'XRPS', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
           {code : 'XLM', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'},
           {code : 'ETH', issuer : 'rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y'}
         ]

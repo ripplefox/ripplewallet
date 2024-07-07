@@ -6,7 +6,7 @@ myApp.factory('ServerManager', ['$rootScope',
     let _client = undefined;
     let _path = undefined; // full function node for path find
 
-    let _timeout = 10000;
+    let _timeout = 30000;
     
     let _reserveBaseXRP = 0;
     let _reserveIncrementXRP = 0;

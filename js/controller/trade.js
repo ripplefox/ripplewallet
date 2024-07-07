@@ -102,6 +102,9 @@ myApp.controller("TradeCtrl", [ '$scope', '$rootScope', 'XrpApi', 'XrpOrderbook'
         if ("XRPS" == fmtCode($scope.base_code)) {
           $scope.price_precise = 6;
         }
+        if ("XAG" == $scope.base_code) {
+          $scope.price_precise = 7;
+        }
       } else if (['BTC', 'ETH'].indexOf($scope.counter_code) >= 0) {
         $scope.price_precise = 6;
       } else {

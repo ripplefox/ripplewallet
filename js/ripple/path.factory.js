@@ -35,7 +35,7 @@ myApp.factory('XrpPath', ['$rootScope', 'ServerManager', function($rootScope, SM
 
       _myHandler = function(data){
         // do not show LP alt
-        data.alternatives = data.alternatives.filter(alt => alt.source_amount.currency.substring(0,2) !== "03");
+        data.alternatives = data.alternatives.filter(alt => alt.source_amount.currency ? alt.source_amount.currency.substring(0,2) !== "03" : true);
         handler(null, data);
       };
 

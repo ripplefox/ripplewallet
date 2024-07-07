@@ -277,12 +277,12 @@ myApp.controller("SendCtrl", ['$scope', '$rootScope', '$routeParams', 'XrpApi', 
         }
         const res = await response.json();
         console.log(res);
-        if (res.error) {
+        if (res.error || res.result == "error") {
           throw new Error(res.error_message || res.error);
         }
 
         if (res.xrc20_json) {
-          const data = res.xrc20_json;
+          const data = res.xrc20_json;          
           if (data.domain == domain) {
             if (data.type == "address") {
               $scope.xrc20 = data; // store the info, later we will use it to check the amount
