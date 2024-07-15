@@ -202,6 +202,22 @@ myApp.run(['$rootScope', '$window', '$location', '$translate', 'AuthenticationFa
         console.log(`Client connect to ${name}`);
         XrpApi.client = SM.client;
       });
+
+      fetch('https://xrps.io/assets.json').then(async (response) => {
+        if (!response.ok) {
+          console.error('assets.json was not ok ' + response.statusText);
+          return;
+        }
+        const text = await response.text();
+        const data = JSON.parse(text);
+        for (let item of data) {
+          if (item.lp) {
+            lp_map[item.currency] = item.lp;
+          } else {
+            Gateways.addGateway(item);
+          }
+        }
+      });
     } catch(e) {
       console.error("Cannot set server", SettingFactory.getNetworkType(), e);
       console.warn("Change network back to xrp.");

@@ -2,7 +2,7 @@
 
 myApp.factory('Gateways', ['$rootScope', function($rootScope) {
     let _gateways = {
-        "xrps.is" : {
+        "xrps.io" : {
           name : 'xrps.io',
           website : 'https://xrps.io/',
           deposit : "https://xrps.io/deposit",
@@ -72,16 +72,7 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
             {code : 'XAG', issuer : 'rpG9E7B3ocgaKqG7vmrsu3jmGwex8W4xAG', list: true, logo: "img/coin/xag.png", deposit: true, withdraw: "xag@xagfans.com"}
           ],
           logo : "img/coin/xag.png"
-        },
-        "sologenic.com" : {
-          name : 'sologenic.com',
-          website : 'https://www.sologenic.com/',
-          service : [],
-          assets : [
-            {code : 'SOLO', issuer : 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz', list: true}
-          ],
-          logo : "img/gateway/sologenic.jpg"
-        },
+        }
         // "dxperts.org" : {
         //   name : 'dxperts.org',
         //   website : 'https://dxperts.org/',
@@ -163,6 +154,42 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
     });
 
     return {
+/* {
+        "currency": "XLM",
+        "issuer": "rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y",
+        "logo": "https://xrps.io/images/coin/xlm.png",
+        "name": "Stellar Lumens",
+        "deposit": "https://ripplefox.com/deposit",
+        "domain": "ripplefox.com",
+        "list": true
+} */
+      // add item to _gateways & _asset2gateway
+      addGateway(item) {
+        if (!_gateways[item.domain]) {
+          _gateways[item.domain] = {
+            name: item.domain,
+            website: "https://" + item.domain,
+            assets : []
+          }
+        }
+        let assets = _gateways[item.domain].assets;
+        let asset = assets.find(x => { return x.code == item.currency });
+        if (!asset) {
+          console.log(`Add ${item.currency} to ${item.domain}`);
+          assets.push({
+            code: item.currency,
+            issuer: item.issuer,
+            name : item.name,
+            logo : item.logo,
+            list : item.list
+          });
+          _asset2gateway[key(item.currency, item.issuer)] = {
+            logo: item.logo,
+            deposit : item.deposit || ""
+          }
+        }
+      },
+
       getGateway(code, issuer) {
         if (code === $rootScope.currentNetwork.coin.code) {
           return { logo : $rootScope.currentNetwork.coin.logo };
