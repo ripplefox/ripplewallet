@@ -9,11 +9,15 @@ myApp.factory('Gateways', ['$rootScope', function($rootScope) {
           assets : [
             {code : 'XRPS', issuer : 'rN1bCPAxHDvyJzvkUso1L2wvXufgE4gXPL', list: true, name: "XRP Inscription", logo: "img/coin/xrps.png"},
             {code : 'USDT', issuer : 'rGbUjUtNVq5M3Un5r4efJqHed4o5P2Usdt', list: true, name: "Tether (USDT)", logo: "img/coin/usdt.svg", deposit: true},
+            {code : 'BTC', issuer : 'raPhno5Bpmch3oWwqXy6e4vgQeidKknBTC', list: true, name: "Bitcoin", logo: "img/coin/btc.svg"},
+            {code : 'BNB',  issuer : 'rsL5YuuidUu5zqSDdf4KQEpp3eHdPy2yes', list: true, name: "Binance", logo: "img/coin/bnb.svg"},
+            {code : 'FIL', issuer : 'rsL5YuuidUu5zqSDdf4KQEpp3eHdPy2yes', list: true, name: "Filecoin", logo: "img/coin/filecoin.svg"},
+            {code : 'OKB',  issuer : 'rsL5YuuidUu5zqSDdf4KQEpp3eHdPy2yes', list: true, name: "OKX", logo: "img/coin/okb.webp"},
             {code : 'PEOPLE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "ConstitutionDAO", logo: "img/coin/people.png"},
             {code : 'PEPE', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Pepe", logo: "img/coin/pepe.jpg"},
             {code : 'SHIB', issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Shiba Inu", logo: "img/coin/shib.svg"},
-            {code : 'BTC', issuer : 'raPhno5Bpmch3oWwqXy6e4vgQeidKknBTC', list: true, name: "Bitcoin", logo: "img/coin/btc.svg"},
-            {code : 'FIL', issuer : 'rsL5YuuidUu5zqSDdf4KQEpp3eHdPy2yes', list: true, name: "Filecoin", logo: "img/coin/filecoin.svg"}
+            {code : 'SOL',  issuer : 'rsL5YuuidUu5zqSDdf4KQEpp3eHdPy2yes', list: true, name: "Solana", logo: "img/coin/sol.webp"},
+            {code : 'UNI',  issuer : 'rfY6rBycwpcyt49TGFvaVAoib3qmcWJERC', list: true, name: "Uniswap", logo: "img/coin/uni.png"}
           ],
           logo : "img/coin/xrps.png"
         },
